@@ -110,4 +110,9 @@ class woo_add_customer_helper
     {
         register_setting('general', 'wac_add_customer');
     }
+
+    public function wac_enqueue_admin_style(){
+            wp_enqueue_style('wac-admin', get_option('siteurl') . '/wp-content/plugins/woocommerce-add-customer/style/admin-style.css');
+        
+    }
 }

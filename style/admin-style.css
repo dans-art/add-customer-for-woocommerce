@@ -1,0 +1,16 @@
+/**
+ * Plugin Name: Woocommerce Add Customer
+ * Style description: Basic style for backend style
+ * Author: DansArt
+ * Author URI: http://dans-art.ch
+ * Todo: 
+ */
+
+ /*
+ Fixes the display of the button
+ */
+#wac_add_customer_con{
+    clear: both;
+    width: 100%;
+    padding-top: 1px;
+}

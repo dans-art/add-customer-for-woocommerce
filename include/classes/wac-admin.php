@@ -132,6 +132,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
     /**
      * Adds the chechbox with a id of "wac_add_customer"
      * Only displays if no customer is linked with the order
+     * Includes the style for admin page
      *
      * @param object $order - The Order Object.
      * @return void
@@ -141,8 +142,10 @@ class woo_add_customer_admin extends woo_add_customer_helper
         if ($order->get_customer_id() !== 0) {
             return false;
         }
+
+        $this -> wac_enqueue_admin_style();
 ?>
-        <div class="edit_address">
+        <div id='wac_add_customer_con' class="edit_address">
             <p class="wac_add_customer_field ">
                 <input type="checkbox" name="wac_add_customer" id="wac_add_customer" value="true" placeholder="">
                 <label for="wac_add_customer"><?php echo __('Add Customer', 'wac'); ?></label>
