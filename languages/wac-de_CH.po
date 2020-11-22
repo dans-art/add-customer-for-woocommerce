@@ -1,0 +1,35 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Woocommerce Add Customer\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-11-22 15:15+0000\n"
+"PO-Revision-Date: 2020-11-22 16:22+0100\n"
+"Last-Translator: Daniel Spycher\n"
+"Language-Team: \n"
+"Language: de_CH\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.4.2\n"
+"X-Loco-Version: 2.4.6; wp-5.5.3\n"
+
+# Checkbox Name
+msgid "Add Customer"
+msgstr "Kunde hinzufügen"
+
+#. Description of the plugin
+msgid "Allows you to add a customer when a new order is created via backend."
+msgstr ""
+
+#. Author of the plugin
+msgid "DansArt."
+msgstr ""
+
+#. Author URI of the plugin
+msgid "http://dans-art.ch"
+msgstr ""
+
+#. Name of the plugin
+msgid "Woocommerce Add Customer"
+msgstr ""
