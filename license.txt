@@ -1,6 +1,6 @@
-The Events Calendar - Notify Me!
+Woocommerce Add Customer
 
-Copyright 2009-2017 by Modern Tribe Inc and the contributors
+Copyright 2020 by Dan's Art
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

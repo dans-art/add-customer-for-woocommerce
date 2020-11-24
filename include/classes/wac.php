@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Plugin Name: Woocommerce Add Customer
+ * Plugin Name: WooCommerce Add Customer
  * Class description: Main Class. Includes the plugins functionalities to front- and backend. 
- * Author: DansArt.
- * Author URI: http://dans-art.ch
+ * Author: dans-art
+ * Author URI: http://dev.dans-art.ch
  *
  */
 class woo_add_customer extends woo_add_customer_helper

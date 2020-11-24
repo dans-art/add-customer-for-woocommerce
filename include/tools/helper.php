@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Plugin Name: Woocommerce Add Customer
+ * Plugin Name: WooCommerce Add Customer
  * Class description: Various helper methods.
- * Author: DansArt.
- * Author URI: http://dans-art.ch
+ * Author: dans-art
+ * Author URI: http://dev.dans-art.ch
  *
  */
 
@@ -26,7 +26,7 @@ function l($msg)
 
 class woo_add_customer_helper
 {
-    protected $version = '0.1';
+    protected $version = '1.0';
     //public $admin_notices = array();
 
     public function __construct()
@@ -68,7 +68,7 @@ class woo_add_customer_helper
     }
     /**
      * Loads the translation of the plugin.
-     * Saved at: plugins/woocommerce-add-customer/languages/
+     * Located at: plugins/woocommerce-add-customer/languages/
      *
      * @return void
      */
@@ -109,5 +109,16 @@ class woo_add_customer_helper
     public function wac_add_settings_section_init()
     {
         register_setting('general', 'wac_add_customer');
+    }
+
+    /**
+     * Enqueue the styles of the plugin
+     * Located at: plugins/woocommerce-add-customer/style/admin-style.css
+     *
+     * @return void
+     */
+    public function wac_enqueue_admin_style()
+    {
+        wp_enqueue_style('wac-admin', get_option('siteurl') . '/wp-content/plugins/woocommerce-add-customer/style/admin-style.css');
     }
 }
