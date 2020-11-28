@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Plugin Name: WooCommerce Add Customer
+ * Plugin Name: Add Customer for WooCommerce
  * Description: Allows you to add a customer when a new order is created at the orders page.
- * Version: 0.1
- * Author: dans-art
+ * Version: 1.0
+ * Author: Dan's Art
  * Author URI: http://dev.dans-art.ch
  * Text Domain: wac
  * License: GPLv2 or later

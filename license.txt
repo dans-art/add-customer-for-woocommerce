@@ -1,4 +1,4 @@
-Woocommerce Add Customer
+Add Customer for WooCommerce
 
 Copyright 2020 by Dan's Art
 
