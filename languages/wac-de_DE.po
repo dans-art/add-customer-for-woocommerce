@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: WooCommerce Add Customer\n"
+"Project-Id-Version: Add Customer for WooCommerce\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-22 15:15+0000\n"
-"PO-Revision-Date: 2020-11-24 13:53+0100\n"
+"PO-Revision-Date: 2020-11-28 09:02+0100\n"
 "Last-Translator: Daniel Spycher\n"
 "Language-Team: \n"
 "Language: de_DE\n"
@@ -31,5 +31,5 @@ msgid "http://dev.dans-art.ch"
 msgstr ""
 
 #. Name of the plugin
-msgid "WooCommerce Add Customer"
+msgid "Add Customer for WooCommerce"
 msgstr "WooCommerce - Kunde hinzufügen"

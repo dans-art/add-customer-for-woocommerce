@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Plugin Name: WooCommerce Add Customer
+ * Plugin Name: Add Customer for WooCommerce
  * Class description: Class for managing the Admin Backend. Add field, process data on order save. 
- * Author: dans-art
+ * Author: Dan's Art
  * Author URI: http://dev.dans-art.ch
  */
 class woo_add_customer_admin extends woo_add_customer_helper

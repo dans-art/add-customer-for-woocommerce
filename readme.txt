@@ -1,4 +1,4 @@
-=== WooCommerce Add Customer ===
+=== Add Customer for WooCommerce ===
 
 Contributors: dans-art
 Contributors URL: http://dev.dans-art.ch

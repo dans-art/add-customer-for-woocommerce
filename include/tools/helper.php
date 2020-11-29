@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Plugin Name: WooCommerce Add Customer
+ * Plugin Name: Add Customer for WooCommerce
  * Class description: Various helper methods.
- * Author: dans-art
+ * Author: Dan's Art
  * Author URI: http://dev.dans-art.ch
  *
  */
@@ -68,13 +68,13 @@ class woo_add_customer_helper
     }
     /**
      * Loads the translation of the plugin.
-     * Located at: plugins/woocommerce-add-customer/languages/
+     * Located at: plugins/add-customer-for-woocommerce/languages/
      *
      * @return void
      */
     public function wac_load_textdomain()
     {
-        load_textdomain('wac', $this->wac_get_home_path() . 'wp-content/plugins/woocommerce-add-customer/languages/wac-' . determine_locale() . '.mo');
+        load_textdomain('wac', $this->wac_get_home_path() . 'wp-content/plugins/add-customer-for-woocommerce/languages/wac-' . determine_locale() . '.mo');
     }
 
     /**
@@ -113,12 +113,12 @@ class woo_add_customer_helper
 
     /**
      * Enqueue the styles of the plugin
-     * Located at: plugins/woocommerce-add-customer/style/admin-style.css
+     * Located at: plugins/add-customer-for-woocommerce/style/admin-style.css
      *
      * @return void
      */
     public function wac_enqueue_admin_style()
     {
-        wp_enqueue_style('wac-admin', get_option('siteurl') . '/wp-content/plugins/woocommerce-add-customer/style/admin-style.css');
+        wp_enqueue_style('wac-admin', get_option('siteurl') . '/wp-content/plugins/add-customer-for-woocommerce/style/admin-style.css');
     }
 }
