@@ -11,19 +11,6 @@
 //Include a better debugger
 include_once('kint.phar');
 
-/**
- * Outputs the message as a Json to the error log
- * For easier debugging
- *
- * @param mixed $msg - Any Object, Array or String
- * @return void
- */
-function l($msg)
-{
-    error_log(json_encode($msg));
-}
-
-
 class woo_add_customer_helper
 {
     protected $version = '1.0';
