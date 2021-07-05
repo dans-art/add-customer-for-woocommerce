@@ -18,7 +18,7 @@ It creates a new user based of the billing data. If no e-mail is provided, it wi
 
 Required Plugins: WooCommerce 4.7.0 or higher
 
-= [1.0] 2020-11-24 =
+= [1.1] 2021-07-06 =
 
 * Added Error logging
 * Error and success messages will be saved in the error_log and printed by Simple History
