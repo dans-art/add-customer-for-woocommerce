@@ -3,33 +3,60 @@ msgstr ""
 "Project-Id-Version: Add Customer for WooCommerce\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-22 15:15+0000\n"
-"PO-Revision-Date: 2020-11-28 09:02+0100\n"
+"PO-Revision-Date: 2021-07-05 20:35+0000\n"
 "Last-Translator: Daniel Spycher\n"
-"Language-Team: \n"
+"Language-Team: Deutsch (Schweiz)\n"
 "Language: de_CH\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.4.2\n"
+"X-Generator: Loco https://localise.biz/\n"
 "X-Loco-Version: 2.4.6; wp-5.5.3\n"
-
-# Checkbox Name
-msgid "Save as new customer"
-msgstr "Speichere neuen Kunden"
-
-#. Description of the plugin
-msgid "Allows you to add a customer when a new order is created at the orders page."
-msgstr "Gibt dir die Möglichkeit, einen Kunden automatisch hinzuzufügen, wenn eine Bestellung im Wordpress Backend erstellt wird."
-
-#. Author of the plugin
-msgid "dans-art"
-msgstr ""
-
-#. Author URI of the plugin
-msgid "http://dev.dans-art.ch"
-msgstr ""
 
 #. Name of the plugin
 msgid "Add Customer for WooCommerce"
 msgstr "WooCommerce - Kunde hinzufügen"
+
+#: include/tools/helper.php:138
+#, php-format
+msgid "Added User \"%s <%s>\" by Add Customer"
+msgstr "Nutzerkonto \"%s <%s>\" durch Add Customer Plugin hinzugefügt"
+
+#. Description of the plugin
+msgid ""
+"Allows you to add a customer when a new order is created at the orders page."
+msgstr ""
+"Gibt dir die Möglichkeit, einen Kunden automatisch hinzuzufügen, wenn eine "
+"Bestellung im Wordpress Backend erstellt wird."
+
+#: include/tools/helper.php:141
+msgid "Could not save user. No Name provided - Add Customer."
+msgstr ""
+"Konnte neues Konto nicht erstellen, keinen Namen eingetragen. Von Add "
+"Customer Plugin."
+
+#. Author of the plugin
+msgid "Dan's Art"
+msgstr "Dan's Art"
+
+#. Author URI of the plugin
+msgid "http://dev.dans-art.ch"
+msgstr "http://dev.dans-art.ch"
+
+#: include/tools/helper.php:150
+msgid "Log Type not found!"
+msgstr "Log-Typ nicht gefunden."
+
+#: include/tools/helper.php:145
+msgid ""
+"New User could not be added by Add Customer Plugin. Please contact the "
+"Plugin Author."
+msgstr ""
+"Neues Nutzerkonto konnte nicht durch das Add Customer Plugin hinzugefügt "
+"werden. Bitte benachrichtige den Plugin Author."
+
+# Checkbox Name
+#: include/classes/wac-admin.php:160
+msgid "Save as new customer"
+msgstr "Speichere neuen Kunden"

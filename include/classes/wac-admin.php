@@ -35,6 +35,10 @@ class woo_add_customer_admin extends woo_add_customer_helper
         if (isset($_REQUEST['wac_add_customer']) and $_REQUEST['wac_add_customer'] == 'true') {
             $email = isset($_REQUEST['_billing_email']) ? sanitize_email($_REQUEST['_billing_email']) : false;
             $existing_user = get_user_by('email', $email);
+            if(empty($_REQUEST['_billing_first_name']) AND empty($_REQUEST['_billing_last_name'])){
+                $this -> log_event("no_name");
+                return false;
+            }
             if ($existing_user === false) {
                 $new_customer_id = $this->wac_add_customer($email, $order_id);
                 if ($new_customer_id) {
@@ -63,7 +67,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
         $user_first = (isset($_REQUEST['_billing_first_name']) and !empty($_REQUEST['_billing_first_name'])) ? sanitize_text_field($_REQUEST['_billing_first_name']) : '';
         $user_last = (isset($_REQUEST['_billing_last_name']) and !empty($_REQUEST['_billing_last_name'])) ? sanitize_text_field($_REQUEST['_billing_last_name']) : '';
         $user = $this->wac_get_unique_user($user_first . '.' . $user_last);
-
+        
         if (empty($email)) {
             //create new 'fake' email
             $email = $this->create_fake_email($user);
@@ -76,7 +80,10 @@ class woo_add_customer_admin extends woo_add_customer_helper
                 $user_data = array('ID' => $user_id,'first_name' => $user_first, 'last_name' => $user_last);
                 wp_update_user($user_data);
                 $this->wac_add_customer_meta($user_id);
+                $this -> log_event("added_user", $user, $email);
                 return (integer) $user_id;
+            }else{
+                $this -> log_event("failed_to_add_user", $user_id, $user, $email);
             }
         }
         return false;
@@ -121,13 +128,13 @@ class woo_add_customer_admin extends woo_add_customer_helper
         $user = strtolower($user);
         $existing_user = get_user_by('login', $user);
         if ($existing_user === false) {
-            return $user;
+            return sanitize_user($user, true);
         } else {
             $user_add = 1;
             while (get_user_by('login', $user . '_' . $user_add) !== false) {
                 $user_add++;
             }
-            return $user . '_' . $user_add;
+            return sanitize_user($user . '_' . $user_add, true);
         }
     }
 

@@ -26,7 +26,7 @@ function l($msg)
 
 class woo_add_customer_helper
 {
-    protected $version = '1.0';
+    protected $version = '1.1';
     //public $admin_notices = array();
 
     public function __construct()
@@ -43,13 +43,14 @@ class woo_add_customer_helper
     public function create_fake_email($username = null)
     {
         $urlparts = parse_url(home_url());
-        $domain_name = $urlparts['host'];
+        $domain_name = ($urlparts['host'] !== 'localhost') ? $urlparts['host'] : 'local.host';
         $number = '';
         $name = (!empty($username)) ? sanitize_user($username) : wp_generate_password(5, false);
         while (get_user_by('email', $name . $number . '@' . $domain_name) !== false) {
             $number = (int)($number === '') ? 1 : $number++;
         }
-        return $name . $number . '@' . $domain_name;
+        $email = $name . $number . '@' . $domain_name;
+        return filter_var($email, FILTER_SANITIZE_EMAIL);
     }
 
     /**
@@ -120,5 +121,54 @@ class woo_add_customer_helper
     public function wac_enqueue_admin_style()
     {
         wp_enqueue_style('wac-admin', get_option('siteurl') . '/wp-content/plugins/add-customer-for-woocommerce/style/admin-style.css');
+    }
+
+    /**
+     * Logs Events to the Simple History Plugin and to the PHP Error Log on error.
+     * Some Errors get displayed to the user
+     * 
+     * @param string $log_type - The log type. Allowed types: added_user, failed_to_add_user
+     * @param mixed $args - Args for the vspringf() Function. String or Int 
+     * 
+     */
+    public function log_event($log_type, ...$args)
+    {
+        $additional_log = array();
+        $print_log = false;
+        switch ($log_type) {
+            case 'added_user':
+                $message = __('Added User "%s <%s>" by Add Customer', 'wac');
+                $print_log = vsprintf($message, $args);
+                break;
+            case 'no_name':
+                $message = __('Could not save user. No Name provided - Add Customer.', 'wac');
+                break;
+            case 'failed_to_add_user':
+                $message = __('New User could not be added by Add Customer Plugin. Please contact the Plugin Author.', 'wac');
+                $additional_log = array('wc_create_new_customer' => $args[0], 'user' => $args[1], 'email' => $args[2]);
+                error_log($message . " - " . json_encode($args)); //Prints the args with the error message from wc_create_new_customer to the error log
+                $print_log = $message;
+                break;
+            default:
+                $message = __('Log Type not found!', 'wac');
+                break;
+        }
+        $msg_trans = vsprintf($message, $args);
+        if ($print_log) {
+            $this->display_message($print_log);
+        }
+        apply_filters('simple_history_log', $msg_trans, $additional_log);
+    }
+
+    /**
+     * Prints out a Woocommerce Admin notice to the user.
+     * @param string $msg - Message to display
+     */
+    public function display_message($msg)
+    {
+        $adminnotice = new WC_Admin_Notices();
+        $adminnotice->add_custom_notice("wac_notice",$msg);
+        //$adminnotice->output_custom_notices();
+        return;
     }
 }

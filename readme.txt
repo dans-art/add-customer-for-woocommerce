@@ -6,7 +6,7 @@ Tags: woocommerce, customer
 Donate link: https://paypal.me/dansart13
 Requires at least: 5.5.3
 Stable tag: 5.5.3
-Tested up to: 5.5.3
+Tested up to: 5.7.2
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -18,6 +18,14 @@ It creates a new user based of the billing data. If no e-mail is provided, it wi
 
 Required Plugins: WooCommerce 4.7.0 or higher
 
+= [1.0] 2020-11-24 =
+
+* Added Error logging
+* Error and success messages will be saved in the error_log and printed by Simple History
+* Fixed: Error when no firstname and not lastname was provided
+* Fixed: Error when domainname is "localhost"
+* Added 4 new Language strings
+* Admin / Editor gets message if creation of the new user was successful or not
 
 = [1.0] 2020-11-24 =
 
