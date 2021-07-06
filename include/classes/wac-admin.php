@@ -9,17 +9,25 @@
 class woo_add_customer_admin extends woo_add_customer_helper
 {
 
+    protected $adminnotice = null; //Variable for the WC_Admin_Notices
+
 
     /**
      * Add the Actions
      */
     public function __construct()
     {
+        //Remove all Admin Notices
+        if(class_exists('WC_Admin_Notices')){
+            $this -> adminnotice = new WC_Admin_Notices();
+        }
         add_action('init', [$this, 'wac_load_textdomain']); //load language 
         add_action('admin_init', [$this, 'wac_add_settings_section_init']);
         add_action('woocommerce_admin_order_data_after_billing_address', [$this, 'wac_add_checkbox'], 10, 1);
         add_action('woocommerce_created_customer', [$this, 'wac_disable_new_customer_mail'], 1, 1);
         add_action('woocommerce_process_shop_order_meta', [$this, 'wac_save_order'], 99, 2);
+
+
     }
 
     /**

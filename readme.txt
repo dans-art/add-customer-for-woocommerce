@@ -21,11 +21,12 @@ Required Plugins: WooCommerce 4.7.0 or higher
 = [1.1] 2021-07-06 =
 
 * Added Error logging
-* Error and success messages will be saved in the error_log and printed by Simple History
-* Fixed: Error when no firstname and not lastname was provided
+* Error messages will be saved in the error_log
+* Error and success messages will be added to the Log of the Simple History Plugin
+* Fixed: Error when no first name and no last name was provided
 * Fixed: Error when domainname is "localhost"
 * Added 4 new Language strings
-* Admin / Editor gets message if creation of the new user was successful or not
+* Admin/Editor gets message if creation of the new user was not successful. Check error_log for details.
 
 = [1.0] 2020-11-24 =
 

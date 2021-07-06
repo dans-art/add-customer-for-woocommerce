@@ -138,7 +138,6 @@ class woo_add_customer_helper
         switch ($log_type) {
             case 'added_user':
                 $message = __('Added User "%s <%s>" by Add Customer', 'wac');
-                $print_log = vsprintf($message, $args);
                 break;
             case 'no_name':
                 $message = __('Could not save user. No Name provided - Add Customer.', 'wac');
@@ -166,9 +165,8 @@ class woo_add_customer_helper
      */
     public function display_message($msg)
     {
-        $adminnotice = new WC_Admin_Notices();
-        $adminnotice->add_custom_notice("wac_notice",$msg);
-        //$adminnotice->output_custom_notices();
+        $this -> adminnotice ->add_custom_notice("wac_notice",$msg);
+        $this -> adminnotice->output_custom_notices();
         return;
     }
 }
