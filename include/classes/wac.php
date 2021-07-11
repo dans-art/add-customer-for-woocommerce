@@ -10,10 +10,11 @@
 class woo_add_customer extends woo_add_customer_helper
 {
 
-
+    public $plugin_path = "";
 
     public function __construct()
     {
+        $this -> plugin_path = WP_PLUGIN_DIR . '/add-customer-for-woocommerce/';
     }
     /**
      * Loads the admin class

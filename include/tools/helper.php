@@ -57,14 +57,18 @@ class woo_add_customer_helper
      * Disables sending emails to the customer while creating a new user.
      *
      * @param integer $customer_id - Customer ID
-     * @return void
+     * @return bool true if emails got disabled, false if emails get send.
      */
     public function wac_disable_new_customer_mail($customer_id)
     {
         if (isset($_REQUEST['wac_add_customer']) and $_REQUEST['wac_add_customer'] === 'true') {
+            if($this -> get_wac_option('wac_send_notification') === 'yes'){
+                return false;
+            }
             add_filter('woocommerce_email_enabled_customer_new_account', function ($enabled, $user, $email) {
                 return false; //$enabled = false;
             }, 10, 3);
+            return true;
         }
     }
     /**
@@ -130,6 +134,7 @@ class woo_add_customer_helper
      * @param string $log_type - The log type. Allowed types: added_user, failed_to_add_user
      * @param mixed $args - Args for the vspringf() Function. String or Int 
      * 
+     * @return void
      */
     public function log_event($log_type, ...$args)
     {
@@ -157,16 +162,59 @@ class woo_add_customer_helper
             $this->display_message($print_log);
         }
         apply_filters('simple_history_log', $msg_trans, $additional_log);
+        return;
     }
 
     /**
      * Prints out a Woocommerce Admin notice to the user.
      * @param string $msg - Message to display
+     * 
+     * @return void
      */
     public function display_message($msg)
     {
         $this -> adminnotice ->add_custom_notice("wac_notice",$msg);
         $this -> adminnotice->output_custom_notices();
         return;
+    }
+
+    /**
+     * Loads template to variable.
+     * @param string $template_name - Name of the template without extension
+     * @param string $subfolder - Name of the Subfolder(s). Base folder is Plugin_dir/templates/
+     * @param string $template_args - Arguments to pass to the template
+     * 
+     * @return string Template content or eror Message
+     */
+    public function load_template_to_var(string $template_name = '', string $subfolder = '', ...$template_args){
+        $args = get_defined_vars();
+        $path = $this -> plugin_path . 'templates/' . $subfolder . $template_name . '.php';
+        if(file_exists($path)){
+            ob_start();
+            include($path);
+            $output_string = ob_get_contents();
+            ob_end_clean();
+            wp_reset_postdata();
+            return $output_string;
+        }
+        return sprintf(__('Template "%s" not found!', 'plek'),$template_name);
+    }
+
+    /**
+     * Get the option value of the wac options
+     * @param string $template_args - Arguments to pass to the template
+     * 
+     * @return mixed Option value or Null, if option is not found
+     */
+    public function get_wac_option(string $options_name = '')
+    {
+        $options = get_option('wac_general_options');
+        if (empty($options_name)) {
+            return null;
+        }
+        if (empty($options[$options_name])) {
+            return null;
+        }
+        return $options[$options_name];
     }
 }
