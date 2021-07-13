@@ -1,3 +1,11 @@
+<?php
+/**
+ * This Template renders the backend page of the settings.
+ * Wordpress Backend -> Settings -> Add Customer Settings
+ * 
+ * @version 1.1
+ */
+?>
 <h2><?php echo __('Add Customer for Woocommerce Settings','wac');?></h2>
 
 

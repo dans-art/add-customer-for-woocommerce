@@ -8,22 +8,6 @@
  *
  */
 
-//Include a better debugger
-include_once('kint.phar');
-
-/**
- * Outputs the message as a Json to the error log
- * For easier debugging
- *
- * @param mixed $msg - Any Object, Array or String
- * @return void
- */
-function l($msg)
-{
-    error_log(json_encode($msg));
-}
-
-
 class woo_add_customer_helper
 {
     protected $version = '1.1';
@@ -36,7 +20,7 @@ class woo_add_customer_helper
 
     /**
      * Creates a fake email with the domain of the site.
-     * It is recomended to setup a catch-all email
+     * It is recommended to setup a catch-all email
      *
      * @param string $username - A username to start with or null
      * @return void
@@ -220,7 +204,15 @@ class woo_add_customer_helper
         return $options[$options_name];
     }
 
-
+    /**
+     * Sends a email with username and password to the new customer
+     *  @param string $email - The email address of the recipient
+     *  @param string $name - The first name of the user
+     *  @param string $password - the password of the user
+     * 
+     *  @return bool true on success, false on error.
+     * 
+     */
     public function send_mail_to_new_customer(string $email = '', string $name = '', string $password = '')
     {
         $mailer = WC()->mailer();

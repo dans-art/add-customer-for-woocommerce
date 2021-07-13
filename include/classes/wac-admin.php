@@ -66,7 +66,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
     }
 
     /**
-     * Adds a new Customer and saves the billing and shipping adress of the current order
+     * Adds a new Customer and saves the billing and shipping address of the current order
      *
      * @param string $email - email of new user
      * @param integer $order_id - Order ID
@@ -93,7 +93,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
                 wp_update_user($user_data);
                 $this->wac_add_customer_meta($user_id);
                 $this->log_event("added_user", $user, $email);
-                //Check if User notification shold be send or not. If so, send email with login information.
+                //Check if User notification should be send or not. If so, send email with login information.
                 if ($this->get_wac_option('wac_send_notification') === 'yes') {
                     $send = $this->send_mail_to_new_customer($email, $user_first, $password);
                     if (!$send) {
@@ -134,7 +134,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
 
     /**
      * Creates a unique username
-     * Adds nummers at the end till the name is unique.
+     * Adds numbers at the end till the name is unique.
      *
      * @param string $user - The username you like to have
      * @return string The new username, or the existing one, if it is unique already
@@ -158,7 +158,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
     }
 
     /**
-     * Adds the chechbox with a id of "wac_add_customer"
+     * Adds the checkbox with a id of "wac_add_customer"
      * Only displays if no customer is linked with the order
      * Includes the style for admin page
      *

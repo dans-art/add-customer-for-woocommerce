@@ -20,7 +20,7 @@ require_once('include/classes/wac.php');
 require_once('include/classes/wac-admin.php');
 require_once('include/classes/wac-backend.php');
 
-//Make sure all other Plugins are loaded, befor running this.
+//Make sure all other Plugins are loaded, before running this.
 add_action('plugins_loaded', function(){
     $wac = new woo_add_customer();
     $wac->wac_admin_init();

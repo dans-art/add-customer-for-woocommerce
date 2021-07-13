@@ -2,7 +2,7 @@
 /**
  * New Account notification email
  * This email is getting send, when a new user is created by Add Customer for Woocommerce.
- * For this to happen, you have to activate the option in Settings -> Add Customer Settings -> Send Notifications to new user
+ * For this to happen, you have to activate the option in Wordpress Backend -> Settings -> Add Customer Settings -> Send Notifications to new user
  * 
  * @version 1.1
  */
@@ -19,7 +19,7 @@ $account_link = make_clickable(esc_url(wc_get_page_permalink('myaccount')));
 do_action('woocommerce_email_header', esc_html__('New account created', 'wac'), 'header_email'); ?>
 
 <h1><?php echo sprintf(esc_html__('Hi, %s', 'wac'), $name); ?></h1>
-<p><?php echo sprintf(esc_html__('A new account on %s got created. You can login with the following credentials:', 'wac'), $site); ?></p>
+<p><?php echo sprintf(esc_html__('Your account on %s got created. You can login with the following credentials:', 'wac'), $site); ?></p>
 <p><?php echo sprintf(esc_html__('Email: %s', 'wac'), $email); ?><br />
     <?php echo sprintf(esc_html__('Password: %s', 'wac'), $password); ?></p>
 
