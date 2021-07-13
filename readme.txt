@@ -33,7 +33,7 @@ If you like the Plugin, please leave some Stars or spend me a coffee. Thanks!
 1. The billing part of a new order. With the checkbox selected, it will create a new user.
 2. The order after saving. A new customer was created and assigned to the order.
 
-= [1.1] 2021-07-06 =
+= [1.1] 2021-07-13 =
 
 * Added Error logging
 * Error messages will be saved in the error_log
@@ -42,6 +42,9 @@ If you like the Plugin, please leave some Stars or spend me a coffee. Thanks!
 * Fixed: Error when domainname is "localhost"
 * Added 4 new Language strings
 * Admin/Editor gets message if creation of the new user was not successful. Check error_log for details.
+* Added Option Menu
+* Added Option to send user notification
+* Added Option to select the checkbox by default
 
 = [1.0] 2020-11-24 =
 

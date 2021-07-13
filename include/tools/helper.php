@@ -27,6 +27,7 @@ function l($msg)
 class woo_add_customer_helper
 {
     protected $version = '1.1';
+    public $plugin_path = '';
     //public $admin_notices = array();
 
     public function __construct()
@@ -62,9 +63,6 @@ class woo_add_customer_helper
     public function wac_disable_new_customer_mail($customer_id)
     {
         if (isset($_REQUEST['wac_add_customer']) and $_REQUEST['wac_add_customer'] === 'true') {
-            if($this -> get_wac_option('wac_send_notification') === 'yes'){
-                return false;
-            }
             add_filter('woocommerce_email_enabled_customer_new_account', function ($enabled, $user, $email) {
                 return false; //$enabled = false;
             }, 10, 3);
@@ -147,6 +145,9 @@ class woo_add_customer_helper
             case 'no_name':
                 $message = __('Could not save user. No Name provided - Add Customer.', 'wac');
                 break;
+            case 'failed_to_send_user_mail':
+                $message = __('Failed to send email notification to user - Add Customer.', 'wac');
+                break;
             case 'failed_to_add_user':
                 $message = __('New User could not be added by Add Customer Plugin. Please contact the Plugin Author.', 'wac');
                 $additional_log = array('wc_create_new_customer' => $args[0], 'user' => $args[1], 'email' => $args[2]);
@@ -173,8 +174,8 @@ class woo_add_customer_helper
      */
     public function display_message($msg)
     {
-        $this -> adminnotice ->add_custom_notice("wac_notice",$msg);
-        $this -> adminnotice->output_custom_notices();
+        $this->adminnotice->add_custom_notice("wac_notice", $msg);
+        $this->adminnotice->output_custom_notices();
         return;
     }
 
@@ -186,10 +187,11 @@ class woo_add_customer_helper
      * 
      * @return string Template content or eror Message
      */
-    public function load_template_to_var(string $template_name = '', string $subfolder = '', ...$template_args){
+    public function load_template_to_var(string $template_name = '', string $subfolder = '', ...$template_args)
+    {
         $args = get_defined_vars();
-        $path = $this -> plugin_path . 'templates/' . $subfolder . $template_name . '.php';
-        if(file_exists($path)){
+        $path = $this->plugin_path . 'templates/' . $subfolder . $template_name . '.php';
+        if (file_exists($path)) {
             ob_start();
             include($path);
             $output_string = ob_get_contents();
@@ -197,7 +199,7 @@ class woo_add_customer_helper
             wp_reset_postdata();
             return $output_string;
         }
-        return sprintf(__('Template "%s" not found!', 'plek'),$template_name);
+        return sprintf(__('Template "%s" not found! (%s)', 'plek'), $template_name, $path);
     }
 
     /**
@@ -216,5 +218,20 @@ class woo_add_customer_helper
             return null;
         }
         return $options[$options_name];
+    }
+
+
+    public function send_mail_to_new_customer(string $email = '', string $name = '', string $password = '')
+    {
+        $mailer = WC()->mailer();
+        $blog_name = get_bloginfo('name');
+        $message = $this->load_template_to_var('new-account', 'email/', $email, $name, $password, $blog_name);
+        $template = 'new-account.php';
+
+        $subject = sprintf(__("New account created at %s", 'wac'), $blog_name);
+        $headers = "Content-Type: text/html\r\n";
+        //Send email
+        $send = $mailer->send($email, $subject, $message, $headers);
+        return $send;
     }
 }

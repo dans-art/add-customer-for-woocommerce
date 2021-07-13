@@ -18,6 +18,7 @@
 require_once('include/tools/helper.php');
 require_once('include/classes/wac.php');
 require_once('include/classes/wac-admin.php');
+require_once('include/classes/wac-backend.php');
 
 //Make sure all other Plugins are loaded, befor running this.
 add_action('plugins_loaded', function(){

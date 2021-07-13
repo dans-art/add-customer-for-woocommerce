@@ -7,6 +7,6 @@
     settings_fields('wac_general_options'); 
     do_settings_sections('wac_general_options');
     
-    submit_button(); 
+    submit_button();
     ?>
 </form>

@@ -17,6 +17,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
      */
     public function __construct()
     {
+        $this->plugin_path = WP_PLUGIN_DIR . '/add-customer-for-woocommerce/';
         //Remove all Admin Notices
         if (class_exists('WC_Admin_Notices')) {
             $this->adminnotice = new WC_Admin_Notices();
@@ -27,8 +28,9 @@ class woo_add_customer_admin extends woo_add_customer_helper
         add_action('woocommerce_process_shop_order_meta', [$this, 'wac_save_order'], 99, 2);
 
         //Add Admin Menu
-        add_action('admin_menu', [$this, 'setup_options']);
-        add_action('admin_init', [$this, 'wac_register_settings']);
+        $backend_class = new woo_add_customer_backend;
+        add_action('admin_menu', [$backend_class, 'setup_options']);
+        add_action('admin_init', [$backend_class, 'wac_register_settings']);
     }
 
     /**
@@ -76,6 +78,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
         $user_first = (isset($_REQUEST['_billing_first_name']) and !empty($_REQUEST['_billing_first_name'])) ? sanitize_text_field($_REQUEST['_billing_first_name']) : '';
         $user_last = (isset($_REQUEST['_billing_last_name']) and !empty($_REQUEST['_billing_last_name'])) ? sanitize_text_field($_REQUEST['_billing_last_name']) : '';
         $user = $this->wac_get_unique_user($user_first . '.' . $user_last);
+        $password = wp_generate_password();
 
         if (empty($email)) {
             //create new 'fake' email
@@ -84,12 +87,19 @@ class woo_add_customer_admin extends woo_add_customer_helper
         }
 
         if ($user !== false) {
-            $user_id = wc_create_new_customer($email, $user, wp_generate_password());
+            $user_id = wc_create_new_customer($email, $user, $password);
             if (is_integer($user_id)) {
                 $user_data = array('ID' => $user_id, 'first_name' => $user_first, 'last_name' => $user_last);
                 wp_update_user($user_data);
                 $this->wac_add_customer_meta($user_id);
                 $this->log_event("added_user", $user, $email);
+                //Check if User notification shold be send or not. If so, send email with login information.
+                if ($this->get_wac_option('wac_send_notification') === 'yes') {
+                    $send = $this->send_mail_to_new_customer($email, $user_first, $password);
+                    if (!$send) {
+                        $this->log_event("failed_to_send_user_mail");
+                    }
+                }
                 return (int) $user_id;
             } else {
                 $this->log_event("failed_to_add_user", $user_id, $user, $email);
@@ -171,79 +181,5 @@ class woo_add_customer_admin extends woo_add_customer_helper
             </p>
         </div>
 <?php
-    }
-
-    /**
-     * Adds the Settings page in the Wordpress backend.
-     *
-     * @return void
-     */
-    public function setup_options()
-    {
-        $title = __('Add Customer Settings', 'wac');
-        add_options_page($title, $title, 'manage_options', 'wac-options', [$this, 'render_options']);
-    }
-
-    /**
-     * Loads the backend page template /template/backend/backend-options-page.php
-     *
-     * @return void
-     */
-    public function render_options()
-    {
-        $wac = new woo_add_customer();
-        echo $wac->load_template_to_var('backend-options-page', 'backend/');
-        return;
-    }
-
-    /**
-     * Registers the settings for the Page. 
-     *
-     * @return void
-     */
-    public function wac_register_settings()
-    {
-
-        register_setting('wac_general_options', 'wac_general_options', [$this, 'wac_options_validate']);
-
-        add_settings_section('wac_main_settings', __('Main Settings', 'wac'), null, 'wac_general_options');
-
-        add_settings_field('wac_preselect', __('Selected by default', 'wac'), [$this, 'get_settings_option'], 'wac_general_options', 'wac_main_settings', array('label_for' => 'wac_preselect', 'type' => 'checkbox', 'class' => 'wac_preselect'));
-        add_settings_field('wac_send_notification', __('Send Notifications to new user', 'wac'), [$this, 'get_settings_option'], 'wac_general_options', 'wac_main_settings', array('label_for' => 'wac_send_notification', 'type' => 'checkbox', 'class' => 'wac_preselect'));
-    }
-
-    /**
-     * Validates the Input of the options page
-     * @todo Validate the inputs
-     *
-     * @param [type] $input
-     * @return void
-     */
-    public function wac_options_validate($input)
-    {
-        return $input;
-    }
-
-    /**
-     * Loads the Options as html tags. 
-     *
-     * @param [array] $args
-     * @return void
-     */
-    public function get_settings_option(array $args)
-    {
-        extract($args);
-        $options = (array) get_option('wac_general_options');
-        $options_val = (isset($options[$label_for])) ? $options[$label_for] : '';
-        switch ($type) {
-            case 'checkbox':
-                $checked = ($options_val === 'yes') ? 'checked' : '';
-                echo "<input id='$label_for' name='wac_general_options[$label_for]' type='checkbox' value='yes' $checked />";
-                break;
-
-            default:
-                # code...
-                break;
-        }
     }
 }

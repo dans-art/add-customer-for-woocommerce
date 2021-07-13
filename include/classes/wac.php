@@ -7,10 +7,11 @@
  * Author URI: http://dev.dans-art.ch
  *
  */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 class woo_add_customer extends woo_add_customer_helper
 {
-
-    public $plugin_path = "";
 
     public function __construct()
     {
