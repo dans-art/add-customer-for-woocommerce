@@ -9,17 +9,28 @@
 class woo_add_customer_admin extends woo_add_customer_helper
 {
 
+    protected $adminnotice = null; //Variable for the WC_Admin_Notices
+
 
     /**
      * Add the Actions
      */
     public function __construct()
     {
+        $this->plugin_path = WP_PLUGIN_DIR . '/add-customer-for-woocommerce/';
+        //Remove all Admin Notices
+        if (class_exists('WC_Admin_Notices')) {
+            $this->adminnotice = new WC_Admin_Notices();
+        }
         add_action('init', [$this, 'wac_load_textdomain']); //load language 
-        add_action('admin_init', [$this, 'wac_add_settings_section_init']);
         add_action('woocommerce_admin_order_data_after_billing_address', [$this, 'wac_add_checkbox'], 10, 1);
         add_action('woocommerce_created_customer', [$this, 'wac_disable_new_customer_mail'], 1, 1);
         add_action('woocommerce_process_shop_order_meta', [$this, 'wac_save_order'], 99, 2);
+
+        //Add Admin Menu
+        $backend_class = new woo_add_customer_backend;
+        add_action('admin_menu', [$backend_class, 'setup_options']);
+        add_action('admin_init', [$backend_class, 'wac_register_settings']);
     }
 
     /**
@@ -35,6 +46,10 @@ class woo_add_customer_admin extends woo_add_customer_helper
         if (isset($_REQUEST['wac_add_customer']) and $_REQUEST['wac_add_customer'] == 'true') {
             $email = isset($_REQUEST['_billing_email']) ? sanitize_email($_REQUEST['_billing_email']) : false;
             $existing_user = get_user_by('email', $email);
+            if (empty($_REQUEST['_billing_first_name']) and empty($_REQUEST['_billing_last_name'])) {
+                $this->log_event("no_name");
+                return false;
+            }
             if ($existing_user === false) {
                 $new_customer_id = $this->wac_add_customer($email, $order_id);
                 if ($new_customer_id) {
@@ -51,7 +66,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
     }
 
     /**
-     * Adds a new Customer and saves the billing and shipping adress of the current order
+     * Adds a new Customer and saves the billing and shipping address of the current order
      *
      * @param string $email - email of new user
      * @param integer $order_id - Order ID
@@ -63,6 +78,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
         $user_first = (isset($_REQUEST['_billing_first_name']) and !empty($_REQUEST['_billing_first_name'])) ? sanitize_text_field($_REQUEST['_billing_first_name']) : '';
         $user_last = (isset($_REQUEST['_billing_last_name']) and !empty($_REQUEST['_billing_last_name'])) ? sanitize_text_field($_REQUEST['_billing_last_name']) : '';
         $user = $this->wac_get_unique_user($user_first . '.' . $user_last);
+        $password = wp_generate_password();
 
         if (empty($email)) {
             //create new 'fake' email
@@ -71,12 +87,22 @@ class woo_add_customer_admin extends woo_add_customer_helper
         }
 
         if ($user !== false) {
-            $user_id = wc_create_new_customer($email, $user, wp_generate_password());
+            $user_id = wc_create_new_customer($email, $user, $password);
             if (is_integer($user_id)) {
-                $user_data = array('ID' => $user_id,'first_name' => $user_first, 'last_name' => $user_last);
+                $user_data = array('ID' => $user_id, 'first_name' => $user_first, 'last_name' => $user_last);
                 wp_update_user($user_data);
                 $this->wac_add_customer_meta($user_id);
-                return (integer) $user_id;
+                $this->log_event("added_user", $user, $email);
+                //Check if User notification should be send or not. If so, send email with login information.
+                if ($this->get_wac_option('wac_send_notification') === 'yes') {
+                    $send = $this->send_mail_to_new_customer($email, $user_first, $password);
+                    if (!$send) {
+                        $this->log_event("failed_to_send_user_mail");
+                    }
+                }
+                return (int) $user_id;
+            } else {
+                $this->log_event("failed_to_add_user", $user_id, $user, $email);
             }
         }
         return false;
@@ -99,7 +125,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
         );
         foreach ($fields as $f_name) {
             $f_value = (isset($_REQUEST['_' . $f_name]) and !empty($_REQUEST['_' . $f_name])) ? sanitize_text_field($_REQUEST['_' . $f_name]) : false;
-            if ($f_value !== false) { 
+            if ($f_value !== false) {
                 update_user_meta($user_id, $f_name, $f_value);
             }
         }
@@ -108,7 +134,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
 
     /**
      * Creates a unique username
-     * Adds nummers at the end till the name is unique.
+     * Adds numbers at the end till the name is unique.
      *
      * @param string $user - The username you like to have
      * @return string The new username, or the existing one, if it is unique already
@@ -121,18 +147,18 @@ class woo_add_customer_admin extends woo_add_customer_helper
         $user = strtolower($user);
         $existing_user = get_user_by('login', $user);
         if ($existing_user === false) {
-            return $user;
+            return sanitize_user($user, true);
         } else {
             $user_add = 1;
             while (get_user_by('login', $user . '_' . $user_add) !== false) {
                 $user_add++;
             }
-            return $user . '_' . $user_add;
+            return sanitize_user($user . '_' . $user_add, true);
         }
     }
 
     /**
-     * Adds the chechbox with a id of "wac_add_customer"
+     * Adds the checkbox with a id of "wac_add_customer"
      * Only displays if no customer is linked with the order
      * Includes the style for admin page
      *
@@ -145,11 +171,12 @@ class woo_add_customer_admin extends woo_add_customer_helper
             return false;
         }
 
-        $this -> wac_enqueue_admin_style();
+        $this->wac_enqueue_admin_style();
+        $checked = ($this->get_wac_option('wac_preselect') === 'yes') ? 'checked' : '';
 ?>
         <div id='wac_add_customer_con' class="edit_address">
             <p class="wac_add_customer_field ">
-                <input type="checkbox" name="wac_add_customer" id="wac_add_customer" value="true" placeholder="">
+                <input type="checkbox" name="wac_add_customer" id="wac_add_customer" value="true" placeholder="" <?php echo $checked; ?>>
                 <label for="wac_add_customer"><?php echo __('Save as new customer', 'wac'); ?></label>
             </p>
         </div>
