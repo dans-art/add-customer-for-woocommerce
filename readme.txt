@@ -20,6 +20,10 @@ Especially useful if the client is ordering via phone or email and you like to t
 It adds a simple checkbox at the end of the billing address. If checked it will create a new user with the role \"customer\".
 If no e-mail is provided, it will create a unique one for you. It uses your sites domain as domain part and the name as name part. Like so; firstname.lastname]@your-site.com.
 The newly created user will not get any emails while creating the account, but he will eventually on order change. 
+
+Settings Menu:
+Settings -> Add Customer Settings
+
 Required Plugins: WooCommerce 4.7.0 or higher
 
 If you like the Plugin, please leave some Stars or spend me a coffee. Thanks!
@@ -34,7 +38,7 @@ If you like the Plugin, please leave some Stars or spend me a coffee. Thanks!
 2. The order after saving. A new customer was created and assigned to the order.
 3. The settings menu
 
-= [1.1] 2021-07-13 =
+= [1.1] 2021-07-18 =
 
 * Added Error logging
 * Error messages will be saved in the error_log
