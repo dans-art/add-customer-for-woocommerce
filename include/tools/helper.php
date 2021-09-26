@@ -10,7 +10,7 @@
 
 class woo_add_customer_helper
 {
-    protected $version = '1.1';
+    protected $version = '1.2';
     public $plugin_path = '';
     //public $admin_notices = array();
 
@@ -106,7 +106,18 @@ class woo_add_customer_helper
      */
     public function wac_enqueue_admin_style()
     {
-        wp_enqueue_style('wac-admin', get_option('siteurl') . '/wp-content/plugins/add-customer-for-woocommerce/style/admin-style.css');
+        wp_enqueue_style('wac-admin-style', get_option('siteurl') . '/wp-content/plugins/add-customer-for-woocommerce/style/admin-style.css');
+    }
+
+    /**
+     * Enqueue the scripts of the plugin
+     * Located at: plugins/add-customer-for-woocommerce/include/js/wac-main-script.min.js
+     *
+     * @return void
+     */
+    public function wac_enqueue_admin_scripts()
+    {
+        wp_enqueue_script('wac-admin-script', get_option('siteurl') . '/wp-content/plugins/add-customer-for-woocommerce/include/js/wac-main-script.min.js', array('jquery'));
     }
 
     /**

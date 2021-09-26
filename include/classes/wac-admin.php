@@ -172,12 +172,18 @@ class woo_add_customer_admin extends woo_add_customer_helper
         }
 
         $this->wac_enqueue_admin_style();
+        $this->wac_enqueue_admin_scripts();
         $checked = ($this->get_wac_option('wac_preselect') === 'yes') ? 'checked' : '';
+        $checked_notify = ($this->get_wac_option('wac_send_notification') === 'yes') ? 'checked' : '';
 ?>
         <div id='wac_add_customer_con' class="edit_address">
             <p class="wac_add_customer_field ">
                 <input type="checkbox" name="wac_add_customer" id="wac_add_customer" value="true" placeholder="" <?php echo $checked; ?>>
                 <label for="wac_add_customer"><?php echo __('Save as new customer', 'wac'); ?></label>
+            </p>
+            <p class="wac_add_customer_notify_field" style="display: none;">
+                <input type="checkbox" name="wac_add_customer_notify" id="wac_add_customer_notify" value="true" placeholder="" <?php echo $checked_notify; ?>>
+                <label for="wac_add_customer_notify"><?php echo __('Send email to new customer', 'wac'); ?></label>
             </p>
         </div>
 <?php
