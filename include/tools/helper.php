@@ -125,26 +125,38 @@ class woo_add_customer_helper
      * Some Errors get displayed to the user
      * 
      * @param string $log_type - The log type. Allowed types: added_user, failed_to_add_user
+     * @param string $order_id - The order id
      * @param mixed $args - Args for the vspringf() Function. String or Int 
      * 
      * @return void
+     * @todo: update language strings
      */
-    public function log_event($log_type, ...$args)
+    public function log_event($log_type, $order_id, ...$args)
     {
         $additional_log = array();
-        $print_log = false;
+        //$print_log = false;
+        $type = 'null';
+
         switch ($log_type) {
             case 'added_user':
-                $message = __('Added User "%s <%s>" by Add Customer', 'wac');
+                $message = htmlspecialchars(__('Added User "%s <%s>"', 'wac'));
+                $type = 'success';
+                break;
+            case 'email_send':
+                $message = __('Send Email to user "%s"', 'wac');
+                $type = 'success';
                 break;
             case 'no_name':
-                $message = __('Could not save user. No Name provided - Add Customer.', 'wac');
+                $message = __('Could not save user. No Name provided.', 'wac');
+                $type = 'null';
                 break;
             case 'failed_to_send_user_mail':
-                $message = __('Failed to send email notification to user - Add Customer.', 'wac');
+                $message = __('Failed to send email notification to user.', 'wac');
+                $type = 'error';
                 break;
             case 'failed_to_add_user':
                 $message = __('New User could not be added by Add Customer Plugin. Please contact the Plugin Author.', 'wac');
+                $type = 'error';
                 $additional_log = array('wc_create_new_customer' => $args[0], 'user' => $args[1], 'email' => $args[2]);
                 error_log($message . " - " . json_encode($args)); //Prints the args with the error message from wc_create_new_customer to the error log
                 $print_log = $message;
@@ -153,17 +165,23 @@ class woo_add_customer_helper
                 $message = __('Log Type not found!', 'wac');
                 break;
         }
-        $msg_trans = vsprintf($message, $args);
-        if ($print_log) {
-            $this->display_message($print_log);
+        if(!empty($args)){
+            $msg_trans = vsprintf($message, $args);
+        }else{
+            $msg_trans = $message;
         }
-        apply_filters('simple_history_log', $msg_trans, $additional_log);
+        /*if ($print_log) {
+            $this->display_message($print_log);
+        }*/
+        apply_filters('simple_history_log', "{$msg_trans} - by Add Customer", $additional_log);
+        $this->wac_set_notice($msg_trans, $type, $order_id);
         return;
     }
 
     /**
      * Prints out a Woocommerce Admin notice to the user.
      * @param string $msg - Message to display
+     * @todo: remove function?
      * 
      * @return void
      */
@@ -236,5 +254,62 @@ class woo_add_customer_helper
         //Send email
         $send = $mailer->send($email, $subject, $message, $headers);
         return $send;
+    }
+
+    /**
+     * Saves a message to be displayed as an admin_notice
+     *
+     * @param string $notice - The message to display
+     * @param string $type - Type of message (success, error)
+     * @param int $order_id - The order_id / post_id
+     * @return bool True on success, false on error
+     */
+    public function wac_set_notice(string $notice, string $type, $order_id)
+    {
+        $user_id = get_current_user_id();
+        $trans_id = "wac_admin_notice_{$user_id}_{$order_id}";
+        $classes = "";
+        switch ($type) {
+            case 'error':
+                $classes = 'notice notice-error';
+                break;
+            case 'success':
+                $classes = 'notice notice-success';
+                break;
+
+            default:
+                $classes = 'notice';
+                break;
+        }
+        $notice = "<div class='{$classes}'><p>{$notice}</p></div>";
+        $trans_notices = get_transient($trans_id);
+        if (is_array($trans_notices)) {
+            $trans_notices[] = $notice;
+        } else {
+            $trans_notices = array($notice);
+        }
+        return set_transient($trans_id, $trans_notices, 45);
+    }
+
+    /**
+     * Displays the stored messages as admin_notices
+     *
+     * @return void
+     */
+    public function wac_display_notices()
+    {
+        add_action('admin_notices', function () {
+            $user_id = get_current_user_id();
+            $order_id = (!empty($_GET['post'])) ? $_GET['post'] : 0;
+            $trans_id = "wac_admin_notice_{$user_id}_{$order_id}";
+
+            $notices = get_transient($trans_id);
+            if (is_array($notices)) {
+                foreach ($notices as $notice) {
+                    echo $notice;
+                }
+            }
+            delete_transient($trans_id);
+        });
     }
 }
