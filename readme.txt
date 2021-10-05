@@ -50,7 +50,8 @@ If you like the Plugin, please leave some Stars or spend me a coffee. Thanks!
 == Screenshots ==
 1. The billing part of a new order. With the checkbox selected, it will create a new user.
 2. The order after saving. A new customer was created and assigned to the order.
-3. The settings menu
+3. The settings menu.
+4. Email received by the new customer.
 
 == Upgrade Notice ==
 Upload the plugin files to the /wp-content/plugins/add-customer-for-woocommerce directory, or update the plugin through the WordPress plugins screen directly.

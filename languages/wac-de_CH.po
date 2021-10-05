@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Add Customer for WooCommerce\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-22 15:15+0000\n"
-"PO-Revision-Date: 2021-10-05 19:14+0000\n"
+"PO-Revision-Date: 2021-10-05 20:42+0000\n"
 "Last-Translator: \n"
 "Language-Team: Deutsch (Schweiz)\n"
 "Language: de_CH\n"
@@ -34,9 +34,10 @@ msgstr "Kunde hinzufügen"
 msgid "Add new Customer"
 msgstr "Neuen Kunden hinzufügen"
 
-#: include/tools/helper.php:148
+#: include/tools/helper.php:149
 #, php-format
-msgid "Added User \"%s <%s>\""
+#| msgid "Added User \"%s <%s>\""
+msgid "Added customer \"%s <%s>\""
 msgstr "Kunde \"%s <%s>\" hinzugefügt"
 
 #. Description of the plugin
@@ -54,7 +55,7 @@ msgstr ""
 "Wähle dies an, wenn nach der Erstellung des Kontos der Kunde eine \"Konto "
 "erstellt\" email erhalten soll."
 
-#: include/tools/helper.php:156
+#: include/tools/helper.php:157
 #| msgid "Could not save user. No Name provided."
 msgid "Could not save customer. No Name provided."
 msgstr "Konnte Kunden nicht speichern, da kein Name angegeben wurde."
@@ -63,37 +64,42 @@ msgstr "Konnte Kunden nicht speichern, da kein Name angegeben wurde."
 msgid "Dan's Art"
 msgstr "Dan's Art"
 
-#: include/tools/helper.php:145
+#: include/tools/helper.php:146
 #, php-format
 msgid "Email \"%s\" already exists. No new customer got created."
 msgstr ""
 "Die Email Adresse \"%s\" existiert bereits. Es wurde kein neuer Kunde "
 "erstellt."
 
-#: include/tools/helper.php:152
+#: include/tools/helper.php:153
 #, php-format
 msgid "Email send to new customer \"%s\""
 msgstr "Email wurde an den neuen Kunden \"%s\" geschickt"
 
-#: templates/email/new-account.php:23
+#: templates/email/new-account.php:26
 #, php-format
 msgid "Email: %s"
 msgstr "Email: %s"
 
-#: include/tools/helper.php:160
+#: include/tools/helper.php:161
 msgid "Failed to send email notification to customer."
 msgstr "Fehler beim senden der Email Benachrichtigung an den Kunden."
 
-#: templates/email/new-account.php:21
+#: templates/email/new-account.php:24
 #, php-format
 msgid "Hi, %s"
 msgstr "Hallo, %s"
 
 #. Author URI of the plugin
-msgid "http://dev.dans-art.ch"
-msgstr "http://dev.dans-art.ch"
+#| msgid "http://dev.dans-art.ch"
+msgid "https://dev.dans-art.ch"
+msgstr "https://dev.dans-art.ch"
 
-#: include/tools/helper.php:171
+#. URI of the plugin
+msgid "https://dev.dans-art.ch/blog/wordpress/add-customer-for-woocommerce/"
+msgstr "https://dev.dans-art.ch/blog/wordpress/add-customer-for-woocommerce/"
+
+#: include/tools/helper.php:172
 msgid "Log Type not found!"
 msgstr "Log-Typ nicht gefunden."
 
@@ -101,24 +107,27 @@ msgstr "Log-Typ nicht gefunden."
 msgid "Main Settings"
 msgstr "Haupteinstellungen"
 
-#: templates/email/new-account.php:19
+#: templates/email/new-account.php:22
 msgid "New account created"
 msgstr "Neues Konto erstellt"
 
-#: include/tools/helper.php:241
+#: include/tools/helper.php:243
 #, php-format
 msgid "New account created at %s"
 msgstr "Neues Konto erstellt auf %s"
 
-#: include/tools/helper.php:164
+#: include/tools/helper.php:165
+#| msgid ""
+#| "New User could not be added by Add Customer Plugin. Please contact the "
+#| "Plugin Author."
 msgid ""
-"New User could not be added by Add Customer Plugin. Please contact the "
+"New customer could not be added by Add Customer Plugin. Please contact the "
 "Plugin Author."
 msgstr ""
 "Neues Nutzerkonto konnte nicht durch das Add Customer Plugin hinzugefügt "
 "werden. Bitte benachrichtige den Plugin Author."
 
-#: templates/email/new-account.php:24
+#: templates/email/new-account.php:27
 #, php-format
 msgid "Password: %s"
 msgstr "Passwort: %s"
@@ -149,12 +158,12 @@ msgstr "Sende Email an neuen Kunden"
 msgid "Send Notifications to new user"
 msgstr "Sende Nachricht an neuen Kunden"
 
-#: templates/email/new-account.php:26
+#: templates/email/new-account.php:29
 #, php-format
 msgid "To your account: %s"
 msgstr "Zu deinem Konto: %s"
 
-#: templates/email/new-account.php:27
+#: templates/email/new-account.php:30
 msgid ""
 "We recommend changing the password as soon as you have logged in to improve "
 "security."
@@ -162,7 +171,7 @@ msgstr ""
 "Wir empfehlen das Passwort zu ändern, sobald du dich angemeldet hast. Dies "
 "erhöht die Sicherheit deines Kontos."
 
-#: templates/email/new-account.php:22
+#: templates/email/new-account.php:25
 #, php-format
 #| msgid ""
 #| "A new account on %s got created. You can login with the following "

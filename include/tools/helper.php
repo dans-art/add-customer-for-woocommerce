@@ -146,7 +146,7 @@ class woo_add_customer_helper
                 $message = htmlspecialchars(__('Email "%s" already exists. No new customer got created.', 'wac'));
                 break;
             case 'added_user':
-                $message = htmlspecialchars(__('Added User "%s <%s>"', 'wac'));
+                $message = htmlspecialchars(__('Added customer "%s <%s>"', 'wac'));
                 $type = 'success';
                 break;
             case 'email_send':
@@ -162,7 +162,7 @@ class woo_add_customer_helper
                 $type = 'error';
                 break;
             case 'failed_to_add_user':
-                $message = __('New User could not be added by Add Customer Plugin. Please contact the Plugin Author.', 'wac');
+                $message = __('New customer could not be added by Add Customer Plugin. Please contact the Plugin Author.', 'wac');
                 $type = 'error';
                 $additional_log = array('wc_create_new_customer' => $args[0], 'user' => $args[1], 'email' => $args[2]);
                 error_log($message . " - " . json_encode($args)); //Prints the args with the error message from wc_create_new_customer to the error log
