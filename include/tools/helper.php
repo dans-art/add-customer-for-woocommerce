@@ -236,6 +236,7 @@ class woo_add_customer_helper
     {
         $mailer = WC()->mailer();
         $blog_name = get_bloginfo('name');
+        $blog_name = html_entity_decode($blog_name, ENT_QUOTES, 'UTF-8');
         $message = $this->load_template_to_var('new-account', 'email/', $email, $name, $password, $blog_name);
         $template = 'new-account.php';
 
