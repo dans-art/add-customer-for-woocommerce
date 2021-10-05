@@ -5,6 +5,11 @@
  * 
  * @version 1.1
  */
+
+if (!defined('ABSPATH')) {
+    exit; // Exit if accessed directly
+}
+
 ?>
 <h2><?php echo __('Add Customer for Woocommerce Settings','wac');?></h2>
 

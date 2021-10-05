@@ -2,12 +2,25 @@
 
 Contributors: dansart
 Contributors URL: http://dev.dans-art.ch
-Tags: woocommerce, customer
-Donate link: https://paypal.me/dansart13
+Tags: woocommerce, customer, tools, helper
+Plugin URI: https://dev.dans-art.ch/blog/wordpress/add-customer-for-woocommerce/
+Version: 1.2
+
 Requires at least: 5.5.3
-Stable tag: 5.8
-Tested up to: 5.8
+Stable tag: 5.8.1
+Tested up to: 5.8.1
+
+WC requires at least: 4.7.0
+WC tested up to: 5.7.1
+
 Requires PHP: 7.4
+
+Domain Path: /languages
+Text Domain: wac
+Author: Dan's Art
+Author URI: https://dev.dans-art.ch
+Donate link: https://paypal.me/dansart13
+
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -53,6 +66,12 @@ Will the users get a notification of the created account?
 - No, not per default. It can be enabled on the settings page. The Email will send the login credentials including password to the customer.
 
 == Changelog ==
+= [1.2] 2021-10-10 =
+
+* Added support for custom billing and shipping fields
+* Added a second checkbox for user notification
+* Errors and notifications for the admin will now be displayed after saving the order
+
 = [1.1] 2021-07-18 =
 
 * Added Error logging

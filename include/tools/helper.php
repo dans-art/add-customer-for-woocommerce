@@ -8,14 +8,19 @@
  *
  */
 
+if (!defined('ABSPATH')) {
+    exit; // Exit if accessed directly
+}
+
 class woo_add_customer_helper
 {
     protected $version = '1.2';
     public $plugin_path = '';
-    //public $admin_notices = array();
 
     public function __construct()
     {
+        $plugin_meta = get_plugin_data($this->plugin_path . 'add-customer-for-woocommerce.php');
+        $this->version = (!empty($plugin_meta['Version'])) ? $plugin_meta['Version'] : "000";
     }
 
     /**
@@ -106,7 +111,7 @@ class woo_add_customer_helper
      */
     public function wac_enqueue_admin_style()
     {
-        wp_enqueue_style('wac-admin-style', get_option('siteurl') . '/wp-content/plugins/add-customer-for-woocommerce/style/admin-style.css');
+        wp_enqueue_style('wac-admin-style', get_option('siteurl') . '/wp-content/plugins/add-customer-for-woocommerce/style/admin-style.css', array(), $this->version);
     }
 
     /**
@@ -117,7 +122,7 @@ class woo_add_customer_helper
      */
     public function wac_enqueue_admin_scripts()
     {
-        wp_enqueue_script('wac-admin-script', get_option('siteurl') . '/wp-content/plugins/add-customer-for-woocommerce/include/js/wac-main-script.min.js', array('jquery'));
+        wp_enqueue_script('wac-admin-script', get_option('siteurl') . '/wp-content/plugins/add-customer-for-woocommerce/include/js/wac-main-script.min.js', array('jquery'), $this->version);
     }
 
     /**
@@ -129,7 +134,6 @@ class woo_add_customer_helper
      * @param mixed $args - Args for the vspringf() Function. String or Int 
      * 
      * @return void
-     * @todo: update language strings
      */
     public function log_event($log_type, $order_id, ...$args)
     {
@@ -138,20 +142,23 @@ class woo_add_customer_helper
         $type = 'null';
 
         switch ($log_type) {
+            case 'existing_account':
+                $message = htmlspecialchars(__('Email "%s" already exists. No new customer got created.', 'wac'));
+                break;
             case 'added_user':
                 $message = htmlspecialchars(__('Added User "%s <%s>"', 'wac'));
                 $type = 'success';
                 break;
             case 'email_send':
-                $message = __('Send Email to user "%s"', 'wac');
+                $message = __('Email send to new customer "%s"', 'wac');
                 $type = 'success';
                 break;
             case 'no_name':
-                $message = __('Could not save user. No Name provided.', 'wac');
+                $message = __('Could not save customer. No Name provided.', 'wac');
                 $type = 'null';
                 break;
             case 'failed_to_send_user_mail':
-                $message = __('Failed to send email notification to user.', 'wac');
+                $message = __('Failed to send email notification to customer.', 'wac');
                 $type = 'error';
                 break;
             case 'failed_to_add_user':
@@ -165,30 +172,13 @@ class woo_add_customer_helper
                 $message = __('Log Type not found!', 'wac');
                 break;
         }
-        if(!empty($args)){
+        if (!empty($args)) {
             $msg_trans = vsprintf($message, $args);
-        }else{
+        } else {
             $msg_trans = $message;
         }
-        /*if ($print_log) {
-            $this->display_message($print_log);
-        }*/
         apply_filters('simple_history_log', "{$msg_trans} - by Add Customer", $additional_log);
         $this->wac_set_notice($msg_trans, $type, $order_id);
-        return;
-    }
-
-    /**
-     * Prints out a Woocommerce Admin notice to the user.
-     * @param string $msg - Message to display
-     * @todo: remove function?
-     * 
-     * @return void
-     */
-    public function display_message($msg)
-    {
-        $this->adminnotice->add_custom_notice("wac_notice", $msg);
-        $this->adminnotice->output_custom_notices();
         return;
     }
 
@@ -278,7 +268,7 @@ class woo_add_customer_helper
                 break;
 
             default:
-                $classes = 'notice';
+                $classes = 'notice notice-info';
                 break;
         }
         $notice = "<div class='{$classes}'><p>{$notice}</p></div>";

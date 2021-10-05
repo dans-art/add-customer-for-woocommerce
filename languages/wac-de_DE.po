@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Add Customer for WooCommerce\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-22 15:15+0000\n"
-"PO-Revision-Date: 2021-07-13 21:26+0000\n"
+"PO-Revision-Date: 2021-10-05 19:14+0000\n"
 "Last-Translator: \n"
 "Language-Team: Deutsch\n"
 "Language: de_DE\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco https://localise.biz/\n"
-"X-Loco-Version: 2.5.3; wp-5.7.2"
+"X-Loco-Version: 2.5.4; wp-5.8.1"
 
 #: include/classes/wac-backend.php:116
 msgid "Activated"
@@ -22,7 +22,7 @@ msgstr "Aktiviert"
 msgid "Add Customer for WooCommerce"
 msgstr "WooCommerce - Kunde hinzufügen"
 
-#: templates/backend/backend-options-page.php:9
+#: templates/backend/backend-options-page.php:14
 msgid "Add Customer for Woocommerce Settings"
 msgstr "Kunde hinzufügen - Einstellungen"
 
@@ -30,10 +30,14 @@ msgstr "Kunde hinzufügen - Einstellungen"
 msgid "Add Customer Settings"
 msgstr "Kunde hinzufügen"
 
-#: include/tools/helper.php:127
+#: include/classes/wac-admin.php:282
+msgid "Add new Customer"
+msgstr "Neuen Kunden hinzufügen"
+
+#: include/tools/helper.php:148
 #, php-format
-msgid "Added User \"%s <%s>\" by Add Customer"
-msgstr "Nutzerkonto \"%s <%s>\" durch Add Customer Plugin hinzugefügt"
+msgid "Added User \"%s <%s>\""
+msgstr "Kunde \"%s <%s>\" hinzugefügt"
 
 #. Description of the plugin
 msgid ""
@@ -50,25 +54,35 @@ msgstr ""
 "Wähle dies an, wenn nach der Erstellung des Kontos der Kunde eine \"Konto "
 "erstellt\" email erhalten soll."
 
-#: include/tools/helper.php:130
-msgid "Could not save user. No Name provided - Add Customer."
-msgstr ""
-"Konnte neues Konto nicht erstellen, keinen Namen eingetragen. Von Add "
-"Customer Plugin."
+#: include/tools/helper.php:156
+#| msgid "Could not save user. No Name provided."
+msgid "Could not save customer. No Name provided."
+msgstr "Konnte Kunden nicht speichern, da kein Name angegeben wurde."
 
 #. Author of the plugin
 msgid "Dan's Art"
 msgstr "Dan's Art"
+
+#: include/tools/helper.php:145
+#, php-format
+msgid "Email \"%s\" already exists. No new customer got created."
+msgstr ""
+"Die Email Adresse \"%s\" existiert bereits. Es wurde kein neuer Kunde "
+"erstellt."
+
+#: include/tools/helper.php:152
+#, php-format
+msgid "Email send to new customer \"%s\""
+msgstr "Email wurde an den neuen Kunden \"%s\" geschickt"
 
 #: templates/email/new-account.php:23
 #, php-format
 msgid "Email: %s"
 msgstr "Email: %s"
 
-#: include/tools/helper.php:133
-msgid "Failed to send email notification to user - Add Customer."
-msgstr ""
-"Fehler beim senden der Mitteilung an den Kunden - Von Add Customer Plugin"
+#: include/tools/helper.php:160
+msgid "Failed to send email notification to customer."
+msgstr "Fehler beim senden der Email Benachrichtigung an den Kunden."
 
 #: templates/email/new-account.php:21
 #, php-format
@@ -79,7 +93,7 @@ msgstr "Hallo, %s"
 msgid "http://dev.dans-art.ch"
 msgstr "http://dev.dans-art.ch"
 
-#: include/tools/helper.php:142
+#: include/tools/helper.php:171
 msgid "Log Type not found!"
 msgstr "Log-Typ nicht gefunden."
 
@@ -91,12 +105,12 @@ msgstr "Haupteinstellungen"
 msgid "New account created"
 msgstr "Neues Konto erstellt"
 
-#: include/tools/helper.php:223
+#: include/tools/helper.php:241
 #, php-format
 msgid "New account created at %s"
 msgstr "Neues Konto erstellt auf %s"
 
-#: include/tools/helper.php:136
+#: include/tools/helper.php:164
 msgid ""
 "New User could not be added by Add Customer Plugin. Please contact the "
 "Plugin Author."
@@ -110,7 +124,7 @@ msgid "Password: %s"
 msgstr "Passwort: %s"
 
 # Checkbox Name
-#: include/classes/wac-admin.php:180
+#: include/classes/wac-admin.php:285
 msgid "Save as new customer"
 msgstr "Speichere neuen Kunden"
 
@@ -126,6 +140,10 @@ msgstr ""
 #: include/classes/wac-backend.php:61
 msgid "Selected by default"
 msgstr "Standardmäßig ausgewählt"
+
+#: include/classes/wac-admin.php:289
+msgid "Send email to new customer"
+msgstr "Sende Email an neuen Kunden"
 
 #: include/classes/wac-backend.php:74
 msgid "Send Notifications to new user"

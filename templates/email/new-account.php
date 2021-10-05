@@ -4,9 +4,12 @@
  * This email is getting send, when a new user is created by Add Customer for Woocommerce.
  * For this to happen, you have to activate the option in Wordpress Backend -> Settings -> Add Customer Settings -> Send Notifications to new user
  * 
- * @version 1.1
+ * Author: Dan's Art
+ * Author URI: http://dev.dans-art.ch
  */
-defined('ABSPATH') || exit;
+if (!defined('ABSPATH')) {
+    exit; // Exit if accessed directly
+}
 
 extract(get_defined_vars());
 $email = (isset($template_args[0])) ? $template_args[0] : '';

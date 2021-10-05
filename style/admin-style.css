@@ -3,7 +3,6 @@
  * Style description: Basic style for backend style
  * Author: Dan's Art
  * Author URI: http://dev.dans-art.ch
- * Todo: 
  */
 
  /*
@@ -11,6 +10,17 @@
  */
 #wac_add_customer_con{
     clear: both;
+    float: left;
     width: 100%;
-    padding-top: 1px;
+    margin: 9px 0 0;
+    color: #777;
 }
+
+#wac_add_customer_con .wac_add_customer_field{
+    margin: 0;
+}
+
+#wac_add_customer_con .wac_add_customer_notify_field{
+    margin-top: 0.5em;
+}
+
