@@ -8,7 +8,7 @@
  */
 
 if (!defined('ABSPATH')) {
-    exit;
+    exit; // Exit if accessed directly
 }
 
 class woo_add_customer_backend extends woo_add_customer_helper
