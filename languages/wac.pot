@@ -1,0 +1,160 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Add Customer for WooCommerce\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-10-06 13:53+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: \n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.5.4; wp-5.8.1\n"
+"X-Domain: wac"
+
+#: include/classes/wac-backend.php:116
+msgid "Activated"
+msgstr ""
+
+#. Name of the plugin
+msgid "Add Customer for WooCommerce"
+msgstr ""
+
+#: templates/backend/backend-options-page.php:14
+msgid "Add Customer for Woocommerce Settings"
+msgstr ""
+
+#: include/classes/wac-backend.php:31
+msgid "Add Customer Settings"
+msgstr ""
+
+#: include/classes/wac-admin.php:282
+msgid "Add new Customer"
+msgstr ""
+
+#: include/tools/helper.php:149
+#, php-format
+msgid "Added customer \"%s <%s>\""
+msgstr ""
+
+#. Description of the plugin
+msgid ""
+"Allows you to add a customer when a new order is created at the orders page."
+msgstr ""
+
+#: include/classes/wac-backend.php:82
+msgid ""
+"Check this to send a \"Account created\" email to the customer after account "
+"creation."
+msgstr ""
+
+#: include/tools/helper.php:157
+msgid "Could not save customer. No Name provided."
+msgstr ""
+
+#. Author of the plugin
+msgid "Dan's Art"
+msgstr ""
+
+#: include/tools/helper.php:146
+#, php-format
+msgid "Email \"%s\" already exists. No new customer got created."
+msgstr ""
+
+#: include/tools/helper.php:153
+#, php-format
+msgid "Email send to new customer \"%s\""
+msgstr ""
+
+#: templates/email/new-account.php:26
+#, php-format
+msgid "Email: %s"
+msgstr ""
+
+#: include/tools/helper.php:161
+msgid "Failed to send email notification to customer."
+msgstr ""
+
+#: templates/email/new-account.php:24
+#, php-format
+msgid "Hi, %s"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://dev.dans-art.ch"
+msgstr ""
+
+#. URI of the plugin
+msgid "https://dev.dans-art.ch/blog/wordpress/add-customer-for-woocommerce/"
+msgstr ""
+
+#: include/tools/helper.php:172
+msgid "Log Type not found!"
+msgstr ""
+
+#: include/classes/wac-backend.php:57
+msgid "Main Settings"
+msgstr ""
+
+#: templates/email/new-account.php:22
+msgid "New account created"
+msgstr ""
+
+#: include/tools/helper.php:243
+#, php-format
+msgid "New account created at %s"
+msgstr ""
+
+#: include/tools/helper.php:165
+msgid ""
+"New customer could not be added by Add Customer Plugin. Please contact the "
+"Plugin Author."
+msgstr ""
+
+#: templates/email/new-account.php:27
+#, php-format
+msgid "Password: %s"
+msgstr ""
+
+#: include/classes/wac-admin.php:285
+msgid "Save as new customer"
+msgstr ""
+
+#: include/classes/wac-backend.php:69
+msgid ""
+"Select this box if you like to have the \"Add Customer\" Checkbox activated "
+"by default."
+msgstr ""
+
+#: include/classes/wac-backend.php:61
+msgid "Selected by default"
+msgstr ""
+
+#: include/classes/wac-admin.php:289
+msgid "Send email to new customer"
+msgstr ""
+
+#: include/classes/wac-backend.php:74
+msgid "Send Notifications to new user"
+msgstr ""
+
+#: templates/email/new-account.php:29
+#, php-format
+msgid "To your account: %s"
+msgstr ""
+
+#: templates/email/new-account.php:30
+msgid ""
+"We recommend changing the password as soon as you have logged in to improve "
+"security."
+msgstr ""
+
+#: templates/email/new-account.php:25
+#, php-format
+msgid ""
+"Your account on %s got created. You can login with the following credentials:"
+msgstr ""

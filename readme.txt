@@ -2,27 +2,16 @@
 
 Contributors: dansart
 Contributors URL: <http://dev.dans-art.ch>
-Tags: woocommerce, customer, tools, helper
-Plugin URI: <https://dev.dans-art.ch/blog/wordpress/add-customer-for-woocommerce>
-Version: 1.2
-Stable tag: 1.2
-
-Requires at least: 5.5.3
-Tested up to: 5.8.1
-
-WC requires at least: 4.7.0
-WC tested up to: 5.7.1
-
-Requires PHP: 7.4
-
-Domain Path: /languages
-Text Domain: wac
-Author: Dan's Art
-Author URI: <https://dev.dans-art.ch>
 Donate link: <https://paypal.me/dansart13>
-
+Tags: woocommerce, customer, tools, helper
+Requires at least: 5.5.3
+Tested up to: 5.8
+Stable tag: 1.2
 License: GPLv3 or later
 License URI: <http://www.gnu.org/licenses/gpl-2.0.html>
+WC requires at least: 4.7.0
+WC tested up to: 5.7.1
+Requires PHP: 7.4
 
 Adds a new checkbox to the orders page to add a new customer/user.
 It creates a new user, based on the billing data. If no e-mail is provided, it will create a fake email (firstname.lastname@your-site.com).

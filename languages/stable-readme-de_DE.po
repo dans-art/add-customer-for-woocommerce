@@ -1,0 +1,182 @@
+# Translation of Plugins - Add Customer for WooCommerce - Stable Readme (latest release) in German
+# This file is distributed under the same license as the Plugins - Add Customer for WooCommerce - Stable Readme (latest release) package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2021-10-06 16:31:15+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: GlotPress/3.0.0-alpha.2\n"
+"Language: de\n"
+"Project-Id-Version: Plugins - Add Customer for WooCommerce - Stable Readme (latest release)\n"
+
+#. Short description.
+msgid ""
+"Adds a new checkbox to the orders page to add a new customer/user.\n"
+"It creates a new user, based on the billing data. If no e-mail is provided, it will &hellip;"
+msgstr "Fügt auf der Bestellseite ein neues Kontrollkästchen hinzu, um einen neuen Kunden / Benutzer hinzuzufügen. Es erstellt einen neuen Benutzer basierend auf den Rechnungsdaten."
+
+#. Plugin name.
+msgid "Add Customer for WooCommerce"
+msgstr "WooCommerce - Kunde hinzufügen"
+
+#. Found in faq paragraph.
+msgid ""
+"Does the new user get a notification of the created account?\n"
+"- No, not per default. It can be enabled on the settings page. The Email will send the login credentials including a random password to the customer."
+msgstr ""
+"Bekommt der neue Nutzer eine Benachrichtigung zum neuen Konto?\n"
+"- Nein, nicht standartmässig. In den Einstellungen kann dies aktiviert werden. Es wird dann eine Email mit den Login Informationen inklusive Passwort an den Kunden gesendet. "
+
+#. Found in faq paragraph.
+msgid ""
+"What happens, if an email already exists?\n"
+"- There will be no new user created. The plugin will assign the order to the existing customer."
+msgstr ""
+"Was passiert, wenn eine Email bereits existiert?\n"
+"- In diesem Fall wird kein neuer Kunde generiert. Das Plugin verbindet die Bestellung mit dem existierenden Kunden."
+
+#. Found in faq paragraph.
+msgid ""
+"What role the new user will have?\n"
+"- Customer"
+msgstr ""
+"Welche Rolle wird der neue Kunde haben?\n"
+"- Kunde"
+
+#. Found in description paragraph.
+msgid "Required Plugins: WooCommerce 4.7.0 or higher"
+msgstr "Benötigte Plugins: WooCommerce 4.7.0 oder neuer"
+
+#. Found in description paragraph.
+msgid ""
+"Settings Menu:\n"
+"Settings -&gt; Add Customer Settings"
+msgstr ""
+"Einstellungsmenu:\n"
+"Einstellungen -> Kunde hinzufügen"
+
+#. Found in description paragraph.
+msgid ""
+"This Plugin is designed to help you to create new users/customers with ease.\n"
+"Especially useful if the client is ordering via phone or email and you like to take advantage of the stock- and order management in WooCommerce.\n"
+"It adds a simple checkbox at the end of the billing address. If the box is checked, it will create a new user with the role \"customer\".\n"
+"If no e-mail is provided, it will create a unique one for you. It uses your site’s domain as the domain part and the name as the name part. E.g. firstname.lastname@your-site.com.\n"
+"By default, the newly created user will not get any emails while creating the account. But he will eventually on order change.\n"
+"In the settings menu, there are options for checking the box by default and send login credentials to the new customer."
+msgstr ""
+"Dieses Plugin wurde entwickelt, um dir zu helfen ganz einfach neue Benutzer/Kunden anzulegen.\n"
+"Besonders nützlich ist dies, wenn der Kunde per Telefon oder E-Mail bestellt und du die Vorteile der Lager- und Auftragsverwaltung in WooCommerce nutzen möchten.\n"
+"Es fügt ein einfaches Kontrollkästchen am Ende der Rechnungsadresse hinzu. Wenn das Kästchen angewählt ist, wird ein neuer Benutzer mit der Rolle \"Kunde\" angelegt.\n"
+"Wenn keine E-Mail-Adresse angeben ist, wird eine einzigartige E-Mail-Adresse für Sie erstellt. Z.B. firstname.lastname@your-site.com.\n"
+"Standardmäßig erhält der neu angelegte Kunde keine E-Mail zum erstellten Konto.\n"
+"Im Einstellungsmenü gibt es die Option die Email Benachrichtigungen zu aktivieren um die Anmeldedaten an den neuen Kunden zu senden."
+
+#. Screenshot description.
+msgid "Email received by the new customer."
+msgstr "Email, welche an den neuen Kunden gesendet wird."
+
+#. Screenshot description.
+msgid "The settings menu."
+msgstr "Das Einstellungen-Menu"
+
+#. Found in installation list item.
+msgid "Enjoy"
+msgstr "Viel Spaß!"
+
+#. Found in installation list item.
+msgid "Activate the plugin through the ‚Plugins‘ screen in WordPress."
+msgstr "Aktiviere das Plugin unter dem Menüpunkt „Plugins“ in WordPress."
+
+#. Found in installation list item.
+msgid "Upload the plugin files to the /wp-content/plugins/add-customer-for-woocommerce directory, or install the plugin through the WordPress plugins screen directly."
+msgstr "Lade die Plugin-Dateien in das Verzeichnis /wp-content/plugins/add-customer-for-woocommerce hoch oder installiere das Plugin direkt über die WordPress-Plugin-Ansicht."
+
+#. Found in description paragraph.
+msgid "If you like the Plugin, please leave some Stars or donate me a coffee. Thanks!"
+msgstr "Wenn dir das Plugin gefällt, freue ich mich über eine 5 Stern Bewertung und du kannst mir auch gerne eine Kaffee spendieren. Danke!"
+
+#. Screenshot description.
+msgid "The order after saving. A new customer was created and assigned to the order."
+msgstr "Nach dem speichern einer Bestellung wird der neue Kunde angelegt und der Bestellung zugeordnet."
+
+#. Screenshot description.
+msgid "The billing part of a new order. With the checkbox selected, it will create a new user."
+msgstr "In der Rechnungsadresse der neue Bestellung. Ist das Kontrollkästchen aktiviert, wird ein neuer Kunde angelegt."
+
+#. Found in changelog list item.
+msgid "Initial Version!"
+msgstr "Erste Version"
+
+#. Found in changelog list item.
+msgid "First and Last name gets saved to the user as well"
+msgstr "Vor- und Nachname werden auch gepeichert"
+
+#. Found in changelog list item.
+msgid "Sanitize input fields"
+msgstr "Filtern der Formular-Feldern"
+
+#. Found in changelog list item.
+msgid "Added comments and method description"
+msgstr "Kommentare und Methoden Beschreibung"
+
+#. Found in changelog list item.
+msgid "Feature complete Version"
+msgstr "Funktional komplettierte Version"
+
+#. Found in changelog list item.
+msgid "Removed debugger"
+msgstr "Debugger entfernt"
+
+#. Found in changelog list item.
+msgid "Added Option to select the checkbox by default"
+msgstr "Option hinzugefügt um die Auswahlbox automatisch anzuwählen"
+
+#. Found in changelog list item.
+msgid "Added Option to send user notification"
+msgstr "Option für das senden der Benachrichtigung an den Kunden hinzugefügt"
+
+#. Found in changelog list item.
+msgid "Added Option Menu"
+msgstr "Einstellungsmenu hinzugefügt"
+
+#. Found in changelog list item.
+msgid "Admin/Editor gets a message if the creation of the new user was not successful. Check error_log for details."
+msgstr "Admin/Bearbeiter erhält eine Nachricht, wenn die Erstellung des neuen Kunden nicht erfolgreich war. Prüfe das error_log für details."
+
+#. Found in changelog list item.
+msgid "Added new Language strings for de-DE and de-CH"
+msgstr "Neue Übersetzungen für de-DE und de-CH wurden hinzugefügt."
+
+#. Found in changelog list item.
+msgid "Fixed: Error when the domain name is \"localhost\""
+msgstr "Behoben: Fehler wenn die Domain \"localhost\" ist"
+
+#. Found in changelog list item.
+msgid "Fixed: Error when no first name and no last name was provided"
+msgstr "Behoben: Fehler wenn kein Vor- und Nachname angegeben war"
+
+#. Found in changelog list item.
+msgid "Error and success messages will be added to the Log of the Simple History Plugin"
+msgstr "Fehler- und Erfolgsnachrichten werden im Log des Simple History Plugin gespeichert."
+
+#. Found in changelog list item.
+msgid "Error messages will be saved in the error_log"
+msgstr "Fehlermeldungen werden im error_log gespeichert"
+
+#. Found in changelog list item.
+msgid "Added Error logging"
+msgstr "Fehleraufzeichnung hinzugefügt"
+
+#. Found in changelog list item.
+msgid "Errors and notifications for the admin will now be displayed after saving the order"
+msgstr "Fehler und Nachrichten werden nun für den Bearbeiter nach dem speichern der Bestellung sichtbar."
+
+#. Found in changelog list item.
+msgid "Added a second checkbox for customer notification"
+msgstr "Zweite Auswahlbox für die Kundenbenachrichtigung hinzugefügt"
+
+#. Found in changelog list item.
+msgid "Added support for custom billing and shipping fields"
+msgstr "Unterstützung von eigenen Rechnungs- und Versandfeldern hinzugefügt."
