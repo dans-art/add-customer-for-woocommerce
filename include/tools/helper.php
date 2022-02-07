@@ -146,11 +146,11 @@ class woo_add_customer_helper
                 $message = htmlspecialchars(__('Email "%s" already exists. No new customer got created.', 'wac'));
                 break;
             case 'added_user':
-                $message = htmlspecialchars(__('Added customer "%s <%s>"', 'wac'));
+                $message = htmlspecialchars(__('Added customer: %s <%s>', 'wac'));
                 $type = 'success';
                 break;
             case 'email_send':
-                $message = __('Email send to new customer "%s"', 'wac');
+                $message = __('Email send to new customer: %s', 'wac');
                 $type = 'success';
                 break;
             case 'no_name':
