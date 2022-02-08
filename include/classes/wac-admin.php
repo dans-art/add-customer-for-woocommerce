@@ -264,17 +264,20 @@ class woo_add_customer_admin extends woo_add_customer_helper
      * Includes the style for admin page
      *
      * @param object $order - The Order Object.
-     * @return void
+     * @return false|void False if no customer ID found. Prints out the checkbox 
      */
     public function wac_add_checkbox($order)
     {
         if ($order->get_customer_id() !== 0) {
             return false;
         }
+        $order_status = $order->get_status();
 
         $this->wac_enqueue_admin_style();
         $this->wac_enqueue_admin_scripts();
-        $checked = ($this->get_wac_option('wac_preselect') === 'yes') ? 'checked' : '';
+
+        //Only pre-check the checkbox if the option is selected by the user and the order is a new order. 
+        $checked = ($this->get_wac_option('wac_preselect') === 'yes' AND $order_status === 'auto-draft') ? 'checked' : '';
         $checked_notify = ($this->get_wac_option('wac_send_notification') === 'yes') ? 'checked' : '';
 ?>
         <div id='wac_add_customer_con' class="edit_address">

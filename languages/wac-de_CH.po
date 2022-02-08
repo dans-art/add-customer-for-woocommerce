@@ -3,9 +3,9 @@ msgstr ""
 "Project-Id-Version: Add Customer for WooCommerce\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-22 15:15+0000\n"
-"PO-Revision-Date: 2021-10-05 20:42+0000\n"
+"PO-Revision-Date: 2022-02-07 15:14+0000\n"
 "Last-Translator: \n"
-"Language-Team: Deutsch (Schweiz)\n"
+"Language-Team: German (Switzerland)\n"
 "Language: de_CH\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "MIME-Version: 1.0\n"
@@ -30,15 +30,15 @@ msgstr "Kunde hinzufügen - Einstellungen"
 msgid "Add Customer Settings"
 msgstr "Kunde hinzufügen"
 
-#: include/classes/wac-admin.php:282
+#: include/classes/wac-admin.php:285
 msgid "Add new Customer"
 msgstr "Neuen Kunden hinzufügen"
 
 #: include/tools/helper.php:149
 #, php-format
-#| msgid "Added User \"%s <%s>\""
-msgid "Added customer \"%s <%s>\""
-msgstr "Kunde \"%s <%s>\" hinzugefügt"
+#| msgid "Added customer \"%s <%s>\""
+msgid "Added customer: %s <%s>"
+msgstr "Kunde %s <%s> hinzugefügt"
 
 #. Description of the plugin
 msgid ""
@@ -73,8 +73,9 @@ msgstr ""
 
 #: include/tools/helper.php:153
 #, php-format
-msgid "Email send to new customer \"%s\""
-msgstr "Email wurde an den neuen Kunden \"%s\" geschickt"
+#| msgid "Email send to new customer \"%s\""
+msgid "Email send to new customer: %s"
+msgstr "Email wurde an den neuen Kunden %s geschickt"
 
 #: templates/email/new-account.php:26
 #, php-format
@@ -133,7 +134,7 @@ msgid "Password: %s"
 msgstr "Passwort: %s"
 
 # Checkbox Name
-#: include/classes/wac-admin.php:285
+#: include/classes/wac-admin.php:288
 msgid "Save as new customer"
 msgstr "Speichere neuen Kunden"
 
@@ -150,7 +151,7 @@ msgstr ""
 msgid "Selected by default"
 msgstr "Standardmäßig ausgewählt"
 
-#: include/classes/wac-admin.php:289
+#: include/classes/wac-admin.php:292
 msgid "Send email to new customer"
 msgstr "Sende Email an neuen Kunden"
 

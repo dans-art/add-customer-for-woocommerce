@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Add Customer for WooCommerce\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-07 15:13+0000\n"
+"POT-Creation-Date: 2021-10-06 13:53+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -32,13 +32,13 @@ msgstr ""
 msgid "Add Customer Settings"
 msgstr ""
 
-#: include/classes/wac-admin.php:285
+#: include/classes/wac-admin.php:282
 msgid "Add new Customer"
 msgstr ""
 
 #: include/tools/helper.php:149
 #, php-format
-msgid "Added customer: %s <%s>"
+msgid "Added customer \"%s <%s>\""
 msgstr ""
 
 #. Description of the plugin
@@ -67,7 +67,7 @@ msgstr ""
 
 #: include/tools/helper.php:153
 #, php-format
-msgid "Email send to new customer: %s"
+msgid "Email send to new customer \"%s\""
 msgstr ""
 
 #: templates/email/new-account.php:26
@@ -120,7 +120,7 @@ msgstr ""
 msgid "Password: %s"
 msgstr ""
 
-#: include/classes/wac-admin.php:288
+#: include/classes/wac-admin.php:285
 msgid "Save as new customer"
 msgstr ""
 
@@ -134,7 +134,7 @@ msgstr ""
 msgid "Selected by default"
 msgstr ""
 
-#: include/classes/wac-admin.php:292
+#: include/classes/wac-admin.php:289
 msgid "Send email to new customer"
 msgstr ""
 
