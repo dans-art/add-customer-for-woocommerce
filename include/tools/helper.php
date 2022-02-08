@@ -60,12 +60,16 @@ class woo_add_customer_helper
     }
     /**
      * Loads the translation of the plugin.
+     * First it checks for downloaded translations by Wordpress, else it will search for the the translation in the plugin dir.
      * Located at: plugins/add-customer-for-woocommerce/languages/
      *
      * @return void
      */
     public function wac_load_textdomain()
     {
+        //Search also in the wp-content/language folder
+        load_textdomain('wac', $this->wac_get_home_path() . 'wp-content/languages/plugins/add-customer-for-woocommerce-' . determine_locale() . '.mo');
+        //Try to load the file from the plugin-dir
         load_textdomain('wac', $this->wac_get_home_path() . 'wp-content/plugins/add-customer-for-woocommerce/languages/wac-' . determine_locale() . '.mo');
     }
 
