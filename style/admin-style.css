@@ -26,6 +26,11 @@
 
 .wac_text_input.text-input td{
     width: 95%;
+    padding-bottom: 0;
+}
+
+.wac_text_input-description td{
+    padding-top: 0.4rem;
 }
 
 .wac-options-tab .main_content .message{

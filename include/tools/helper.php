@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
 
 class woo_add_customer_helper
 {
-    protected $version = '1.3';
+    protected $version = '1.4';
     public $plugin_path = '';
 
     public function __construct()
@@ -165,6 +165,10 @@ class woo_add_customer_helper
                 $message = __('Failed to send email notification to customer.', 'wac');
                 $type = 'error';
                 break;
+            case 'failed_to_send_user_mail_fakemail':
+                $message = __('Email was not send to user because no email was provided.', 'wac');
+                $type = 'null';
+                break;
             case 'failed_to_add_user':
                 $message = __('New customer could not be added by Add Customer Plugin. Please contact the Plugin Author.', 'wac');
                 $type = 'error';
@@ -251,17 +255,17 @@ class woo_add_customer_helper
      * Sends a email with username and password to the new customer
      *  @param string $email - The email address of the recipient
      *  @param string $name - The first name of the user
-     *  @param string $password - the password of the user
      * 
      *  @return bool true on success, false on error.
      * 
      */
-    public function send_mail_to_new_customer(string $email = '', string $name = '', string $password = '')
+    public function send_mail_to_new_customer(string $email = '', string $name = '')
     {
         $mailer = WC()->mailer();
         $blog_name = get_bloginfo('name');
         $blog_name = html_entity_decode($blog_name, ENT_QUOTES, 'UTF-8');
-        $message = $this->load_template_to_var('new-account', 'email/', $email, $name, $password, $blog_name);
+        $password_reset_link = $this->get_user_reset_password_link($email);
+        $message = $this->load_template_to_var('new-account', 'email/', $email, $name, $password_reset_link, $blog_name);
         $from_email_option = $this->get_mail_from();
 
         $subject = $this->get_mail_subject('wac_template_subject_add_account');
@@ -364,5 +368,20 @@ class woo_add_customer_helper
             }
             delete_transient($trans_id);
         });
+    }
+
+    /**
+     * Generates the link to the reset password page
+     *
+     * @param string $user_email - The user email
+     * @return string The url to the password reset page
+     */
+    public function get_user_reset_password_link($user_email)
+    {
+        //Create the Password reset link
+        $user = get_user_by('email', $user_email);
+        $user_login = $user->user_login;
+        $reset_key = get_password_reset_key($user);
+        return network_site_url("wp-login.php?action=rp&key=$reset_key&login=" . rawurlencode($user_login), 'login');
     }
 }

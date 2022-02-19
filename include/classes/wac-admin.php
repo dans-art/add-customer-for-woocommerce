@@ -163,11 +163,13 @@ class woo_add_customer_admin extends woo_add_customer_helper
         $user_last = (isset($_REQUEST['_billing_last_name']) and !empty($_REQUEST['_billing_last_name'])) ? sanitize_text_field($_REQUEST['_billing_last_name']) : '';
         $user = $this->wac_get_unique_user($user_first . '.' . $user_last);
         $password = wp_generate_password();
+        $email_is_fake = false;
 
         if (empty($email)) {
             //create new 'fake' email
             $email = $this->create_fake_email($user);
             update_post_meta($order_id, '_billing_email', $email);
+            $email_is_fake = true;
         }
         if ($user !== false) {
             $user_id = wc_create_new_customer($email, $user, $password);
@@ -179,7 +181,13 @@ class woo_add_customer_admin extends woo_add_customer_helper
                 $this->log_event("added_user", $order_id, $user, $email);
                 //Check if User notification should be send or not. If so, send email with login information.
                 if (isset($_REQUEST['wac_add_customer_notify']) and $_REQUEST['wac_add_customer_notify'] == 'true') {
-                    $send = $this->send_mail_to_new_customer($email, $user_first, $password);
+                    //Check if user email is a fake email. If so, no email will be sent.
+                    if($email_is_fake){
+                        $this->log_event("failed_to_send_user_mail_fakemail", $order_id, $user);
+                        return (int) $user_id;
+                    }
+                    //No fake email, try to send the email
+                    $send = $this->send_mail_to_new_customer($email, $user_first);
                     if (!$send) {
                         $this->log_event("failed_to_send_user_mail", $order_id);
                     } else {

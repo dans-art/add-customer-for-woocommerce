@@ -55,12 +55,18 @@ What happens, if an email already exists?
 Does the new user get a notification of the created account?
 - No, not per default. It can be enabled on the settings page. The Email will send the login credentials including a random password to the customer.
 
+Can I change how the email for the new customer looks?
+- Yes, you can. Just copy the "new-account.php" from "wp-content\plugins\add-customer-for-woocommerce\templates\email" to "\wp-content\themes\[theme/child-theme]\woocommerce\add-customer\email"
+
 == Changelog ==
-= [1.4] 2022-02-08 =
+= [1.4] 2022-02-16 =
 
 * Added: Option to set the sender email
 * Added: Option to set subject of the new customer email
 * Added: New tab at the settings page to preview the loaded template (add-account)
+* Removed the plan password with a password reset link to improve security.
+* Fixed: Email to the new customer will not be sent if it is a generated fake email
+* Added 15 new language strings. 4 obsolete strings removed.
 
 = [1.3.1] 2022-02-08 =
 
