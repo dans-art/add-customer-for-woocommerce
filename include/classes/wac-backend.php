@@ -144,7 +144,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
         extract($args);
         $options = (array) get_option($args['page']);
         $default_value = (!empty($args['default_value']))?$args['default_value']:'';
-        $options_val = (!empty($options[$label_for])) ? $options[$label_for] : $default_value;
+        $options_val = (!empty($options[$label_for])) ? $options[$label_for] : '';
         switch ($type) {
             case 'checkbox':
                 $checked = ($options_val === 'yes') ? 'checked' : '';?>
@@ -160,7 +160,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
                 ?>
                 <tr class='<?php echo $class; ?> text-input'>
                     <td>
-                        <input name="wac_general_options[<?php echo $label_for; ?>]" id="<?php echo $label_for; ?>" type="<?php echo $type; ?>" value="<?php echo $options_val; ?>" />
+                        <input name="wac_general_options[<?php echo $label_for; ?>]" id="<?php echo $label_for; ?>" type="<?php echo $type; ?>" value="<?php echo $options_val; ?>" placeholder="<?php echo $default_value; ?>" />
                 </td>
                 </tr>
                 <tr class='<?php echo $class; ?>-description'>

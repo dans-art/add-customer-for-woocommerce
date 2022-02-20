@@ -21,7 +21,7 @@ $reset_user_pass_link = (isset($template_args[2])) ? $template_args[2] : ''; //T
 $site = (isset($template_args[3])) ? $template_args[3] : ''; //The Site name
 
 
-//The Woocommerce email Header
+//The WooCommerce email Header
 //To change the header,copy the email-header.php from plugins\woocommerce\templates\emails to the theme folder
 do_action('woocommerce_email_header', esc_html__('New account created', 'wac'), 'header_email'); ?>
 
@@ -35,6 +35,6 @@ do_action('woocommerce_email_header', esc_html__('New account created', 'wac'), 
 </p>
 
 <?php
-//The Woocommerce email footer
+//The WooCommerce email footer
 //To change the header,copy the email-footer.php from plugins\woocommerce\templates\emails to the theme folder
 do_action('woocommerce_email_footer', 'footer_email');

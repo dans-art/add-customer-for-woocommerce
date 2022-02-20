@@ -225,11 +225,11 @@ class woo_add_customer_helper
     public function get_template_location($template_name, $subfolder)
     {
         //Checks if the file exists in the theme or child-theme folder
-        $locate = locate_template('woocommerce\add-customer\\'.$subfolder.$template_name.'.php');
+        $locate = locate_template('woocommerce/add-customer/'.$subfolder.$template_name.'.php');
         if(empty($locate)){
-            return str_replace('/','\\', $this->plugin_path . 'templates/' . $subfolder . $template_name . '.php');
+            return str_replace('\\','/', $this->plugin_path . 'templates/' . $subfolder . $template_name . '.php');
         }
-        return str_replace('/','\\', $locate);
+        return str_replace('\\','/', $locate);
     }
 
 
