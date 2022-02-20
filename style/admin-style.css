@@ -24,6 +24,9 @@
     margin-top: 0.5em;
 }
 
+/*
+Style for the settings page
+*/
 .wac_text_input.text-input td{
     width: 95%;
     padding-bottom: 0;

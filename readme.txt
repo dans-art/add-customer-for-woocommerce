@@ -62,11 +62,11 @@ Can I change how the email for the new customer looks?
 = [1.4] 2022-02-16 =
 
 * Added: Option to set the sender email
-* Added: Option to set subject of the new customer email
+* Added: Option to set the subject of the new customer email
 * Added: New tab at the settings page to preview the loaded template (add-account)
-* Removed the plan password with a password reset link to improve security.
+* Removed the plain password with a password reset link to improve security.
 * Fixed: Email to the new customer will not be sent if it is a generated fake email
-* Added 15 new language strings. 4 obsolete strings removed.
+* Added 18 new language strings. 4 obsolete strings removed.
 
 = [1.3.1] 2022-02-08 =
 
@@ -74,9 +74,9 @@ Can I change how the email for the new customer looks?
 
 = [1.3] 2022-02-07 =
 
-* Fixed: New customer gets created when a existing guest order is updated.
+* Fixed: New customer gets created when an existing guest order is updated.
 * Add customer checkbox is only pre-selected on new orders
-* Updated: testet up to
+* Updated: tested up to
 * Updated: WC tested up to
 
 = [1.2] 2021-10-10 =

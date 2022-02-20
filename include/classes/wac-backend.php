@@ -14,15 +14,12 @@ if (!defined('ABSPATH')) {
 class woo_add_customer_backend extends woo_add_customer_helper
 {
 
-    /**
-     * Add the Actions
-     */
     public function __construct()
     {
     }
 
     /**
-     * Adds the Settings page in the Wordpress backend.
+     * Adds the Settings menu item in the Wordpress backend.
      *
      * @return void
      */
@@ -137,9 +134,9 @@ class woo_add_customer_backend extends woo_add_customer_helper
     }
 
     /**
-     * Loads the Options as html tags. 
+     * Loads the Options as html input elements, wrapped in a table structure
      *
-     * @param [array] $args
+     * @param array $args
      * @return void
      */
     public function get_settings_option(array $args)
@@ -158,9 +155,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
                     <td><?php echo $description; ?></td>
                 </tr>
                 <?php
-                //echo "<input id='$label_for' name='wac_general_options[$label_for]' type='checkbox' value='yes' $checked />";
                 break;
-
             case 'text':
                 ?>
                 <tr class='<?php echo $class; ?> text-input'>
@@ -172,7 +167,6 @@ class woo_add_customer_backend extends woo_add_customer_helper
                     <td><?php echo $description; ?></td>
                 </tr>
                 <?php
-                //echo "<input id='$label_for' name='wac_general_options[$label_for]' type='checkbox' value='yes' $checked />";
                 break;
 
             default:
