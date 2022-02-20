@@ -4,7 +4,7 @@ Contributors: dansart
 Contributors URL: <http://dev.dans-art.ch>
 Donate link: <https://paypal.me/dansart13>
 Tags: woocommerce, customer, tools, helper
-Requires at least: 5.5.3
+Requires at least: 5.4.0
 Tested up to: 5.9
 Stable tag: 1.4
 License: GPLv3 or later
