@@ -34,7 +34,7 @@ $subject = $wac->get_mail_subject('wac_template_subject_add_account');
     </div>
 </div>
 <div id="load_location_container">
-    <?php echo __('Template loaded from:', 'wac') . ' ' . $wac->get_template_location('add-account', 'email/');  ?>
+    <?php echo __('Template loaded from:', 'wac') . ' ' . $wac->get_template_location('new-account', 'email/');  ?>
 
 </div>
 <div id="reload_container">
