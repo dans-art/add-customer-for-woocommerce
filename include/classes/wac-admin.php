@@ -190,7 +190,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
                 $this->log_event("added_user", $order_id, $user, $email);
                 //Check if User notification should be send or not. If so, send email with login information.
                 if (isset($_REQUEST['wac_add_customer_notify']) and $_REQUEST['wac_add_customer_notify'] == 'true') {
-                    //Check if user email is a fake email. If so, no email will be sent.
+                    //Check if the address is a fake email. If so, no email will be sent.
                     if($email_is_fake){
                         $this->log_event("failed_to_send_user_mail_fakemail", $order_id, $user);
                         return (int) $user_id;

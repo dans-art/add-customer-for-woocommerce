@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
 class woo_add_customer_helper
 {
     protected $version = '000'; //The current plugin version. This is used to make sure that on plugin update, the styles and scripts will be cleared from the cache.
-    public $plugin_path = '';
+    public $plugin_path = ''; //The path to the plugin folder
 
     /**
      * Loads the current plugin version.
