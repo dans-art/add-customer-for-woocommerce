@@ -24,3 +24,24 @@
     margin-top: 0.5em;
 }
 
+.wac_text_input.text-input td{
+    width: 95%;
+}
+
+.wac-options-tab .main_content .message{
+    background-color: white;
+}
+
+.wac-options-tab #load_location_container,
+.wac-options-tab .main_content,
+.wac-options-tab .subject_content{
+    margin: 1rem 0;
+}
+
+@media (min-width: 782px) {
+    .wac_text_input.text-input,
+    .wac_text_input.text-input input{
+        width: 100%;
+        max-width: 666px;
+    }
+}

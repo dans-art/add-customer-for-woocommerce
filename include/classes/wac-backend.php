@@ -51,10 +51,15 @@ class woo_add_customer_backend extends woo_add_customer_helper
      */
     public function wac_register_settings()
     {
+        $wac = new woo_add_customer();
+
+        $blog_name = get_bloginfo('name');
+        $default_email_from = $wac->get_mail_from();
 
         register_setting('wac_general_options', 'wac_general_options', [$this, 'wac_options_validate']);
 
         add_settings_section('wac_main_settings', __('Main Settings', 'wac'), null, 'wac_general_options');
+        add_settings_section('wac_template_settings', __('Template Settings', 'wac'), null, 'wac_general_options');
 
         add_settings_field(
             'wac_preselect',
@@ -66,7 +71,9 @@ class woo_add_customer_backend extends woo_add_customer_helper
                 'label_for' => 'wac_preselect',
                 'type' => 'checkbox',
                 'class' => 'wac_preselect',
-                'description' => __('Select this box if you like to have the "Add Customer" Checkbox activated by default.', 'wac')
+                'description' => __('Select this box if you like to have the "Add Customer" Checkbox activated by default.', 'wac'),
+                'page' => 'wac_general_options'
+
             )
         );
         add_settings_field(
@@ -79,7 +86,40 @@ class woo_add_customer_backend extends woo_add_customer_helper
                 'label_for' => 'wac_send_notification',
                 'type' => 'checkbox',
                 'class' => 'wac_preselect',
-                'description' => __('Check this to send a "Account created" email to the customer after account creation.', 'wac')
+                'description' => __('Check this to send a "Account created" email to the customer after account creation.', 'wac'),
+                'page' => 'wac_general_options'
+            )
+        );
+
+        //Template settings fields
+        add_settings_field(
+            'wac_template_subject_add_account',
+            __('Email Subject for new accounts created', 'wac'),
+            [$this, 'get_settings_option'],
+            'wac_general_options',
+            'wac_template_settings',
+            array(
+                'label_for' => 'wac_template_subject_add_account',
+                'type' => 'text',
+                'class' => 'wac_text_input',
+                'description' => __('The subject / header for the email which are sended to the new customers', 'wac'),
+                'page' => 'wac_general_options',
+                'default_value' => sprintf(__("New account created at %s", 'wac'), $blog_name)
+            )
+        );
+        add_settings_field(
+            'wac_email_from',
+            __('Sender email', 'wac'),
+            [$this, 'get_settings_option'],
+            'wac_general_options',
+            'wac_template_settings',
+            array(
+                'label_for' => 'wac_email_from',
+                'type' => 'text',
+                'class' => 'wac_text_input',
+                'description' => __('The sender email', 'wac'),
+                'page' => 'wac_general_options',
+                'default_value' => $default_email_from
             )
         );
     }
@@ -105,19 +145,33 @@ class woo_add_customer_backend extends woo_add_customer_helper
     public function get_settings_option(array $args)
     {
         extract($args);
-        $options = (array) get_option('wac_general_options');
-        $options_val = (isset($options[$label_for])) ? $options[$label_for] : '';
+        $options = (array) get_option($args['page']);
+        $default_value = (!empty($args['default_value']))?$args['default_value']:'';
+        $options_val = (!empty($options[$label_for])) ? $options[$label_for] : $default_value;
         switch ($type) {
             case 'checkbox':
-                $checked = ($options_val === 'yes') ? 'checked' : '';
-?>
+                $checked = ($options_val === 'yes') ? 'checked' : '';?>
                 <tr class='<?php echo $class; ?>'>
-                    <th><label><input name="wac_general_options[<?php echo $label_for; ?>]" id="<?php echo $label_for; ?>" type="checkbox" value="yes" <?php echo $checked; ?> />
+                    <th><label><input name="<?php echo $args['page']; ?>[<?php echo $label_for; ?>]" id="<?php echo $label_for; ?>" type="checkbox" value="yes" <?php echo $checked; ?> />
                             <?php echo __('Activated','wac'); ?>
                         </label></th>
                     <td><?php echo $description; ?></td>
                 </tr>
-<?php
+                <?php
+                //echo "<input id='$label_for' name='wac_general_options[$label_for]' type='checkbox' value='yes' $checked />";
+                break;
+
+            case 'text':
+                ?>
+                <tr class='<?php echo $class; ?> text-input'>
+                    <td>
+                        <input name="wac_general_options[<?php echo $label_for; ?>]" id="<?php echo $label_for; ?>" type="<?php echo $type; ?>" value="<?php echo $options_val; ?>" />
+                </td>
+                </tr>
+                <tr class='<?php echo $class; ?>-description'>
+                    <td><?php echo $description; ?></td>
+                </tr>
+                <?php
                 //echo "<input id='$label_for' name='wac_general_options[$label_for]' type='checkbox' value='yes' $checked />";
                 break;
 

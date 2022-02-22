@@ -6,7 +6,7 @@ Donate link: <https://paypal.me/dansart13>
 Tags: woocommerce, customer, tools, helper
 Requires at least: 5.5.3
 Tested up to: 5.9
-Stable tag: 1.3.1
+Stable tag: 1.4
 License: GPLv3 or later
 License URI: <http://www.gnu.org/licenses/gpl-2.0.html>
 WC requires at least: 4.7.0
@@ -56,6 +56,12 @@ Does the new user get a notification of the created account?
 - No, not per default. It can be enabled on the settings page. The Email will send the login credentials including a random password to the customer.
 
 == Changelog ==
+= [1.4] 2022-02-08 =
+
+* Added: Option to set the sender email
+* Added: Option to set subject of the new customer email
+* Added: New tab at the settings page to preview the loaded template (add-account)
+
 = [1.3.1] 2022-02-08 =
 
 * Fixed: Wordpress.org translations did not get loaded.

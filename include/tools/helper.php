@@ -197,7 +197,8 @@ class woo_add_customer_helper
     public function load_template_to_var(string $template_name = '', string $subfolder = '', ...$template_args)
     {
         $args = get_defined_vars();
-        $path = $this->plugin_path . 'templates/' . $subfolder . $template_name . '.php';
+        $path = $this->get_template_location($template_name, $subfolder);
+
         if (file_exists($path)) {
             ob_start();
             include($path);
@@ -210,6 +211,24 @@ class woo_add_customer_helper
     }
 
     /**
+     * Function to find the template file. First the Child-Theme will be checked. If not found, the file in the plugin will be returned.
+     *
+     * @param string $template_name - The name of the template.
+     * @param string $subfolder - The subfolder the template is in. With tailing \
+     * @return string The location of the file.
+     */
+    public function get_template_location($template_name, $subfolder)
+    {
+        //Checks if the file exists in the theme or child-theme folder
+        $locate = locate_template('woocommerce\add-customer\\'.$subfolder.$template_name.'.php');
+        if(empty($locate)){
+            return str_replace('/','\\', $this->plugin_path . 'templates/' . $subfolder . $template_name . '.php');
+        }
+        return str_replace('/','\\', $locate);
+    }
+
+
+    /**
      * Get the option value of the wac options
      * @param string $template_args - Arguments to pass to the template
      * 
@@ -217,10 +236,11 @@ class woo_add_customer_helper
      */
     public function get_wac_option(string $options_name = '')
     {
-        $options = get_option('wac_general_options');
         if (empty($options_name)) {
             return null;
         }
+        $options = get_option('wac_general_options');
+
         if (empty($options[$options_name])) {
             return null;
         }
@@ -242,13 +262,51 @@ class woo_add_customer_helper
         $blog_name = get_bloginfo('name');
         $blog_name = html_entity_decode($blog_name, ENT_QUOTES, 'UTF-8');
         $message = $this->load_template_to_var('new-account', 'email/', $email, $name, $password, $blog_name);
-        $template = 'new-account.php';
+        $from_email_option = $this->get_mail_from();
 
-        $subject = sprintf(__("New account created at %s", 'wac'), $blog_name);
-        $headers = "Content-Type: text/html\r\n";
+        $subject = $this->get_mail_subject('wac_template_subject_add_account');
+        $headers = array("Content-Type: text/html", "From: " . $from_email_option);
         //Send email
         $send = $mailer->send($email, $subject, $message, $headers);
         return $send;
+    }
+
+    /**
+     * Returns the email subject.
+     *
+     * @param string $option_name - The option name to get the text from. Default: wac_template_subject_add_account
+     * @return string The subject text
+     */
+    public function get_mail_subject(string $option_name){
+        $blog_name = get_bloginfo('name');
+        $blog_name = html_entity_decode($blog_name, ENT_QUOTES, 'UTF-8');
+
+        $subject = $this->get_wac_option('wac_template_subject_add_account');
+        if(!empty($subject)){
+            return $subject;
+        }
+        //The default subject text
+        return sprintf(__("New account created at %s", 'wac'), $blog_name);
+    }
+
+    /**
+     * Loads the sender email from the options
+     * If no email set, the default wordpress@sitename email will be used.
+     *
+     * @return string The email address.
+     */
+    public function get_mail_from(){
+        $email_from = $this->get_wac_option('wac_email_from');
+        if(!empty($email_from)){
+            return $email_from;
+        }
+        //Generate the default email
+        $sitename = wp_parse_url( network_home_url(), PHP_URL_HOST );
+        if ( substr( $sitename, 0, 4 ) === 'www.' ) {
+            $sitename = substr( $sitename, 4 );
+        }
+
+        return 'wordpress@' . $sitename;
     }
 
     /**

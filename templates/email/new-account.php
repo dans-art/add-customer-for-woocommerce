@@ -4,6 +4,9 @@
  * This email is getting send, when a new user is created by Add Customer for Woocommerce.
  * For this to happen, you have to activate the option in Wordpress Backend -> Settings -> Add Customer Settings -> Send Notifications to new user
  * 
+ * This file can be overridden by a template file in the theme / child-theme folder.
+ * Copy this file to: /wp-content/themes/[theme/child-theme]/woocommerce/add-customer/email/add-account.php 
+ * 
  * Author: Dan's Art
  * Author URI: http://dev.dans-art.ch
  */
