@@ -15,7 +15,11 @@ $blog_name = get_bloginfo('name');
 $blog_name = html_entity_decode($blog_name, ENT_QUOTES, 'UTF-8');
 $user = wp_get_current_user();
 
-$message = $this->load_template_to_var('new-account', 'email/', $user->user_email, $user->display_name, 'sup3r5ecur3p@ssw0rd', $blog_name);
+$message = $this->load_template_to_var('new-account', 'email/', $user->user_email, $user->display_name, $wac->get_user_reset_password_link($user->user_email), $blog_name);
+//Apply the style
+$woo = new WC_Email;
+$message = $woo->style_inline($message);
+
 $subject = $wac->get_mail_subject('wac_template_subject_add_account');
 
 ?>
@@ -30,7 +34,7 @@ $subject = $wac->get_mail_subject('wac_template_subject_add_account');
     </div>
 </div>
 <div id="load_location_container">
-    <?php echo __('Template loaded from:', 'wac') . ' ' . $wac->get_template_location('add-account', 'email/');  ?>
+    <?php echo __('Template loaded from:', 'wac') . ' ' . $wac->get_template_location('new-account', 'email/');  ?>
 
 </div>
 <div id="reload_container">

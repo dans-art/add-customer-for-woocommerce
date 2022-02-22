@@ -14,15 +14,12 @@ if (!defined('ABSPATH')) {
 class woo_add_customer_backend extends woo_add_customer_helper
 {
 
-    /**
-     * Add the Actions
-     */
     public function __construct()
     {
     }
 
     /**
-     * Adds the Settings page in the Wordpress backend.
+     * Adds the Settings menu item in the Wordpress backend.
      *
      * @return void
      */
@@ -137,9 +134,9 @@ class woo_add_customer_backend extends woo_add_customer_helper
     }
 
     /**
-     * Loads the Options as html tags. 
+     * Loads the Options as html input elements, wrapped in a table structure
      *
-     * @param [array] $args
+     * @param array $args
      * @return void
      */
     public function get_settings_option(array $args)
@@ -147,7 +144,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
         extract($args);
         $options = (array) get_option($args['page']);
         $default_value = (!empty($args['default_value']))?$args['default_value']:'';
-        $options_val = (!empty($options[$label_for])) ? $options[$label_for] : $default_value;
+        $options_val = (!empty($options[$label_for])) ? $options[$label_for] : '';
         switch ($type) {
             case 'checkbox':
                 $checked = ($options_val === 'yes') ? 'checked' : '';?>
@@ -158,21 +155,18 @@ class woo_add_customer_backend extends woo_add_customer_helper
                     <td><?php echo $description; ?></td>
                 </tr>
                 <?php
-                //echo "<input id='$label_for' name='wac_general_options[$label_for]' type='checkbox' value='yes' $checked />";
                 break;
-
             case 'text':
                 ?>
                 <tr class='<?php echo $class; ?> text-input'>
                     <td>
-                        <input name="wac_general_options[<?php echo $label_for; ?>]" id="<?php echo $label_for; ?>" type="<?php echo $type; ?>" value="<?php echo $options_val; ?>" />
+                        <input name="wac_general_options[<?php echo $label_for; ?>]" id="<?php echo $label_for; ?>" type="<?php echo $type; ?>" value="<?php echo $options_val; ?>" placeholder="<?php echo $default_value; ?>" />
                 </td>
                 </tr>
                 <tr class='<?php echo $class; ?>-description'>
                     <td><?php echo $description; ?></td>
                 </tr>
                 <?php
-                //echo "<input id='$label_for' name='wac_general_options[$label_for]' type='checkbox' value='yes' $checked />";
                 break;
 
             default:

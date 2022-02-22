@@ -17,15 +17,20 @@ class woo_add_customer_admin extends woo_add_customer_helper
     protected $adminnotice = null; //Variable for the WC_Admin_Notices
     public $custom_billing_fields = array(); //The custom billing fields to save.
     public $custom_shipping_fields = array(); //The custom shipping fields to save.
-    public $default_fields = array('first_name', 'last_name', 'company', 'address_1', 'address_2', 'city', 'postcode', 'country', 'state', 'email', 'phone'); //The default Woocommerce billing and shipping fields
+    public $default_fields = array('first_name', 'last_name', 'company', 'address_1', 'address_2', 'city', 'postcode', 'country', 'state', 'email', 'phone'); //The default WooCommerce billing and shipping fields
 
 
     /**
-     * Add the Actions
+     * Add the Actions and hooks, loads the classes and version
      */
     public function __construct()
     {
+        
         $this->plugin_path = WP_PLUGIN_DIR . '/add-customer-for-woocommerce/';
+        
+        //Load the current version
+        $this->load_version();
+
         //Remove all Admin Notices
         if (class_exists('WC_Admin_Notices')) {
             $this->adminnotice = new WC_Admin_Notices();
@@ -54,7 +59,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
      * Adds the values of the custom billing and shipping fields.
      *
      * @param array $data - Array with the data to populate. 
-     * @param array $customer - WC_Customer object
+     * @param array $customer - WC_Customer object //Not used by now
      * @param int $user_id - Id uf the user
      * @return void
      */
@@ -81,11 +86,12 @@ class woo_add_customer_admin extends woo_add_customer_helper
         }
         return $data;
     }
+
     /**
      * Adds any custom billing fields to the $custom_billing_fields property
      *
      * @param array $fields - Fields to display in the bulling fields. 
-     * @return array The original fields.
+     * @return array The custom billing fields.
      */
     public function wac_add_custom_billing_fields($fields)
     {
@@ -103,7 +109,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
      * Adds any custom shipping fields to the $custom_shipping_fields property
      *
      * @param array $fields - Fields to display in the shipping fields. 
-     * @return array The original fields.
+     * @return array The custom shipping fields.
      */
     public function wac_add_custom_shipping_fields($fields)
     {
@@ -118,12 +124,12 @@ class woo_add_customer_admin extends woo_add_customer_helper
     }
 
     /**
-     * Hoocks in after all fields are saved.
+     * Hooks in after all fields are saved.
      * If "wac_add_customer" is checked, it will create a new user or link a existing one, if email exists in user db.
      *
      * @param integer $order_id - ID of Order
      * @param  object $posted 
-     * @return void
+     * @return bool false on error, true on success
      */
     public function wac_save_order($order_id, $posted)
     {
@@ -147,7 +153,10 @@ class woo_add_customer_admin extends woo_add_customer_helper
                 $_REQUEST['customer_user'] = $existing_user->ID;
                 update_post_meta($order_id, '_customer_user', $existing_user->ID);
             }
+
+            return true;
         }
+        return;
     }
 
     /**
@@ -163,11 +172,13 @@ class woo_add_customer_admin extends woo_add_customer_helper
         $user_last = (isset($_REQUEST['_billing_last_name']) and !empty($_REQUEST['_billing_last_name'])) ? sanitize_text_field($_REQUEST['_billing_last_name']) : '';
         $user = $this->wac_get_unique_user($user_first . '.' . $user_last);
         $password = wp_generate_password();
+        $email_is_fake = false;
 
         if (empty($email)) {
             //create new 'fake' email
             $email = $this->create_fake_email($user);
             update_post_meta($order_id, '_billing_email', $email);
+            $email_is_fake = true;
         }
         if ($user !== false) {
             $user_id = wc_create_new_customer($email, $user, $password);
@@ -175,11 +186,17 @@ class woo_add_customer_admin extends woo_add_customer_helper
             if (is_integer($user_id)) {
                 $user_data = array('ID' => $user_id, 'first_name' => $user_first, 'last_name' => $user_last);
                 wp_update_user($user_data);
-                $this->wac_add_customer_meta($user_id);
+                $this->wac_add_customer_meta($user_id, $order_id);
                 $this->log_event("added_user", $order_id, $user, $email);
                 //Check if User notification should be send or not. If so, send email with login information.
                 if (isset($_REQUEST['wac_add_customer_notify']) and $_REQUEST['wac_add_customer_notify'] == 'true') {
-                    $send = $this->send_mail_to_new_customer($email, $user_first, $password);
+                    //Check if the address is a fake email. If so, no email will be sent.
+                    if($email_is_fake){
+                        $this->log_event("failed_to_send_user_mail_fakemail", $order_id, $user);
+                        return (int) $user_id;
+                    }
+                    //No fake email, try to send the email
+                    $send = $this->send_mail_to_new_customer($email, $user_first);
                     if (!$send) {
                         $this->log_event("failed_to_send_user_mail", $order_id);
                     } else {
@@ -198,10 +215,10 @@ class woo_add_customer_admin extends woo_add_customer_helper
      * Adds all the customer meta to the user.
      *
      * @param integer $user_id - Id of a existing user
+     * @param integer $order_id - Id the current order
      * @return bool true
-     * @todo Output error if meta could not be saved.
      */
-    public function wac_add_customer_meta($user_id)
+    public function wac_add_customer_meta($user_id, $order_id)
     {
         $fields = array();
         $fields = array(
@@ -212,22 +229,26 @@ class woo_add_customer_admin extends woo_add_customer_helper
         //Save all the default fields
         foreach ($fields as $f_name) {
             $f_value = (isset($_REQUEST['_' . $f_name]) and !empty($_REQUEST['_' . $f_name])) ? sanitize_text_field($_REQUEST['_' . $f_name]) : false;
-            if ($f_value !== false) {
-                update_user_meta($user_id, $f_name, $f_value);
+            if ($f_value !== false AND !update_user_meta($user_id, $f_name, $f_value)) {
+                $this->wac_set_notice(sprintf(__('Could not save the default field "%s"','wac'), $f_name), 'error', $order_id);
             }
         }
         //saves the custom billing fields
         if (!empty($this->custom_billing_fields) and is_array($this->custom_billing_fields)) {
             foreach ($this->custom_billing_fields as $field_id => $value) {
                 $cf_value = (isset($_REQUEST['_billing_' . $field_id]) and !empty($_REQUEST['_billing_' . $field_id])) ? sanitize_text_field($_REQUEST['_billing_' . $field_id]) : false;
-                update_user_meta($user_id, "billing_{$field_id}", $cf_value);
+                if(!update_user_meta($user_id, "billing_{$field_id}", $cf_value)){
+                    $this->wac_set_notice(sprintf(__('Could not save the "%s" billing field','wac'), $field_id), 'error', $order_id);
+                }
             }
         }
         //saves the custom shipping fields
         if (!empty($this->custom_shipping_fields) and is_array($this->custom_shipping_fields)) {
             foreach ($this->custom_shipping_fields as $field_id => $value) {
                 $cf_value = (isset($_REQUEST['_shipping_' . $field_id]) and !empty($_REQUEST['_shipping_' . $field_id])) ? sanitize_text_field($_REQUEST['_shipping_' . $field_id]) : false;
-                update_user_meta($user_id, "shipping_{$field_id}", $cf_value);
+                if(!update_user_meta($user_id, "shipping_{$field_id}", $cf_value)){
+                    $this->wac_set_notice(sprintf(__('Could not save the "%s" shipping field','wac'), $field_id), 'error', $order_id);
+                }
             }
         }
         return true;
