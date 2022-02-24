@@ -22,7 +22,7 @@ class woo_add_customer_helper
      */
     public function load_version()
     {
-        $plugin_meta = get_plugin_data($this->plugin_path . 'add-customer-for-woocommerce.php');
+        $plugin_meta = get_file_data($this->plugin_path . 'add-customer-for-woocommerce.php', array('Version'), 'plugin');
         $this->version = (!empty($plugin_meta['Version'])) ? $plugin_meta['Version'] : "000";
     }
 
