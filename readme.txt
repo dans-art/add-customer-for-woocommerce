@@ -6,7 +6,7 @@ Donate link: <https://paypal.me/dansart13>
 Tags: woocommerce, customer, tools, helper
 Requires at least: 5.4.0
 Tested up to: 5.9
-Stable tag: 1.4
+Stable tag: 1.4.1
 License: GPLv3 or later
 License URI: <http://www.gnu.org/licenses/gpl-2.0.html>
 WC requires at least: 4.7.0
@@ -59,7 +59,11 @@ Can I change how the email template for the new customer?
 - Yes, you can. Just copy the "new-account.php" from "wp-content\plugins\add-customer-for-woocommerce\templates\email" to "\wp-content\themes\[theme/child-theme]\woocommerce\add-customer\email" and do your changes.
 
 == Changelog ==
-= [1.4] 2022-02-16 =
+= [1.4.1] 2022-02-24 =
+
+* Fixed: Fatal error on loading the version
+
+= [1.4] 2022-02-22 =
 
 * Added: Option to set the sender email
 * Added: Option to set the subject of the new customer email
