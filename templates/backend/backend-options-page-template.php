@@ -10,6 +10,12 @@
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
+
+if(!class_exists('WC_Email')){
+    echo __('Error: WooCommerce Email Class not found. Make sure that you have the newest version of WooCommerce installed.', 'wac');
+    return;
+}
+
 $wac = new woo_add_customer;
 $blog_name = get_bloginfo('name');
 $blog_name = html_entity_decode($blog_name, ENT_QUOTES, 'UTF-8');

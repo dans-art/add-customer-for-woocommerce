@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Add Customer for WooCommerce\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-20 11:15+0000\n"
+"POT-Creation-Date: 2022-05-15 19:27+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -36,7 +36,7 @@ msgstr ""
 msgid "Add new Customer"
 msgstr ""
 
-#: include/tools/helper.php:155
+#: include/tools/helper.php:160
 #, php-format
 msgid "Added customer: %s <%s>"
 msgstr ""
@@ -52,7 +52,7 @@ msgid ""
 "creation."
 msgstr ""
 
-#: include/tools/helper.php:163
+#: include/tools/helper.php:168
 msgid "Could not save customer. No Name provided."
 msgstr ""
 
@@ -75,16 +75,16 @@ msgstr ""
 msgid "Dan's Art"
 msgstr ""
 
-#: include/tools/helper.php:152
+#: include/tools/helper.php:157
 #, php-format
 msgid "Email \"%s\" already exists. No new customer got created."
 msgstr ""
 
-#: templates/backend/backend-options-page-template.php:32
+#: templates/backend/backend-options-page-template.php:38
 msgid "Email Content:"
 msgstr ""
 
-#: include/tools/helper.php:159
+#: include/tools/helper.php:164
 #, php-format
 msgid "Email send to new customer: %s"
 msgstr ""
@@ -93,11 +93,11 @@ msgstr ""
 msgid "Email Subject for new accounts created"
 msgstr ""
 
-#: templates/backend/backend-options-page-template.php:28
+#: templates/backend/backend-options-page-template.php:34
 msgid "Email Subject:"
 msgstr ""
 
-#: include/tools/helper.php:171
+#: include/tools/helper.php:176
 msgid "Email was not send to user because no email was provided."
 msgstr ""
 
@@ -106,7 +106,13 @@ msgstr ""
 msgid "Email: %s"
 msgstr ""
 
-#: include/tools/helper.php:167
+#: templates/backend/backend-options-page-template.php:15
+msgid ""
+"Error: WooCommerce Email Class not found. Make sure that you have the newest "
+"version of WooCommerce installed."
+msgstr ""
+
+#: include/tools/helper.php:172
 msgid "Failed to send email notification to customer."
 msgstr ""
 
@@ -131,7 +137,7 @@ msgstr ""
 msgid "In order to login, you have to define a password for your account."
 msgstr ""
 
-#: include/tools/helper.php:181
+#: include/tools/helper.php:186
 msgid "Log Type not found!"
 msgstr ""
 
@@ -143,18 +149,18 @@ msgstr ""
 msgid "New account created"
 msgstr ""
 
-#: include/classes/wac-backend.php:104 include/tools/helper.php:294
+#: include/classes/wac-backend.php:104 include/tools/helper.php:299
 #, php-format
 msgid "New account created at %s"
 msgstr ""
 
-#: include/tools/helper.php:175
+#: include/tools/helper.php:180
 msgid ""
 "New customer could not be added by Add Customer Plugin. Please contact the "
 "Plugin Author."
 msgstr ""
 
-#: templates/backend/backend-options-page-template.php:43
+#: templates/backend/backend-options-page-template.php:49
 msgid "Reload template"
 msgstr ""
 
@@ -192,7 +198,7 @@ msgstr ""
 msgid "Template"
 msgstr ""
 
-#: templates/backend/backend-options-page-template.php:37
+#: templates/backend/backend-options-page-template.php:43
 msgid "Template loaded from:"
 msgstr ""
 
