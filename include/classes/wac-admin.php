@@ -25,9 +25,9 @@ class woo_add_customer_admin extends woo_add_customer_helper
      */
     public function __construct()
     {
-        
+
         $this->plugin_path = WP_PLUGIN_DIR . '/add-customer-for-woocommerce/';
-        
+
         //Load the current version
         $this->load_version();
 
@@ -149,7 +149,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
                 }
             } else {
                 //Link Order to Customer
-                $this -> log_event("existing_account",$order_id, $email);
+                $this->log_event("existing_account", $order_id, $email);
                 $_REQUEST['customer_user'] = $existing_user->ID;
                 update_post_meta($order_id, '_customer_user', $existing_user->ID);
             }
@@ -180,9 +180,10 @@ class woo_add_customer_admin extends woo_add_customer_helper
             update_post_meta($order_id, '_billing_email', $email);
             $email_is_fake = true;
         }
+
         if ($user !== false) {
             $user_id = wc_create_new_customer($email, $user, $password);
-            //$this->log_event("failed_to_add_user", $user_id, $user, $email);
+
             if (is_integer($user_id)) {
                 $user_data = array('ID' => $user_id, 'first_name' => $user_first, 'last_name' => $user_last);
                 wp_update_user($user_data);
@@ -191,7 +192,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
                 //Check if User notification should be send or not. If so, send email with login information.
                 if (isset($_REQUEST['wac_add_customer_notify']) and $_REQUEST['wac_add_customer_notify'] == 'true') {
                     //Check if the address is a fake email. If so, no email will be sent.
-                    if($email_is_fake){
+                    if ($email_is_fake) {
                         $this->log_event("failed_to_send_user_mail_fakemail", $order_id, $user);
                         return (int) $user_id;
                     }
@@ -205,7 +206,11 @@ class woo_add_customer_admin extends woo_add_customer_helper
                 }
                 return (int) $user_id;
             } else {
-                $this->log_event("failed_to_add_user", $order_id, $user_id, $user, $email);
+                $error_message = __('Add customer could not save a new user:', 'wac') . ' ' . $user_id->get_error_message();
+                $additional_log = array('wc_create_new_customer' => $order_id, 'user' => $user, 'email' => $email);
+
+                $this->wac_set_notice($error_message, 'error', $order_id);
+                apply_filters('simple_history_log', "{$error_message} - by Add Customer", $additional_log);
             }
         }
         return false;
@@ -229,16 +234,16 @@ class woo_add_customer_admin extends woo_add_customer_helper
         //Save all the default fields
         foreach ($fields as $f_name) {
             $f_value = (isset($_REQUEST['_' . $f_name]) and !empty($_REQUEST['_' . $f_name])) ? sanitize_text_field($_REQUEST['_' . $f_name]) : false;
-            if ($f_value !== false AND !update_user_meta($user_id, $f_name, $f_value)) {
-                $this->wac_set_notice(sprintf(__('Could not save the default field "%s"','wac'), $f_name), 'error', $order_id);
+            if ($f_value !== false and !update_user_meta($user_id, $f_name, $f_value)) {
+                $this->wac_set_notice(sprintf(__('Could not save the default field "%s"', 'wac'), $f_name), 'error', $order_id);
             }
         }
         //saves the custom billing fields
         if (!empty($this->custom_billing_fields) and is_array($this->custom_billing_fields)) {
             foreach ($this->custom_billing_fields as $field_id => $value) {
                 $cf_value = (isset($_REQUEST['_billing_' . $field_id]) and !empty($_REQUEST['_billing_' . $field_id])) ? sanitize_text_field($_REQUEST['_billing_' . $field_id]) : false;
-                if(!update_user_meta($user_id, "billing_{$field_id}", $cf_value)){
-                    $this->wac_set_notice(sprintf(__('Could not save the "%s" billing field','wac'), $field_id), 'error', $order_id);
+                if (!update_user_meta($user_id, "billing_{$field_id}", $cf_value)) {
+                    $this->wac_set_notice(sprintf(__('Could not save the "%s" billing field', 'wac'), $field_id), 'error', $order_id);
                 }
             }
         }
@@ -246,8 +251,8 @@ class woo_add_customer_admin extends woo_add_customer_helper
         if (!empty($this->custom_shipping_fields) and is_array($this->custom_shipping_fields)) {
             foreach ($this->custom_shipping_fields as $field_id => $value) {
                 $cf_value = (isset($_REQUEST['_shipping_' . $field_id]) and !empty($_REQUEST['_shipping_' . $field_id])) ? sanitize_text_field($_REQUEST['_shipping_' . $field_id]) : false;
-                if(!update_user_meta($user_id, "shipping_{$field_id}", $cf_value)){
-                    $this->wac_set_notice(sprintf(__('Could not save the "%s" shipping field','wac'), $field_id), 'error', $order_id);
+                if (!update_user_meta($user_id, "shipping_{$field_id}", $cf_value)) {
+                    $this->wac_set_notice(sprintf(__('Could not save the "%s" shipping field', 'wac'), $field_id), 'error', $order_id);
                 }
             }
         }
@@ -298,7 +303,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
         $this->wac_enqueue_admin_scripts();
 
         //Only pre-check the checkbox if the option is selected by the user and the order is a new order. 
-        $checked = ($this->get_wac_option('wac_preselect') === 'yes' AND $order_status === 'auto-draft') ? 'checked' : '';
+        $checked = ($this->get_wac_option('wac_preselect') === 'yes' and $order_status === 'auto-draft') ? 'checked' : '';
         $checked_notify = ($this->get_wac_option('wac_send_notification') === 'yes') ? 'checked' : '';
 ?>
         <div id='wac_add_customer_con' class="edit_address">

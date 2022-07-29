@@ -22,7 +22,7 @@ class woo_add_customer_helper
      */
     public function load_version()
     {
-        if(!function_exists('get_file_data')){
+        if (!function_exists('get_file_data')) {
             $this->version = "000";
             return;
         }
@@ -217,7 +217,7 @@ class woo_add_customer_helper
             wp_reset_postdata();
             return $output_string;
         }
-        return sprintf(__('Template "%s" not found! (%s)', 'plek'), $template_name, $path);
+        return sprintf(__('Template "%s" not found! (%s)', 'wac'), $template_name, $path);
     }
 
     /**
@@ -230,11 +230,11 @@ class woo_add_customer_helper
     public function get_template_location($template_name, $subfolder)
     {
         //Checks if the file exists in the theme or child-theme folder
-        $locate = locate_template('woocommerce/add-customer/'.$subfolder.$template_name.'.php');
-        if(empty($locate)){
-            return str_replace('\\','/', $this->plugin_path . 'templates/' . $subfolder . $template_name . '.php');
+        $locate = locate_template('woocommerce/add-customer/' . $subfolder . $template_name . '.php');
+        if (empty($locate)) {
+            return str_replace('\\', '/', $this->plugin_path . 'templates/' . $subfolder . $template_name . '.php');
         }
-        return str_replace('\\','/', $locate);
+        return str_replace('\\', '/', $locate);
     }
 
 
@@ -287,12 +287,13 @@ class woo_add_customer_helper
      * @param string $option_name - The option name to get the text from. Default: wac_template_subject_add_account
      * @return string The subject text
      */
-    public function get_mail_subject(string $option_name = 'wac_template_subject_add_account'){
+    public function get_mail_subject(string $option_name = 'wac_template_subject_add_account')
+    {
         $blog_name = get_bloginfo('name');
         $blog_name = html_entity_decode($blog_name, ENT_QUOTES, 'UTF-8');
 
         $subject = $this->get_wac_option($option_name);
-        if(!empty($subject)){
+        if (!empty($subject)) {
             return $subject;
         }
         //The default subject text
@@ -305,15 +306,16 @@ class woo_add_customer_helper
      *
      * @return string The email address set in the options, or the default email
      */
-    public function get_mail_from(){
+    public function get_mail_from()
+    {
         $email_from = $this->get_wac_option('wac_email_from');
-        if(!empty($email_from)){
+        if (!empty($email_from)) {
             return $email_from;
         }
         //Generate the default email
-        $sitename = wp_parse_url( network_home_url(), PHP_URL_HOST );
-        if ( substr( $sitename, 0, 4 ) === 'www.' ) {
-            $sitename = substr( $sitename, 4 );
+        $sitename = wp_parse_url(network_home_url(), PHP_URL_HOST);
+        if (substr($sitename, 0, 4) === 'www.') {
+            $sitename = substr($sitename, 4);
         }
 
         return 'wordpress@' . $sitename;

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Add Customer for WooCommerce\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-29 15:59+0000\n"
+"POT-Creation-Date: 2022-05-15 19:27+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -20,10 +20,6 @@ msgstr ""
 msgid "Activated"
 msgstr ""
 
-#: include/classes/wac-admin.php:209
-msgid "Add customer could not save a new user:"
-msgstr ""
-
 #. Name of the plugin
 msgid "Add Customer for WooCommerce"
 msgstr ""
@@ -36,7 +32,7 @@ msgstr ""
 msgid "Add Customer Settings"
 msgstr ""
 
-#: include/classes/wac-admin.php:311
+#: include/classes/wac-admin.php:306
 msgid "Add new Customer"
 msgstr ""
 
@@ -60,17 +56,17 @@ msgstr ""
 msgid "Could not save customer. No Name provided."
 msgstr ""
 
-#: include/classes/wac-admin.php:246
+#: include/classes/wac-admin.php:241
 #, php-format
 msgid "Could not save the \"%s\" billing field"
 msgstr ""
 
-#: include/classes/wac-admin.php:255
+#: include/classes/wac-admin.php:250
 #, php-format
 msgid "Could not save the \"%s\" shipping field"
 msgstr ""
 
-#: include/classes/wac-admin.php:238
+#: include/classes/wac-admin.php:233
 #, php-format
 msgid "Could not save the default field \"%s\""
 msgstr ""
@@ -153,7 +149,7 @@ msgstr ""
 msgid "New account created"
 msgstr ""
 
-#: include/classes/wac-backend.php:104 include/tools/helper.php:300
+#: include/classes/wac-backend.php:104 include/tools/helper.php:299
 #, php-format
 msgid "New account created at %s"
 msgstr ""
@@ -168,7 +164,7 @@ msgstr ""
 msgid "Reload template"
 msgstr ""
 
-#: include/classes/wac-admin.php:314
+#: include/classes/wac-admin.php:309
 msgid "Save as new customer"
 msgstr ""
 
@@ -182,7 +178,7 @@ msgstr ""
 msgid "Selected by default"
 msgstr ""
 
-#: include/classes/wac-admin.php:318
+#: include/classes/wac-admin.php:313
 msgid "Send email to new customer"
 msgstr ""
 
@@ -200,11 +196,6 @@ msgstr ""
 
 #: templates/backend/backend-options-page.php:25
 msgid "Template"
-msgstr ""
-
-#: include/tools/helper.php:220
-#, php-format
-msgid "Template \"%s\" not found! (%s)"
 msgstr ""
 
 #: templates/backend/backend-options-page-template.php:43
