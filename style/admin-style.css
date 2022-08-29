@@ -40,6 +40,10 @@ Style for the settings page
     background-color: white;
 }
 
+.wac_preselect{
+    display: flex;
+}
+
 .wac-options-tab #load_location_container,
 .wac-options-tab .main_content,
 .wac-options-tab .subject_content{

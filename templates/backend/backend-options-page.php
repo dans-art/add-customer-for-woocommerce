@@ -11,6 +11,7 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 $wac = new woo_add_customer;
+
 $this->wac_enqueue_admin_style();
 ?>
 

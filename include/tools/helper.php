@@ -16,6 +16,7 @@ class woo_add_customer_helper
 {
     protected $version = '000'; //The current plugin version. This is used to make sure that on plugin update, the styles and scripts will be cleared from the cache.
     public $plugin_path = ''; //The path to the plugin folder
+    public $supported_fake_email_parts = ['first_name', 'last_name', 'company', 'city', 'postcode', 'country', 'state', 'phone'];
 
     /**
      * Loads the current plugin version.
@@ -40,15 +41,73 @@ class woo_add_customer_helper
      */
     public function create_fake_email($username = null)
     {
-        $urlparts = parse_url(home_url());
-        $domain_name = ($urlparts['host'] !== 'localhost') ? $urlparts['host'] : 'local.host';
+        $domain_name = $this->get_domain_name();
         $number = '';
-        $name = (!empty($username)) ? sanitize_user($username) : wp_generate_password(5, false);
+        $name = $this->create_fake_email_name($username);
+        //Add a number if email already exists
         while (get_user_by('email', $name . $number . '@' . $domain_name) !== false) {
             $number = (int)($number === '') ? 1 : $number++;
         }
         $email = $name . $number . '@' . $domain_name;
         return filter_var($email, FILTER_SANITIZE_EMAIL);
+    }
+
+    /**
+     * Receives the domain name without the scheme
+     * If the option wac_fakemail_format is set, the domain name will be taken from the option. 
+     *
+     * @return string The Domain name.
+     */
+    public function get_domain_name()
+    {
+        $custom_format = $this->get_wac_option('wac_fakemail_format');
+        $exp = explode('@', $custom_format);
+        //$exp[0] = email Name, $exp[1] = domain name
+        if (isset($exp[1])) {
+            return $exp[1];
+        }
+        $urlparts = parse_url(home_url());
+        return ($urlparts['host'] !== 'localhost') ? $urlparts['host'] : 'local.host';
+    }
+
+    /**
+     * Creates the name for the email
+     * If the option wac_fakemail_format is set, the name will be created accordingly. 
+     *
+     * @param string $username
+     * @return string The eMail name
+     */
+    public function create_fake_email_name($username = null)
+    {
+        $backend_class = new woo_add_customer_backend;
+        $name = (!empty($username)) ? sanitize_user($username) : wp_generate_password(5, false);
+
+        //Craft the email
+        $custom_format = $this->get_wac_option('wac_fakemail_format');
+        if (!empty($backend_class->check_option('wac_fakemail_format', $custom_format))) {
+            //Email set in the options is not valid. Return the original name
+            return $name;
+        }
+        if (!empty($custom_format)) {
+            //Custom format
+            $mail_split = explode('@', $custom_format);
+            $custom_format_name = (isset($mail_split[0])) ? $mail_split[0] : $custom_format;
+
+            foreach ($this->supported_fake_email_parts as $tag_name) {
+                //Add the _billing_ if field exists but only if no custom field exists with the same name
+                $request_name = $tag_name;
+                if (isset($_REQUEST['_billing_' . $tag_name]) and !isset($_REQUEST[$tag_name])) {
+                    $request_name = '_billing_' . $tag_name;
+                }
+                if (isset($_REQUEST[$request_name]) and strpos($custom_format_name, $tag_name) !== false) {
+                    //Placeholder found in the custom format and data found in request
+                    $value = $_REQUEST[$request_name];
+                    $custom_format_name = str_replace('[' . $tag_name . ']', $value, $custom_format_name);
+                }
+            }
+            return str_replace(['[', ']'], '', $custom_format_name); //Remove tags if any left
+        }
+        return $name;
     }
 
     /**

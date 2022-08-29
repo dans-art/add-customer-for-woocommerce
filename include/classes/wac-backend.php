@@ -87,6 +87,22 @@ class woo_add_customer_backend extends woo_add_customer_helper
                 'page' => 'wac_general_options'
             )
         );
+        add_settings_field(
+            'wac_fakemail_format',
+            __('Auto-Generated eMail Format', 'wac'),
+            [$this, 'get_settings_option'],
+            'wac_general_options',
+            'wac_main_settings',
+            array(
+                'label_for' => 'wac_fakemail_format',
+                'type' => 'text',
+                'class' => 'wac_text_input',
+                'description' => __('The Format you like to have for the automatic generated eMail', 'wac') . '<br/>' .
+                    __('Supported tags:', 'wac') . ' ' . implode(', ', $wac->supported_fake_email_parts),
+                'page' => 'wac_general_options',
+                'default_value' => '[first_name].[last_name]@' . $wac->get_domain_name()
+            )
+        );
 
         //Template settings fields
         add_settings_field(
@@ -130,7 +146,32 @@ class woo_add_customer_backend extends woo_add_customer_helper
      */
     public function wac_options_validate($input)
     {
+
         return $input;
+    }
+
+    /**
+     * Checks if the option field contains some errors.
+     *
+     * @param string $field_name
+     * @param string $value
+     * @return string Error message or empty string
+     */
+    public function check_option($field_name, $value)
+    {
+        switch ($field_name) {
+            case 'wac_fakemail_format':
+                //Check if multiple @ exists
+                if (substr_count($value, '@') !== 1) {
+                    return "<div class='notice notice-error'><p>" . __('Invalid eMail address', 'wac') . "</p></div>";
+                }
+                break;
+
+            default:
+                # code...
+                break;
+        }
+        return '';
     }
 
     /**
@@ -141,32 +182,36 @@ class woo_add_customer_backend extends woo_add_customer_helper
      */
     public function get_settings_option(array $args)
     {
-        extract($args);
+        extract($args); //$label_for, $type, $class, $description, $page, $default_value
         $options = (array) get_option($args['page']);
-        $default_value = (!empty($args['default_value']))?$args['default_value']:'';
+        $default_value = (!empty($args['default_value'])) ? $args['default_value'] : '';
         $options_val = (!empty($options[$label_for])) ? $options[$label_for] : '';
         switch ($type) {
             case 'checkbox':
-                $checked = ($options_val === 'yes') ? 'checked' : '';?>
+                $checked = ($options_val === 'yes') ? 'checked' : ''; ?>
                 <tr class='<?php echo $class; ?>'>
                     <th><label><input name="<?php echo $args['page']; ?>[<?php echo $label_for; ?>]" id="<?php echo $label_for; ?>" type="checkbox" value="yes" <?php echo $checked; ?> />
-                            <?php echo __('Activated','wac'); ?>
+                            <?php echo __('Activated', 'wac'); ?>
                         </label></th>
                     <td><?php echo $description; ?></td>
                 </tr>
-                <?php
+            <?php
                 break;
             case 'text':
-                ?>
+            ?>
                 <tr class='<?php echo $class; ?> text-input'>
                     <td>
                         <input name="wac_general_options[<?php echo $label_for; ?>]" id="<?php echo $label_for; ?>" type="<?php echo $type; ?>" value="<?php echo $options_val; ?>" placeholder="<?php echo $default_value; ?>" />
-                </td>
+                    </td>
+                </tr>
+                <tr class='<?php echo $class; ?>-field-errors'>
+                    <td><?php echo $this->check_option($label_for, $options_val); ?></td>
                 </tr>
                 <tr class='<?php echo $class; ?>-description'>
                     <td><?php echo $description; ?></td>
                 </tr>
-                <?php
+
+<?php
                 break;
 
             default:
