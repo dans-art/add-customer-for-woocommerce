@@ -180,7 +180,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
         switch ($field_name) {
             case 'wac_fakemail_format':
                 //Check if multiple @ exists
-                if (substr_count($value, '@') !== 1) {
+                if (!empty($value) AND substr_count($value, '@') !== 1) {
                     return "<div class='notice notice-error'><p>" . __('Invalid eMail address', 'wac') . "</p></div>";
                 }
                 break;
