@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Add Customer for WooCommerce\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-22 15:15+0000\n"
-"PO-Revision-Date: 2022-09-14 19:46+0000\n"
+"PO-Revision-Date: 2022-09-14 19:43+0000\n"
 "Last-Translator: \n"
 "Language-Team: Deutsch\n"
 "Language: de_DE\n"
@@ -13,6 +13,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco https://localise.biz/\n"
 "X-Loco-Version: 2.5.8; wp-5.9"
+
+#: templates/backend/backend-options-page.php:44
+#, php-format
+msgid "There have been %d customers added and %d customers edited by the plugin"
+msgstr ""
+"Es wurden bisher durch das Plugin %d Kunden hinzugefügt und %d Kunden bearbeitet."
 
 #: templates/backend/components/checkbox.php:30
 msgid "Activated"
@@ -270,14 +276,6 @@ msgstr "Die Absender Email"
 msgid ""
 "The subject / header for the email which are sended to the new customers"
 msgstr "Der Betreff der Email, welche an den neuen Kunden geschickt wird"
-
-#: templates/backend/backend-options-page.php:44
-#, php-format
-msgid ""
-"There have been %d customers added and %d customers edited by the plugin"
-msgstr ""
-"Es wurden bisher durch das Plugin %d Kunden hinzugefügt und %d Kunden "
-"bearbeitet."
 
 #: templates/order/update-checkbox.php:21
 msgid "Update Customer"

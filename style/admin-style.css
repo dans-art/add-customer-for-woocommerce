@@ -24,12 +24,23 @@
     margin-top: 0.5em;
 }
 
+#wac_options_page .form-table{
+    margin-left: 5%;
+    width: 90%;
+}
 /*
 Style for the settings page
 */
+.wac_text_input th{
+    padding-bottom: 0.2em;
+}
 .wac_text_input.text-input td{
     width: 95%;
     padding-bottom: 0;
+}
+
+.wac-field-errors td{
+    padding: 0.1em 0;
 }
 
 .wac_text_input-description td{
@@ -38,6 +49,11 @@ Style for the settings page
 
 .wac-options-tab .main_content .message{
     background-color: white;
+}
+
+.wac_preselect,
+.wac_preselect_update{
+    display: flex;
 }
 
 .wac-options-tab #load_location_container,

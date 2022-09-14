@@ -11,6 +11,7 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 $wac = new woo_add_customer;
+
 $this->wac_enqueue_admin_style();
 ?>
 
@@ -36,4 +37,16 @@ $current_tab = (isset($_GET['tab'])) ? $_GET['tab'] : null;
             break;
     }
     ?>
+</div>
+<div class="wac-statistics">
+    <?php
+    echo sprintf(
+        __('There have been %d customers added and %d customers edited by the plugin', 'wac'),
+        intval(get_option('wac_add_customer_count')),
+        intval(get_option('wac_edit_customer_count'))
+    );
+    ?>
+</div>
+<div class="wac-footer">
+    <span><?php echo __('Made with ❤️ by Dan\'s Art', 'wac'); ?></span>
 </div>

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This Template renders the backend page for the main settings.
  * Wordpress Backend -> Settings -> Add Customer Settings
@@ -12,13 +13,12 @@ if (!defined('ABSPATH')) {
 
 ?>
 
-
-<form id='wac_options_page' action="options.php" method="post"  enctype="multipart/form-data">
+<form id='wac_options_page' action="options.php" method="post" enctype="multipart/form-data">
     <?php
 
-    settings_fields('wac_general_options'); 
+    settings_fields('wac_general_options');
     do_settings_sections('wac_general_options');
-    
+
     submit_button();
     ?>
 </form>
