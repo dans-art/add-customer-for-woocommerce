@@ -6,7 +6,7 @@ Donate link: <https://paypal.me/dansart13>
 Tags: woocommerce, customer, tools, helper
 Requires at least: 5.4.0
 Tested up to: 6.0.2
-Stable tag: 1.5
+Stable tag: 1.5.0
 License: GPLv3 or later
 License URI: <http://www.gnu.org/licenses/gpl-2.0.html>
 WC requires at least: 4.7.0

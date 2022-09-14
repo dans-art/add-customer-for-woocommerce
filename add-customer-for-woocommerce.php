@@ -11,10 +11,10 @@
  * Stable tag: 1.5.0
  * 
  * Requires at least: 5.4.0
- * Tested up to: 6.0.1
+ * Tested up to: 6.0.2
  * 
  * WC requires at least: 4.7.0
- * WC tested up to: 6.1.1
+ * WC tested up to: 6.9.1
  * 
  * Requires PHP: 7.4
  * 
