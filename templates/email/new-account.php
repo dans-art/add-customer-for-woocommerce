@@ -26,7 +26,7 @@ $site = (isset($template_args[3])) ? $template_args[3] : ''; //The Site name
 do_action('woocommerce_email_header', esc_html__('New account created', 'wac'), 'header_email'); ?>
 
 <h1><?php echo sprintf(esc_html__('Hi, %s', 'wac'), $name); ?></h1>
-<p><?php echo sprintf(esc_html__('Your account on %s got created.', 'wac'), $site); ?></p>
+<p><?php echo sprintf(esc_html__('Your account on %s has been created.', 'wac'), $site); ?></p>
 <p><?php echo sprintf(esc_html__('Email: %s', 'wac'), $email); ?><br /></p>
 
 <p>

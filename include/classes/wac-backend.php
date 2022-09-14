@@ -16,6 +16,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
 
     public function __construct()
     {
+        $this->plugin_path = WP_PLUGIN_DIR . '/add-customer-for-woocommerce/';
     }
 
     /**
@@ -60,7 +61,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
 
         add_settings_field(
             'wac_preselect',
-            __('Selected by default', 'wac'),
+            __('Add new customer by default', 'wac'),
             [$this, 'get_settings_option'],
             'wac_general_options',
             'wac_main_settings',
@@ -69,6 +70,21 @@ class woo_add_customer_backend extends woo_add_customer_helper
                 'type' => 'checkbox',
                 'class' => 'wac_preselect',
                 'description' => __('Select this box if you like to have the "Add Customer" Checkbox activated by default.', 'wac'),
+                'page' => 'wac_general_options'
+
+            )
+        );
+        add_settings_field(
+            'wac_preselect_update',
+            __('Update new customer by default', 'wac'),
+            [$this, 'get_settings_option'],
+            'wac_general_options',
+            'wac_main_settings',
+            array(
+                'label_for' => 'wac_preselect_update',
+                'type' => 'checkbox',
+                'class' => 'wac_preselect_update',
+                'description' => __('If this is checked, the existing customer data will be updated when the order is updated.', 'wac'),
                 'page' => 'wac_general_options'
 
             )
@@ -97,7 +113,9 @@ class woo_add_customer_backend extends woo_add_customer_helper
                 'label_for' => 'wac_fakemail_format',
                 'type' => 'text',
                 'class' => 'wac_text_input',
-                'description' => __('The Format you like to have for the automatic generated eMail', 'wac') . '<br/>' .
+                'description' =>
+                __('The Format you like to have for the automatic generated eMail.', 'wac') . ' ' .
+                    __('You can use the supported tags below wrapping them in [ ]', 'wac') . '<br/>' .
                     __('Supported tags:', 'wac') . ' ' . implode(', ', $wac->supported_fake_email_parts),
                 'page' => 'wac_general_options',
                 'default_value' => '[first_name].[last_name]@' . $wac->get_domain_name()
@@ -177,7 +195,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
     /**
      * Loads the Options as html input elements, wrapped in a table structure
      *
-     * @param array $args
+     * @param array $args - The arguments form the add_settings_field function
      * @return void
      */
     public function get_settings_option(array $args)
@@ -188,30 +206,10 @@ class woo_add_customer_backend extends woo_add_customer_helper
         $options_val = (!empty($options[$label_for])) ? $options[$label_for] : '';
         switch ($type) {
             case 'checkbox':
-                $checked = ($options_val === 'yes') ? 'checked' : ''; ?>
-                <tr class='<?php echo $class; ?>'>
-                    <th><label><input name="<?php echo $args['page']; ?>[<?php echo $label_for; ?>]" id="<?php echo $label_for; ?>" type="checkbox" value="yes" <?php echo $checked; ?> />
-                            <?php echo __('Activated', 'wac'); ?>
-                        </label></th>
-                    <td><?php echo $description; ?></td>
-                </tr>
-            <?php
+                echo $this->load_template_to_var('checkbox', 'backend/components', $label_for, $options_val, $default_value, $args);
                 break;
             case 'text':
-            ?>
-                <tr class='<?php echo $class; ?> text-input'>
-                    <td>
-                        <input name="wac_general_options[<?php echo $label_for; ?>]" id="<?php echo $label_for; ?>" type="<?php echo $type; ?>" value="<?php echo $options_val; ?>" placeholder="<?php echo $default_value; ?>" />
-                    </td>
-                </tr>
-                <tr class='<?php echo $class; ?>-field-errors'>
-                    <td><?php echo $this->check_option($label_for, $options_val); ?></td>
-                </tr>
-                <tr class='<?php echo $class; ?>-description'>
-                    <td><?php echo $description; ?></td>
-                </tr>
-
-<?php
+                echo $this->load_template_to_var('text-input', 'backend/components', $label_for, $options_val, $default_value, $args);
                 break;
 
             default:

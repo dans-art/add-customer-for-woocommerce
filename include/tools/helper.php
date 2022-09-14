@@ -23,7 +23,7 @@ class woo_add_customer_helper
      */
     public function load_version()
     {
-        if(!function_exists('get_file_data')){
+        if (!function_exists('get_file_data')) {
             $this->version = "000";
             return;
         }
@@ -182,7 +182,7 @@ class woo_add_customer_helper
      */
     public function wac_enqueue_admin_style()
     {
-        wp_enqueue_style('wac-admin-style', get_option('siteurl') . '/wp-content/plugins/add-customer-for-woocommerce/style/admin-style.css', array(), $this->version);
+        wp_enqueue_style('wac-admin-style', get_option('siteurl') . '/wp-content/plugins/add-customer-for-woocommerce/style/admin-style.min.css', array(), $this->version);
     }
 
     /**
@@ -215,6 +215,10 @@ class woo_add_customer_helper
             case 'existing_account':
                 $message = htmlspecialchars(__('Email "%s" already exists. No new customer got created.', 'wac'));
                 break;
+            case 'no_user_id':
+                $message = __('Could not update the customer, because the customer was not found.', 'wac');
+                $type = 'error';
+                break;
             case 'added_user':
                 $message = htmlspecialchars(__('Added customer: %s <%s>', 'wac'));
                 $type = 'success';
@@ -222,6 +226,11 @@ class woo_add_customer_helper
             case 'email_send':
                 $message = __('Email send to new customer: %s', 'wac');
                 $type = 'success';
+                break;
+            case 'customer_updated':
+                $message = __('Customer successfully updated.', 'wac');
+                $type = 'success';
+                $additional_log = array('changed_fields' => $args[0], 'changed_user_id' => $args[1]);
                 break;
             case 'no_name':
                 $message = __('Could not save customer. No Name provided.', 'wac');
@@ -289,11 +298,12 @@ class woo_add_customer_helper
     public function get_template_location($template_name, $subfolder)
     {
         //Checks if the file exists in the theme or child-theme folder
-        $locate = locate_template('woocommerce/add-customer/'.$subfolder.$template_name.'.php');
-        if(empty($locate)){
-            return str_replace('\\','/', $this->plugin_path . 'templates/' . $subfolder . $template_name . '.php');
+        $subfolder = (substr($subfolder, -1) !== '/') ? $subfolder . '/' : $subfolder;
+        $locate = locate_template('woocommerce/add-customer/' . $subfolder . $template_name . '.php');
+        if (empty($locate)) {
+            return str_replace('\\', '/', $this->plugin_path . 'templates/' . $subfolder . $template_name . '.php');
         }
-        return str_replace('\\','/', $locate);
+        return str_replace('\\', '/', $locate);
     }
 
 
@@ -346,12 +356,13 @@ class woo_add_customer_helper
      * @param string $option_name - The option name to get the text from. Default: wac_template_subject_add_account
      * @return string The subject text
      */
-    public function get_mail_subject(string $option_name = 'wac_template_subject_add_account'){
+    public function get_mail_subject(string $option_name = 'wac_template_subject_add_account')
+    {
         $blog_name = get_bloginfo('name');
         $blog_name = html_entity_decode($blog_name, ENT_QUOTES, 'UTF-8');
 
         $subject = $this->get_wac_option($option_name);
-        if(!empty($subject)){
+        if (!empty($subject)) {
             return $subject;
         }
         //The default subject text
@@ -364,15 +375,16 @@ class woo_add_customer_helper
      *
      * @return string The email address set in the options, or the default email
      */
-    public function get_mail_from(){
+    public function get_mail_from()
+    {
         $email_from = $this->get_wac_option('wac_email_from');
-        if(!empty($email_from)){
+        if (!empty($email_from)) {
             return $email_from;
         }
         //Generate the default email
-        $sitename = wp_parse_url( network_home_url(), PHP_URL_HOST );
-        if ( substr( $sitename, 0, 4 ) === 'www.' ) {
-            $sitename = substr( $sitename, 4 );
+        $sitename = wp_parse_url(network_home_url(), PHP_URL_HOST);
+        if (substr($sitename, 0, 4) === 'www.') {
+            $sitename = substr($sitename, 4);
         }
 
         return 'wordpress@' . $sitename;
@@ -448,5 +460,18 @@ class woo_add_customer_helper
         $user_login = $user->user_login;
         $reset_key = get_password_reset_key($user);
         return network_site_url("wp-login.php?action=rp&key=$reset_key&login=" . rawurlencode($user_login), 'login');
+    }
+
+    /**
+     * Increases the wooCommerce add customer counter by one.
+     * 
+     * @param string $type Type to increase. Accepts wac_add_customer_count and wac_edit_customer_count
+     * @return bool True if the counter got increased, false otherwise.
+     */
+    public function increase_wac_counter($type)
+    {
+        $option_name = ($type === 'add') ? 'wac_add_customer_count' : 'wac_edit_customer_count';
+        $value = (int) get_option($option_name);
+        return update_option($option_name, $value + 1);
     }
 }
