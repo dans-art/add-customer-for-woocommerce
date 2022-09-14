@@ -5,12 +5,12 @@ Contributors URL: <http://dev.dans-art.ch>
 Donate link: <https://paypal.me/dansart13>
 Tags: woocommerce, customer, tools, helper
 Requires at least: 5.4.0
-Tested up to: 6.0
-Stable tag: 1.4.2
+Tested up to: 6.0.2
+Stable tag: 1.5
 License: GPLv3 or later
 License URI: <http://www.gnu.org/licenses/gpl-2.0.html>
 WC requires at least: 4.7.0
-WC tested up to: 6.1.1
+WC tested up to: 6.9.1
 Requires PHP: 7.4
 
 Adds a new checkbox to the orders page to add a new customer/user.
@@ -21,6 +21,7 @@ This Plugin is designed to help you to create new users/customers with ease.
 Especially useful if the client is ordering via phone or email and you like to take advantage of the stock- and order management in WooCommerce.
 It adds a simple checkbox at the end of the billing address. If the box is checked, it will create a new user with the role "customer".
 If no e-mail is provided, it will create a unique one for you. It uses your site’s domain as the domain part and the name as the name part. E.g. firstname.lastname@your-site.com.
+You can customize the auto-generated email to your liking.
 By default, the newly created user will not get any emails while creating the account. But he will eventually on order change.
 In the settings menu, there are options for checking the box by default and send login credentials to the new customer.
 
@@ -59,6 +60,17 @@ Can I change how the email template for the new customer?
 - Yes, you can. Just copy the "new-account.php" from "wp-content\plugins\add-customer-for-woocommerce\templates\email" to "\wp-content\themes\[theme/child-theme]\woocommerce\add-customer\email" and do your changes.
 
 == Changelog ==
+= [1.5] 2022-09-14 =
+
+* Added settings field to customize the generated email
+* Added filter: wac_supported_fake_email_parts
+* Fixed Language strings, 15 new strings added. 2 obsolete strings removed
+* Added "Update customer" function
+* Added counter to keep track of updated and created customers
+* Optimized code. Moved HTML code to dedicated template files
+* Added new settings field. Allowing to preselect the update customer checkbox
+* Backend style fixes
+
 = [1.4.2] 2022-05-15 =
 
 * Fixed: Fatal error on template preview if WooCommerce is not installed
