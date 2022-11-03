@@ -34,3 +34,12 @@ $checked_notify = ($wac->get_wac_option('wac_send_notification') === 'yes') ? 'c
         </p>
     </div>
 </div>
+<!-- Variables for the JS to use -->
+<script type="text/javascript">
+    window.sep_variables = {
+        'default_options': {
+            'add_customer': '<?php echo $checked; ?>',
+            'notify_customer': '<?php echo $checked_notify; ?>'
+        }
+    }
+</script>
