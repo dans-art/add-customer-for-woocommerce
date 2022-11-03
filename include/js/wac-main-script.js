@@ -18,14 +18,14 @@ let wac_scripts = {
          * Fires if the user selects an saved user form the customer list
          */
         jQuery('#customer_user').change((e) => {
-            debugger;
-            console.log('Changed');
-            if(wac_scripts.empty(e.currentTarget.value)){
+            if (wac_scripts.empty(e.currentTarget.value)) {
                 //No customer selected, change to the default state
-                if(window.sep_variables.default_options.add_customer === 'checked'){
+                if (window.sep_variables.default_options.add_customer === 'checked') {
                     jQuery('#wac_add_customer').prop("checked", true);
                 }
-            }else{
+                //Uncheck the update customer
+                jQuery('#wac_update_customer').prop("checked", false);
+            } else {
                 //Customer selected, remove the tick on the checkbox
                 jQuery('#wac_add_customer').prop("checked", false);
             }
@@ -34,8 +34,9 @@ let wac_scripts = {
         /**
          * Fires when the edit address button is clicked
          */
-        jQuery('#order_data a.edit_address').on('click', () =>{
+        jQuery('#order_data a.edit_address').on('click', () => {
             this.maybe_check_update_customer();
+            this.maybe_check_add_customer();
         })
 
         //Run after document loaded to show the second checkbox.
@@ -58,10 +59,19 @@ let wac_scripts = {
     /**
      * Checks if the edit customer checkbox should be checked and checks it.
      */
-    maybe_check_update_customer(){
+    maybe_check_update_customer() {
         //If the checkbox should be preselected, select it now.
-        if(window.sep_variables.default_options.update_customer === 'checked'){
+        if (window.sep_variables.default_options.update_customer === 'checked') {
             jQuery('#wac_update_customer').prop("checked", true);
+        }
+    },
+    /**
+     * Checks if the add customer checkbox should be checked and checks it.
+     */
+    maybe_check_add_customer() {
+        //If the checkbox should be preselected, select it now.
+        if (window.sep_variables.default_options.add_customer === 'checked') {
+            jQuery('#wac_add_customer').prop("checked", true);
         }
     },
 
@@ -86,6 +96,8 @@ let wac_scripts = {
 
 };
 
-wac_scripts.construct();
+jQuery(document).ready(() => {
+    wac_scripts.construct();
+});
 
 

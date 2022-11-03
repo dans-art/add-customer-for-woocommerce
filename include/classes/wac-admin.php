@@ -260,7 +260,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
         foreach ($fields as $f_name) {
             $f_value = (isset($_REQUEST['_' . $f_name]) and !empty($_REQUEST['_' . $f_name])) ? sanitize_text_field($_REQUEST['_' . $f_name]) : false;
             $old_value = get_user_meta($user_id, $f_name, true);
-
+    
             //Only save if the value got updated
             if (($f_value !== $old_value) and $f_value !== false) {
                 if (!update_user_meta($user_id, $f_name, $f_value)) {
@@ -312,6 +312,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
      */
     public function wac_get_unique_user($user)
     {
+        $user = sanitize_user($user, true); //Remove everything that is not valid from the start
         if ($user === '..' or empty($user)) {
             //Try to get the username from the fake email name part
             $user = $this -> create_fake_email_name();

@@ -198,7 +198,11 @@ class woo_add_customer_helper
      */
     public function wac_enqueue_admin_scripts()
     {
-        wp_enqueue_script('wac-admin-script', get_option('siteurl') . '/wp-content/plugins/add-customer-for-woocommerce/include/js/wac-main-script.min.js', array('jquery'), $this->version);
+        if(WP_DEBUG){
+            wp_enqueue_script('wac-admin-script', get_option('siteurl') . '/wp-content/plugins/add-customer-for-woocommerce/include/js/wac-main-script.js', array('jquery'), $this->version);
+        }else{
+            wp_enqueue_script('wac-admin-script', get_option('siteurl') . '/wp-content/plugins/add-customer-for-woocommerce/include/js/wac-main-script.min.js', array('jquery'), $this->version);
+        }
     }
 
     /**
