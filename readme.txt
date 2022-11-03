@@ -72,13 +72,13 @@ Are there any hooks I can use?
 == Changelog ==
 = [1.6.0] 2022-11-03 =
 
-* Fixed: Invalid email when the value of the tags, defined in the custom fake-email where empty
+* Fixed: Invalid email when the value of the tags, defined in the custom fake email where empty
 * Changed: Default fake-email structure to [billing_first_name].[billing_last_name].[billing_company]
 * Added: The add_customer checkbox gets unchecked if a customer gets loaded
-* Added hook to filter "wac_add_customer_email" the email before checking and saving new user 
+* Added hook to filter "wac_add_customer_email" the email before checking and saving a new user 
 * Fixed 'wac_supported_fake_email_parts' hook
 * Fixed various issues
-* Removed the need to have billing name / surname or company at all. It will just generate a random name for the email
+* Removed the need to have billing name/surname or company at all. It will just generate a random name for the email
 * Added 1 new language string
 
 = [1.5.1] 2022-09-14 =
