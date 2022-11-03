@@ -137,6 +137,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
             //Add new customer
             $email = isset($_REQUEST['_billing_email']) ? sanitize_email($_REQUEST['_billing_email']) : false;
             $existing_user = get_user_by('email', $email);
+            $user_id = null;
 
             if ($existing_user === false) {
                 $new_customer_id = $this->wac_add_customer($email, $order_id);
@@ -144,14 +145,16 @@ class woo_add_customer_admin extends woo_add_customer_helper
                     //Link the Order to the Customer
                     $_REQUEST['customer_user'] = $new_customer_id;
                     update_post_meta($order_id, '_customer_user', $new_customer_id);
+                    $user_id = $new_customer_id;
                 }
             } else {
                 //Link Order to Customer
                 $this->log_event("existing_account", $order_id, $email);
                 $_REQUEST['customer_user'] = $existing_user->ID;
                 update_post_meta($order_id, '_customer_user', $existing_user->ID);
+                $user_id =  $existing_user->ID;
             }
-
+            do_action('wac_after_insert_new_customer', $user_id, $order_id);
             return true;
         }
         if (isset($_REQUEST['wac_update_customer']) and $_REQUEST['wac_update_customer'] == 'true') {
@@ -166,6 +169,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
                 $this->log_event("customer_updated", $order_id, $update_customer, $user_id);
                 $this->increase_wac_counter('edit');
             }
+            do_action('wac_after_insert_updated_customer', $user_id, $order_id);
         }
         return;
     }
@@ -192,10 +196,10 @@ class woo_add_customer_admin extends woo_add_customer_helper
             $email_is_fake = true;
         }
         //Add hook to allow to modify the email
-        $email = apply_filters( 'wac_add_customer_email', $email, $user );
+        $email = apply_filters('wac_add_customer_email', $email, $user);
 
         //Validate the email
-        if(is_email($email) === false){
+        if (is_email($email) === false) {
             //User Exists already. This should never happen, but if it does, it does.
             $this->log_event("invalid_email", $order_id, $email);
             return false;
@@ -203,7 +207,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
         //Save the email to the order
         update_post_meta($order_id, '_billing_email', $email);
 
-        if(get_user_by('email', $email) !== false){
+        if (get_user_by('email', $email) !== false) {
             //User Exists already. This should never happen, but if it does, it does.
             $this->log_event("existing_account", $order_id, $email);
             return false;
@@ -260,7 +264,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
         foreach ($fields as $f_name) {
             $f_value = (isset($_REQUEST['_' . $f_name]) and !empty($_REQUEST['_' . $f_name])) ? sanitize_text_field($_REQUEST['_' . $f_name]) : false;
             $old_value = get_user_meta($user_id, $f_name, true);
-    
+
             //Only save if the value got updated
             if (($f_value !== $old_value) and $f_value !== false) {
                 if (!update_user_meta($user_id, $f_name, $f_value)) {
@@ -315,14 +319,13 @@ class woo_add_customer_admin extends woo_add_customer_helper
         $user = sanitize_user($user, true); //Remove everything that is not valid from the start
         if ($user === '..' or empty($user)) {
             //Try to get the username from the fake email name part
-            $user = $this -> create_fake_email_name();
+            $user = $this->create_fake_email_name();
         }
         //Replace dots
-        if(strpos($user,'.') === 0){
-            //First character is a dot. Remove it.
-            $user = ltrim($user,'..'); //Try to remove two dots
-            $user = ltrim($user,'.');
-        }
+        $user = str_replace('..', '.', $user); //Replace the two dots with one
+        $user = ltrim($user, '.'); //Remove dots from the left
+        $user = rtrim($user, '.'); //Remove dots from the right
+
         $user = strtolower($user);
         $existing_user = get_user_by('login', $user);
         if ($existing_user === false) {

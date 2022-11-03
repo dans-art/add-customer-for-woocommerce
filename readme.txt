@@ -5,12 +5,12 @@ Contributors URL: <http://dev.dans-art.ch>
 Donate link: <https://paypal.me/dansart13>
 Tags: woocommerce, customer, tools, helper
 Requires at least: 5.4.0
-Tested up to: 6.0.2
-Stable tag: 1.6.0
+Tested up to: 6.1
+Stable tag: 1.6.1
 License: GPLv3 or later
 License URI: <http://www.gnu.org/licenses/gpl-2.0.html>
 WC requires at least: 4.7.0
-WC tested up to: 6.9.1
+WC tested up to: 7.0.1
 Requires PHP: 7.4
 
 Adds a new checkbox to the orders page to add a new customer/user.
@@ -70,6 +70,12 @@ Are there any hooks I can use?
 
 
 == Changelog ==
+= [1.6.1] 2022-11-03 =
+
+* Fixed: Removed extra dots if not all three fields (billing_first_name, billing_last_name and billing_company) are filled out
+* Added action "wac_after_insert_new_customer" to hook in after new customer got created
+* Added action "wac_after_insert_updated_customer" to hook in after new customer got updated
+
 = [1.6.0] 2022-11-03 =
 
 * Fixed: Invalid email when the value of the tags, defined in the custom fake email where empty
