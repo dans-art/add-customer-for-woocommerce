@@ -118,7 +118,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
                     __('You can use the supported tags below wrapping them in [ ]', 'wac') . '<br/>' .
                     __('Supported tags:', 'wac') . ' ' . implode(', ', $wac->supported_fake_email_parts),
                 'page' => 'wac_general_options',
-                'default_value' => '[first_name].[last_name]@' . $wac->get_domain_name()
+                'default_value' => '[first_name].[last_name].[company]@' . $wac->get_domain_name()
             )
         );
 

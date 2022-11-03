@@ -105,9 +105,10 @@ class woo_add_customer_helper
                     $custom_format_name = str_replace('[' . $tag_name . ']', $value, $custom_format_name);
                 }
             }
-            return str_replace(['[', ']'], '', $custom_format_name); //Remove tags if any left
+            $name = str_replace(['[', ']'], '', $custom_format_name); //Remove tags if any left
         }
-        return $name;
+        //Make sure that the generated name is not empty
+        return (empty($name)) ? wp_generate_password(5, false) : $name;
     }
 
     /**

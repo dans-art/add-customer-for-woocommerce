@@ -6,7 +6,7 @@ Donate link: <https://paypal.me/dansart13>
 Tags: woocommerce, customer, tools, helper
 Requires at least: 5.4.0
 Tested up to: 6.0.2
-Stable tag: 1.5.1
+Stable tag: 1.6.0
 License: GPLv3 or later
 License URI: <http://www.gnu.org/licenses/gpl-2.0.html>
 WC requires at least: 4.7.0
@@ -60,6 +60,11 @@ Can I change how the email template for the new customer?
 - Yes, you can. Just copy the "new-account.php" from "wp-content\plugins\add-customer-for-woocommerce\templates\email" to "\wp-content\themes\[theme/child-theme]\woocommerce\add-customer\email" and do your changes.
 
 == Changelog ==
+= [1.6.0] 2022-11-03 =
+
+* Fixed: Invalid email when the value of the tags, defined in the custom fake-email where empty
+* Changed: Default fake-email structure to [billing_first_name].[billing_last_name].[billing_company]
+
 = [1.5.1] 2022-09-14 =
 
 * Fixed: Error on add customer settings page when no eMail was provided.

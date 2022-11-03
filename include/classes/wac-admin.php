@@ -137,7 +137,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
             //Add new customer
             $email = isset($_REQUEST['_billing_email']) ? sanitize_email($_REQUEST['_billing_email']) : false;
             $existing_user = get_user_by('email', $email);
-            if (empty($_REQUEST['_billing_first_name']) and empty($_REQUEST['_billing_last_name'])) {
+            if (empty($_REQUEST['_billing_first_name']) and empty($_REQUEST['_billing_last_name']) and empty($_REQUEST['_billing_company'])) {
                 $this->log_event("no_name", $order_id);
                 return false;
             }
@@ -184,7 +184,8 @@ class woo_add_customer_admin extends woo_add_customer_helper
     {
         $user_first = (isset($_REQUEST['_billing_first_name']) and !empty($_REQUEST['_billing_first_name'])) ? sanitize_text_field($_REQUEST['_billing_first_name']) : '';
         $user_last = (isset($_REQUEST['_billing_last_name']) and !empty($_REQUEST['_billing_last_name'])) ? sanitize_text_field($_REQUEST['_billing_last_name']) : '';
-        $user = $this->wac_get_unique_user($user_first . '.' . $user_last);
+        $user_company = (isset($_REQUEST['_billing_company']) and !empty($_REQUEST['_billing_company'])) ? sanitize_text_field($_REQUEST['_billing_company']) : '';
+        $user = $this->wac_get_unique_user($user_first . '.' . $user_last . '.' . $user_company);
         $password = wp_generate_password();
         $email_is_fake = false;
 
@@ -300,6 +301,12 @@ class woo_add_customer_admin extends woo_add_customer_helper
     {
         if ($user === '.') {
             return false;
+        }
+        //Replace dots
+        if(strpos($user,'.') === 0){
+            //First character is a dot. Remove it.
+            $user = ltrim($user,'..'); //Try to remove two dots
+            $user = ltrim($user,'.');
         }
         $user = strtolower($user);
         $existing_user = get_user_by('login', $user);
