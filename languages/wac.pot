@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Add Customer for WooCommerce\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-14 19:34+0000\n"
+"POT-Creation-Date: 2022-11-03 19:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -15,11 +15,6 @@ msgstr ""
 "X-Generator: Loco https://localise.biz/\n"
 "X-Loco-Version: 2.5.4; wp-5.8.1\n"
 "X-Domain: wac"
-
-#: templates/backend/backend-options-page.php:44
-#, php-format
-msgid "There have been %d customers added and %d customers edited by the plugin"
-msgstr ""
 
 #: templates/backend/components/checkbox.php:30
 msgid "Activated"
@@ -45,7 +40,7 @@ msgstr ""
 msgid "Add new customer by default"
 msgstr ""
 
-#: include/tools/helper.php:223
+#: include/tools/helper.php:232
 #, php-format
 msgid "Added customer: %s <%s>"
 msgstr ""
@@ -65,30 +60,30 @@ msgid ""
 "creation."
 msgstr ""
 
-#: include/tools/helper.php:236
+#: include/tools/helper.php:245
 msgid "Could not save customer. No Name provided."
 msgstr ""
 
-#: include/classes/wac-admin.php:267
+#: include/classes/wac-admin.php:281
 #, php-format
 msgid "Could not save the \"%s\" billing field"
 msgstr ""
 
-#: include/classes/wac-admin.php:282
+#: include/classes/wac-admin.php:296
 #, php-format
 msgid "Could not save the \"%s\" shipping field"
 msgstr ""
 
-#: include/classes/wac-admin.php:253
+#: include/classes/wac-admin.php:267
 #, php-format
 msgid "Could not save the default field \"%s\""
 msgstr ""
 
-#: include/tools/helper.php:219
+#: include/tools/helper.php:228
 msgid "Could not update the customer, because the customer was not found."
 msgstr ""
 
-#: include/tools/helper.php:231
+#: include/tools/helper.php:240
 msgid "Customer successfully updated."
 msgstr ""
 
@@ -96,7 +91,7 @@ msgstr ""
 msgid "Dan's Art"
 msgstr ""
 
-#: include/tools/helper.php:216
+#: include/tools/helper.php:225
 #, php-format
 msgid "Email \"%s\" already exists. No new customer got created."
 msgstr ""
@@ -105,7 +100,7 @@ msgstr ""
 msgid "Email Content:"
 msgstr ""
 
-#: include/tools/helper.php:227
+#: include/tools/helper.php:236
 #, php-format
 msgid "Email send to new customer: %s"
 msgstr ""
@@ -118,7 +113,7 @@ msgstr ""
 msgid "Email Subject:"
 msgstr ""
 
-#: include/tools/helper.php:244
+#: include/tools/helper.php:253
 msgid "Email was not send to user because no email was provided."
 msgstr ""
 
@@ -133,7 +128,7 @@ msgid ""
 "version of WooCommerce installed."
 msgstr ""
 
-#: include/tools/helper.php:240
+#: include/tools/helper.php:249
 msgid "Failed to send email notification to customer."
 msgstr ""
 
@@ -168,7 +163,7 @@ msgstr ""
 msgid "Invalid eMail address"
 msgstr ""
 
-#: include/tools/helper.php:254
+#: include/tools/helper.php:267
 msgid "Log Type not found!"
 msgstr ""
 
@@ -184,12 +179,12 @@ msgstr ""
 msgid "New account created"
 msgstr ""
 
-#: include/classes/wac-backend.php:138 include/tools/helper.php:369
+#: include/classes/wac-backend.php:138 include/tools/helper.php:382
 #, php-format
 msgid "New account created at %s"
 msgstr ""
 
-#: include/tools/helper.php:248
+#: include/tools/helper.php:261
 msgid ""
 "New customer could not be added by Add Customer Plugin. Please contact the "
 "Plugin Author."
@@ -241,6 +236,11 @@ msgstr ""
 msgid "Template Settings"
 msgstr ""
 
+#: include/tools/helper.php:257
+#, php-format
+msgid "The email \"%s\" is not valid."
+msgstr ""
+
 #: include/classes/wac-backend.php:117
 msgid "The Format you like to have for the automatic generated eMail."
 msgstr ""
@@ -252,6 +252,12 @@ msgstr ""
 #: include/classes/wac-backend.php:136
 msgid ""
 "The subject / header for the email which are sended to the new customers"
+msgstr ""
+
+#: templates/backend/backend-options-page.php:44
+#, php-format
+msgid ""
+"There have been %d customers added and %d customers edited by the plugin"
 msgstr ""
 
 #: templates/order/update-checkbox.php:21

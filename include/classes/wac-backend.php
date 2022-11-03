@@ -116,9 +116,9 @@ class woo_add_customer_backend extends woo_add_customer_helper
                 'description' =>
                 __('The Format you like to have for the automatic generated eMail.', 'wac') . ' ' .
                     __('You can use the supported tags below wrapping them in [ ]', 'wac') . '<br/>' .
-                    __('Supported tags:', 'wac') . ' ' . implode(', ', $wac->supported_fake_email_parts),
+                    __('Supported tags:', 'wac') . ' ' . implode(', ', apply_filters('wac_supported_fake_email_parts', $wac->supported_fake_email_parts)),
                 'page' => 'wac_general_options',
-                'default_value' => '[first_name].[last_name]@' . $wac->get_domain_name()
+                'default_value' => '[first_name].[last_name].[company]@' . $wac->get_domain_name()
             )
         );
 
@@ -180,7 +180,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
         switch ($field_name) {
             case 'wac_fakemail_format':
                 //Check if multiple @ exists
-                if (!empty($value) AND substr_count($value, '@') !== 1) {
+                if (!empty($value) and substr_count($value, '@') !== 1) {
                     return "<div class='notice notice-error'><p>" . __('Invalid eMail address', 'wac') . "</p></div>";
                 }
                 break;

@@ -6,7 +6,7 @@ Donate link: <https://paypal.me/dansart13>
 Tags: woocommerce, customer, tools, helper
 Requires at least: 5.4.0
 Tested up to: 6.0.2
-Stable tag: 1.5.1
+Stable tag: 1.6.0
 License: GPLv3 or later
 License URI: <http://www.gnu.org/licenses/gpl-2.0.html>
 WC requires at least: 4.7.0
@@ -59,7 +59,28 @@ Does the new user get a notification of the created account?
 Can I change how the email template for the new customer?
 - Yes, you can. Just copy the "new-account.php" from "wp-content\plugins\add-customer-for-woocommerce\templates\email" to "\wp-content\themes\[theme/child-theme]\woocommerce\add-customer\email" and do your changes.
 
+Is it possible to change the email format?
+- Yes. You can set the desired format in the Settings menu of the plugin.
+
+Are there any hooks I can use?
+- Sure thing! There are currently two filters:
+    wac_add_customer_email - To modify the email saved by the plugin
+    wac_supported_fake_email_parts - To add support for custom fields
+
+
+
 == Changelog ==
+= [1.6.0] 2022-11-03 =
+
+* Fixed: Invalid email when the value of the tags, defined in the custom fake email where empty
+* Changed: Default fake-email structure to [billing_first_name].[billing_last_name].[billing_company]
+* Added: The add_customer checkbox gets unchecked if a customer gets loaded
+* Added hook to filter "wac_add_customer_email" the email before checking and saving a new user 
+* Fixed 'wac_supported_fake_email_parts' hook
+* Fixed various issues
+* Removed the need to have billing name/surname or company at all. It will just generate a random name for the email
+* Added 1 new language string
+
 = [1.5.1] 2022-09-14 =
 
 * Fixed: Error on add customer settings page when no eMail was provided.

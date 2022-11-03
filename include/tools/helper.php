@@ -49,6 +49,7 @@ class woo_add_customer_helper
             $number = (int)($number === '') ? 1 : $number++;
         }
         $email = $name . $number . '@' . $domain_name;
+        $email = str_replace(' ','',$email); //Replace whitespace
         return filter_var($email, FILTER_SANITIZE_EMAIL);
     }
 
@@ -92,22 +93,26 @@ class woo_add_customer_helper
             //Custom format
             $mail_split = explode('@', $custom_format);
             $custom_format_name = (isset($mail_split[0])) ? $mail_split[0] : $custom_format;
-
-            foreach ($this->supported_fake_email_parts as $tag_name) {
-                //Add the _billing_ if field exists but only if no custom field exists with the same name
-                $request_name = $tag_name;
-                if (isset($_REQUEST['_billing_' . $tag_name]) and !isset($_REQUEST[$tag_name])) {
-                    $request_name = '_billing_' . $tag_name;
-                }
-                if (isset($_REQUEST[$request_name]) and strpos($custom_format_name, $tag_name) !== false) {
-                    //Placeholder found in the custom format and data found in request
-                    $value = $_REQUEST[$request_name];
-                    $custom_format_name = str_replace('[' . $tag_name . ']', $value, $custom_format_name);
+            $mail_parts = apply_filters('wac_supported_fake_email_parts', $this->supported_fake_email_parts);
+            if (is_array($mail_parts)) {
+                foreach ($mail_parts as $tag_name) {
+                    //Add the _billing_ if field exists but only if no custom field exists with the same name
+                    $request_name = $tag_name;
+                    if (isset($_REQUEST['_billing_' . $tag_name]) and !isset($_REQUEST[$tag_name])) {
+                        $request_name = '_billing_' . $tag_name;
+                    }
+                    if (isset($_REQUEST[$request_name]) and strpos($custom_format_name, $tag_name) !== false) {
+                        //Placeholder found in the custom format and data found in request
+                        $value = $_REQUEST[$request_name];
+                        $custom_format_name = str_replace('[' . $tag_name . ']', $value, $custom_format_name);
+                    }
                 }
             }
-            return str_replace(['[', ']'], '', $custom_format_name); //Remove tags if any left
+
+            $name = str_replace(['[', ']'], '', $custom_format_name); //Remove tags if any left
         }
-        return $name;
+        //Make sure that the generated name is not empty
+        return (empty($name)) ? wp_generate_password(5, false) : $name;
     }
 
     /**
@@ -193,7 +198,11 @@ class woo_add_customer_helper
      */
     public function wac_enqueue_admin_scripts()
     {
-        wp_enqueue_script('wac-admin-script', get_option('siteurl') . '/wp-content/plugins/add-customer-for-woocommerce/include/js/wac-main-script.min.js', array('jquery'), $this->version);
+        if(WP_DEBUG){
+            wp_enqueue_script('wac-admin-script', get_option('siteurl') . '/wp-content/plugins/add-customer-for-woocommerce/include/js/wac-main-script.js', array('jquery'), $this->version);
+        }else{
+            wp_enqueue_script('wac-admin-script', get_option('siteurl') . '/wp-content/plugins/add-customer-for-woocommerce/include/js/wac-main-script.min.js', array('jquery'), $this->version);
+        }
     }
 
     /**
@@ -243,6 +252,10 @@ class woo_add_customer_helper
             case 'failed_to_send_user_mail_fakemail':
                 $message = __('Email was not send to user because no email was provided.', 'wac');
                 $type = 'null';
+                break;
+            case 'invalid_email':
+                $message = sprintf(__('The email "%s" is not valid.', 'wac'), $args[0]);
+                $type = 'error';
                 break;
             case 'failed_to_add_user':
                 $message = __('New customer could not be added by Add Customer Plugin. Please contact the Plugin Author.', 'wac');
