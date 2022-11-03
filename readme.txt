@@ -66,6 +66,9 @@ Are there any hooks I can use?
 - Sure thing! There are currently two filters:
     wac_add_customer_email - To modify the email saved by the plugin
     wac_supported_fake_email_parts - To add support for custom fields
+- And two actions:
+   wac_after_insert_new_customer to hook in after new customer got created
+   wac_after_insert_updated_customer to hook in after new customer got updated
 
 
 
