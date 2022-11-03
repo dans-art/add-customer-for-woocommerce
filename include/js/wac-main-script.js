@@ -14,6 +14,9 @@ let wac_scripts = {
             this.wac_checkbox_checker();
         });
 
+        /**
+         * Fires if the user selects an saved user form the customer list
+         */
         jQuery('#customer_user').change((e) => {
             debugger;
             console.log('Changed');
@@ -27,6 +30,13 @@ let wac_scripts = {
                 jQuery('#wac_add_customer').prop("checked", false);
             }
         });
+
+        /**
+         * Fires when the edit address button is clicked
+         */
+        jQuery('#order_data a.edit_address').on('click', () =>{
+            this.maybe_check_update_customer();
+        })
 
         //Run after document loaded to show the second checkbox.
         jQuery(document).ready(function () {
@@ -42,6 +52,16 @@ let wac_scripts = {
             jQuery('p.wac_add_customer_notify_field').show();
         } else {
             jQuery('p.wac_add_customer_notify_field').hide();
+        }
+    },
+
+    /**
+     * Checks if the edit customer checkbox should be checked and checks it.
+     */
+    maybe_check_update_customer(){
+        //If the checkbox should be preselected, select it now.
+        if(window.sep_variables.default_options.update_customer === 'checked'){
+            jQuery('#wac_update_customer').prop("checked", true);
         }
     },
 

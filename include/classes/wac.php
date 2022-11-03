@@ -16,8 +16,6 @@ class woo_add_customer extends woo_add_customer_helper
     public function __construct()
     {
         $this->plugin_path = WP_PLUGIN_DIR . '/add-customer-for-woocommerce/';
-        //Allow users to add their custom fields.
-        $this -> supported_fake_email_parts = apply_filters('wac_supported_fake_email_parts', $this->supported_fake_email_parts);
     }
     /**
      * Loads the admin class

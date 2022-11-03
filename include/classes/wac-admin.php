@@ -137,10 +137,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
             //Add new customer
             $email = isset($_REQUEST['_billing_email']) ? sanitize_email($_REQUEST['_billing_email']) : false;
             $existing_user = get_user_by('email', $email);
-            if (empty($_REQUEST['_billing_first_name']) and empty($_REQUEST['_billing_last_name']) and empty($_REQUEST['_billing_company'])) {
-                $this->log_event("no_name", $order_id);
-                return false;
-            }
+
             if ($existing_user === false) {
                 $new_customer_id = $this->wac_add_customer($email, $order_id);
                 if ($new_customer_id) {
@@ -192,8 +189,24 @@ class woo_add_customer_admin extends woo_add_customer_helper
         if (empty($email)) {
             //create new 'fake' email
             $email = $this->create_fake_email($user);
-            update_post_meta($order_id, '_billing_email', $email);
             $email_is_fake = true;
+        }
+        //Add hook to allow to modify the email
+        $email = apply_filters( 'wac_add_customer_email', $email, $user );
+
+        //Validate the email
+        if(is_email($email) === false){
+            //User Exists already. This should never happen, but if it does, it does.
+            $this->log_event("invalid_email", $order_id, $email);
+            return false;
+        }
+        //Save the email to the order
+        update_post_meta($order_id, '_billing_email', $email);
+
+        if(get_user_by('email', $email) !== false){
+            //User Exists already. This should never happen, but if it does, it does.
+            $this->log_event("existing_account", $order_id, $email);
+            return false;
         }
         if ($user !== false) {
             $user_id = wc_create_new_customer($email, $user, $password);
@@ -299,8 +312,9 @@ class woo_add_customer_admin extends woo_add_customer_helper
      */
     public function wac_get_unique_user($user)
     {
-        if ($user === '.') {
-            return false;
+        if ($user === '..' or empty($user)) {
+            //Try to get the username from the fake email name part
+            $user = $this -> create_fake_email_name();
         }
         //Replace dots
         if(strpos($user,'.') === 0){

@@ -20,8 +20,16 @@ $checked = ($wac->get_wac_option('wac_preselect_update') === 'yes') ? 'checked' 
 <div class="_add_customer_fields">
     <label><?php echo __('Update Customer', 'wac'); ?></label>
     <p class="wac_update_customer_field">
-        <input type="checkbox" name="wac_update_customer" id="wac_update_customer" value="true" placeholder="" <?php echo $checked; ?>>
+        <input type="checkbox" name="wac_update_customer" id="wac_update_customer" value="true" placeholder="">
         <label for="wac_update_customer"><?php echo __('Updates the existing customer', 'wac'); ?></label>
     </p>
 </div>
 </div>
+<!-- Variables for the JS to use -->
+<script type="text/javascript">
+    window.sep_variables = {
+        'default_options': {
+            'update_customer': '<?php echo $checked; ?>',
+        }
+    }
+</script>
