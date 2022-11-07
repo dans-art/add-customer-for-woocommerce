@@ -29,6 +29,8 @@ let wac_scripts = {
                 //Customer selected, remove the tick on the checkbox
                 jQuery('#wac_add_customer').prop("checked", false);
             }
+            //Update the notify checkbox
+            this.wac_checkbox_checker();
         });
 
         /**
@@ -37,12 +39,13 @@ let wac_scripts = {
         jQuery('#order_data a.edit_address').on('click', () => {
             this.maybe_check_update_customer();
             this.maybe_check_add_customer();
+            this.wac_checkbox_checker();
         })
 
         //Run after document loaded to show the second checkbox.
-        jQuery(document).ready(function () {
-            wac_scripts.wac_checkbox_checker();
-        });
+        wac_scripts.wac_checkbox_checker();
+        /*jQuery(document).ready(function () {
+        });*/
     },
 
     /**
