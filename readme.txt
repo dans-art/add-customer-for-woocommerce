@@ -6,7 +6,7 @@ Donate link: <https://paypal.me/dansart13>
 Tags: woocommerce, customer, tools, helper
 Requires at least: 5.4.0
 Tested up to: 6.1
-Stable tag: 1.6.1
+Stable tag: 1.6.2
 License: GPLv3 or later
 License URI: <http://www.gnu.org/licenses/gpl-2.0.html>
 WC requires at least: 4.7.0
@@ -66,10 +66,17 @@ Are there any hooks I can use?
 - Sure thing! There are currently two filters:
     wac_add_customer_email - To modify the email saved by the plugin
     wac_supported_fake_email_parts - To add support for custom fields
+- And two actions:
+   wac_after_insert_new_customer to hook in after new customer got created
+   wac_after_insert_updated_customer to hook in after new customer got updated
 
 
 
 == Changelog ==
+= [1.6.2] 2022-11-07 =
+
+* Fixed: Notify customer checkbox did not get displayed
+
 = [1.6.1] 2022-11-03 =
 
 * Fixed: Removed extra dots if not all three fields (billing_first_name, billing_last_name and billing_company) are filled out
