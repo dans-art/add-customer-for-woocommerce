@@ -49,8 +49,9 @@ class woo_add_customer_helper
             $number = (int)($number === '') ? 1 : $number++;
         }
         $email = $name . $number . '@' . $domain_name;
-        $email = str_replace(' ','',$email); //Replace whitespace
-        return filter_var($email, FILTER_SANITIZE_EMAIL);
+        $email = str_replace(' ', '_', $email); //Replace the spaces with underlines
+        $email = trim($email); //Removes all the other whitespaces, tabs, new-lines, etc.
+        return $email;
     }
 
     /**
@@ -198,9 +199,9 @@ class woo_add_customer_helper
      */
     public function wac_enqueue_admin_scripts()
     {
-        if(WP_DEBUG){
+        if (WP_DEBUG) {
             wp_enqueue_script('wac-admin-script', get_option('siteurl') . '/wp-content/plugins/add-customer-for-woocommerce/include/js/wac-main-script.js', array('jquery'), $this->version);
-        }else{
+        } else {
             wp_enqueue_script('wac-admin-script', get_option('siteurl') . '/wp-content/plugins/add-customer-for-woocommerce/include/js/wac-main-script.min.js', array('jquery'), $this->version);
         }
     }
@@ -486,5 +487,54 @@ class woo_add_customer_helper
         $option_name = ($type === 'add') ? 'wac_add_customer_count' : 'wac_edit_customer_count';
         $value = (int) get_option($option_name);
         return update_option($option_name, $value + 1);
+    }
+
+    /**
+     * Replaces all the email parts that are not valid
+     * Converts cyrillic and other non latin characters to latin
+     * Requires the INTL PHP extension
+     * @return void
+     */
+    public function make_email_valid($email)
+    {
+        //Replaces the cyrillic letters
+        $orig_email = $email;
+        //Make sure that the Intl extension is installed
+        if(function_exists('transliterator_transliterate')){
+            //Converts to latin characters
+            $email = transliterator_transliterate('Any-Latin; Latin-ASCII; [\u0100-\u7fff] remove', $email);
+        }elseif(!is_email($email)){
+            //Display notice if email is not valid and php intl extension is not installed
+            $this->wac_set_notice(__('Intl PHP extension not installed. Please install it to make your email valid', 'wac'), 'error', get_the_ID());
+        }
+        
+
+        $email = sanitize_email($email, true); //Remove all un-allowed characters
+
+        return apply_filters('wac_make_email_valid', $email, $orig_email);
+    }
+
+    /**
+     * Replaces all the user name parts that are not valid
+     * Converts cyrillic and other non latin characters to latin
+     * Requires the INTL PHP extension
+     * @return void
+     */
+    public function make_user_valid($user)
+    {
+        //Replaces the cyrillic letters
+        $orig_user = $user;
+        //Make sure that the Intl extension is installed
+        if(function_exists('transliterator_transliterate')){
+            //Converts to latin characters
+            $user = transliterator_transliterate('Any-Latin; Latin-ASCII; [\u0100-\u7fff] remove', $user);
+        }elseif($user !== sanitize_user($user, true)){
+            //Display notice if user is not valid and php intl extension is not installed
+            $this->wac_set_notice(__('Intl PHP extension not installed. Please install it to make your username valid', 'wac'), 'error', get_the_ID());
+            
+        }
+        $user = sanitize_user($user, true); //Remove all un-allowed characters
+
+        return apply_filters('wac_make_user_valid', $user, $orig_user);
     }
 }

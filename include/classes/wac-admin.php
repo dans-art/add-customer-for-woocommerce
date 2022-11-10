@@ -195,7 +195,9 @@ class woo_add_customer_admin extends woo_add_customer_helper
             $email = $this->create_fake_email($user);
             $email_is_fake = true;
         }
+
         //Add hook to allow to modify the email
+        $email = $this->make_email_valid($email);
         $email = apply_filters('wac_add_customer_email', $email, $user);
 
         //Validate the email
@@ -204,6 +206,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
             $this->log_event("invalid_email", $order_id, $email);
             return false;
         }
+
         //Save the email to the order
         update_post_meta($order_id, '_billing_email', $email);
 
@@ -212,6 +215,10 @@ class woo_add_customer_admin extends woo_add_customer_helper
             $this->log_event("existing_account", $order_id, $email);
             return false;
         }
+
+        //Make the username valid
+        $user = $this -> make_user_valid($user);
+        
         if ($user !== false) {
             $user_id = wc_create_new_customer($email, $user, $password);
             //$this->log_event("failed_to_add_user", $user_id, $user, $email);
@@ -316,26 +323,28 @@ class woo_add_customer_admin extends woo_add_customer_helper
      */
     public function wac_get_unique_user($user)
     {
-        $user = sanitize_user($user, true); //Remove everything that is not valid from the start
+        $user = sanitize_user($user); //Remove everything that is not valid from the start
         if ($user === '..' or empty($user)) {
             //Try to get the username from the fake email name part
             $user = $this->create_fake_email_name();
         }
         //Replace dots
         $user = str_replace('..', '.', $user); //Replace the two dots with one
+        $user = str_replace(' ', '_', $user); //Replace the spaces with underlines
         $user = ltrim($user, '.'); //Remove dots from the left
         $user = rtrim($user, '.'); //Remove dots from the right
+        $user = trim($user); //Removes all the other whitespaces, tabs, new-lines, etc.
 
         $user = strtolower($user);
         $existing_user = get_user_by('login', $user);
         if ($existing_user === false) {
-            return sanitize_user($user, true);
+            return sanitize_user($user);
         } else {
             $user_add = 1;
             while (get_user_by('login', $user . '_' . $user_add) !== false) {
                 $user_add++;
             }
-            return sanitize_user($user . '_' . $user_add, true);
+            return sanitize_user($user . '_' . $user_add);
         }
     }
 
