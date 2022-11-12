@@ -76,9 +76,9 @@ Are there any hooks I can use?
 == Changelog ==
 = [1.6.3] 2022-11-12 =
 
-* Fixed: Errors when non-latin characters where used.
-* Added filter: wac_make_user_valid - Use this if you like to modify the username before saving to the database
-* Added filter: wac_make_email_valid - Use this if you like to modify the email before saving to the database
+* Fixed: Errors when non-Latin characters were used.
+* Added filter: wac_make_user_valid - Use this if you like to modify the username before saving it to the database
+* Added filter: wac_make_email_valid - Use this if you like to modify the email before saving it to the database
 * Added two new language strings
 
 = [1.6.2] 2022-11-07 =
