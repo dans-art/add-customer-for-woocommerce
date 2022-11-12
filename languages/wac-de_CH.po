@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Add Customer for WooCommerce\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-22 15:15+0000\n"
-"PO-Revision-Date: 2022-11-03 19:57+0000\n"
+"PO-Revision-Date: 2022-11-12 15:04+0000\n"
 "Last-Translator: \n"
 "Language-Team: Deutsch (Schweiz)\n"
 "Language: de_CH\n"
@@ -38,7 +38,7 @@ msgstr "Neuen Kunden hinzufügen"
 msgid "Add new customer by default"
 msgstr "Neue Kunden standardmässig speichern"
 
-#: include/tools/helper.php:232
+#: include/tools/helper.php:233
 #, php-format
 #| msgid "Added customer \"%s <%s>\""
 msgid "Added customer: %s <%s>"
@@ -63,31 +63,31 @@ msgstr ""
 "Wähle dies an, wenn nach der Erstellung des Kontos der Kunde eine \"Konto "
 "erstellt\" email erhalten soll."
 
-#: include/tools/helper.php:245
+#: include/tools/helper.php:246
 #| msgid "Could not save user. No Name provided."
 msgid "Could not save customer. No Name provided."
 msgstr "Konnte Kunden nicht speichern, da kein Name angegeben wurde."
 
-#: include/classes/wac-admin.php:281
+#: include/classes/wac-admin.php:292
 #, php-format
 msgid "Could not save the \"%s\" billing field"
 msgstr "Fehler beim speichern des \"%s\" Rechnungsfelds"
 
-#: include/classes/wac-admin.php:296
+#: include/classes/wac-admin.php:307
 #, php-format
 msgid "Could not save the \"%s\" shipping field"
 msgstr "Fehler beim speichern des \"%s\" Versandfeldes"
 
-#: include/classes/wac-admin.php:267
+#: include/classes/wac-admin.php:278
 #, php-format
 msgid "Could not save the default field \"%s\""
 msgstr "Fehler beim speichern des \"%s\" Standartfeldes."
 
-#: include/tools/helper.php:228
+#: include/tools/helper.php:229
 msgid "Could not update the customer, because the customer was not found."
 msgstr "Konnte Kunden nicht aktualisieren, da der Kunde nicht gefunden wurde."
 
-#: include/tools/helper.php:240
+#: include/tools/helper.php:241
 msgid "Customer successfully updated."
 msgstr "Der Kunde wurde erfolgreich aktualisiert."
 
@@ -95,7 +95,7 @@ msgstr "Der Kunde wurde erfolgreich aktualisiert."
 msgid "Dan's Art"
 msgstr "Dan's Art"
 
-#: include/tools/helper.php:225
+#: include/tools/helper.php:226
 #, php-format
 msgid "Email \"%s\" already exists. No new customer got created."
 msgstr ""
@@ -106,7 +106,7 @@ msgstr ""
 msgid "Email Content:"
 msgstr "Email Inhalt:"
 
-#: include/tools/helper.php:236
+#: include/tools/helper.php:237
 #, php-format
 #| msgid "Email send to new customer \"%s\""
 msgid "Email send to new customer: %s"
@@ -120,7 +120,7 @@ msgstr "Betreff für die Email des neuen Kontos."
 msgid "Email Subject:"
 msgstr "Email Betreff:"
 
-#: include/tools/helper.php:253
+#: include/tools/helper.php:254
 msgid "Email was not send to user because no email was provided."
 msgstr "Email wurde nicht gesendet, da keine Adresse angegeben wurde."
 
@@ -137,7 +137,7 @@ msgstr ""
 "Fehler: Die WooCommerce Email Klasse wurde nicht gefunden. Stelle sicher das "
 "die neuste Version von WooCommerce installiert ist."
 
-#: include/tools/helper.php:249
+#: include/tools/helper.php:250
 msgid "Failed to send email notification to customer."
 msgstr "Fehler beim senden der Email Benachrichtigung an den Kunden."
 
@@ -171,11 +171,26 @@ msgstr ""
 msgid "In order to login, you have to define a password for your account."
 msgstr "Definiere dein Passwort damit du dich einloggen kannst."
 
+#: include/tools/helper.php:508
+msgid ""
+"Intl PHP extension not installed. Please install it to make your email valid"
+msgstr ""
+"Intl PHP Erweiterung ist nicht Installiert. Bitte installiere die "
+"Erweiterung um die Email valide zu machen."
+
+#: include/tools/helper.php:533
+msgid ""
+"Intl PHP extension not installed. Please install it to make your username "
+"valid"
+msgstr ""
+"Intl PHP Erweiterung ist nicht Installiert. Bitte installiere die "
+"Erweiterung um den Benutzername valide zu machen."
+
 #: include/classes/wac-backend.php:184
 msgid "Invalid eMail address"
 msgstr "Ungültige Email Adresse"
 
-#: include/tools/helper.php:267
+#: include/tools/helper.php:268
 msgid "Log Type not found!"
 msgstr "Log-Typ nicht gefunden."
 
@@ -191,12 +206,12 @@ msgstr "Haupteinstellungen"
 msgid "New account created"
 msgstr "Neues Konto erstellt"
 
-#: include/classes/wac-backend.php:138 include/tools/helper.php:382
+#: include/classes/wac-backend.php:138 include/tools/helper.php:383
 #, php-format
 msgid "New account created at %s"
 msgstr "Neues Konto erstellt auf %s"
 
-#: include/tools/helper.php:261
+#: include/tools/helper.php:262
 #| msgid ""
 #| "New User could not be added by Add Customer Plugin. Please contact the "
 #| "Plugin Author."
@@ -256,7 +271,7 @@ msgstr "Template wurde geladen von:"
 msgid "Template Settings"
 msgstr "Einstellung für das Template"
 
-#: include/tools/helper.php:257
+#: include/tools/helper.php:258
 #, php-format
 msgid "The email \"%s\" is not valid."
 msgstr "Die Email \"%s\" ist nicht valide."

@@ -6,7 +6,7 @@ Donate link: <https://paypal.me/dansart13>
 Tags: woocommerce, customer, tools, helper
 Requires at least: 5.4.0
 Tested up to: 6.1
-Stable tag: 1.6.2
+Stable tag: 1.6.3
 License: GPLv3 or later
 License URI: <http://www.gnu.org/licenses/gpl-2.0.html>
 WC requires at least: 4.7.0
@@ -29,6 +29,7 @@ Settings Menu:
 Settings -> Add Customer Settings
 
 Required Plugins: WooCommerce 4.7.0 or higher
+Required PHP extension: Intl
 
 If you like the Plugin, please leave some Stars or donate me a coffee. Thanks!
 
@@ -73,6 +74,13 @@ Are there any hooks I can use?
 
 
 == Changelog ==
+= [1.6.3] 2022-11-12 =
+
+* Fixed: Errors when non-Latin characters were used.
+* Added filter: wac_make_user_valid - Use this if you like to modify the username before saving it to the database
+* Added filter: wac_make_email_valid - Use this if you like to modify the email before saving it to the database
+* Added two new language strings
+
 = [1.6.2] 2022-11-07 =
 
 * Fixed: Notify customer checkbox did not get displayed
