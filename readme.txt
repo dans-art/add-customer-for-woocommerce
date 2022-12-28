@@ -5,12 +5,12 @@ Contributors URL: <http://dev.dans-art.ch>
 Donate link: <https://paypal.me/dansart13>
 Tags: woocommerce, customer, tools, helper
 Requires at least: 5.4.0
-Tested up to: 6.1
-Stable tag: 1.6.3
+Tested up to: 6.1.1
+Stable tag: 1.6.4
 License: GPLv3 or later
 License URI: <http://www.gnu.org/licenses/gpl-2.0.html>
 WC requires at least: 4.7.0
-WC tested up to: 7.0.1
+WC tested up to: 7.2.2
 Requires PHP: 7.4
 
 Adds a new checkbox to the orders page to add a new customer/user.
@@ -31,7 +31,7 @@ Settings -> Add Customer Settings
 Required Plugins: WooCommerce 4.7.0 or higher
 Required PHP extension: Intl
 
-If you like the Plugin, please leave some Stars or donate me a coffee. Thanks!
+If you like the Plugin, please leave some Stars or spent me a coffee. Thanks!
 
 == Installation ==
 1. Upload the plugin files to the /wp-content/plugins/add-customer-for-woocommerce directory, or install the plugin through the WordPress plugins screen directly.
@@ -74,6 +74,11 @@ Are there any hooks I can use?
 
 
 == Changelog ==
+= [1.6.4] 2022-12-28 =
+* Fixed: Compatibility issues with the plugin https://wordpress.org/plugins/simple-cloudflare-turnstile
+* Added: Support page
+* Added 12 new language strings, 1 updated
+
 = [1.6.3] 2022-11-12 =
 
 * Fixed: Errors when non-Latin characters were used.

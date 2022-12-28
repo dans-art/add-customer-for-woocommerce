@@ -11,7 +11,7 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 
-if(!class_exists('WC_Email')){
+if (!class_exists('WC_Email')) {
     echo __('Error: WooCommerce Email Class not found. Make sure that you have the newest version of WooCommerce installed.', 'wac');
     return;
 }
@@ -29,6 +29,7 @@ $message = $woo->style_inline($message);
 $subject = $wac->get_mail_subject('wac_template_subject_add_account');
 
 ?>
+<h2><?php echo __('Template settings', 'wac'); ?></h2>
 <div id="template_preview_container">
     <div class="subject_content">
         <div><?php echo __('Email Subject:', 'wac'); ?></div>

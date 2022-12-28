@@ -56,7 +56,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
 
         register_setting('wac_general_options', 'wac_general_options', [$this, 'wac_options_validate']);
 
-        add_settings_section('wac_main_settings', __('Main Settings', 'wac'), null, 'wac_general_options');
+        add_settings_section('wac_main_settings', __('Main settings', 'wac'), null, 'wac_general_options');
         add_settings_section('wac_template_settings', __('Template Settings', 'wac'), null, 'wac_general_options');
 
         add_settings_field(

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Add Customer for WooCommerce\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-22 15:15+0000\n"
-"PO-Revision-Date: 2022-11-12 15:04+0000\n"
+"PO-Revision-Date: 2022-12-28 18:13+0000\n"
 "Last-Translator: \n"
 "Language-Team: Deutsch\n"
 "Language: de_DE\n"
@@ -95,6 +95,14 @@ msgstr "Der Kunde wurde erfolgreich aktualisiert."
 msgid "Dan's Art"
 msgstr "Dan's Art"
 
+#: templates/backend/backend-options-page-support.php:19
+msgid "Development"
+msgstr "Entwicklung"
+
+#: templates/backend/backend-options-page-support.php:28
+msgid "Donate something on PayPal"
+msgstr "Spende etwas auf PayPal"
+
 #: include/tools/helper.php:226
 #, php-format
 msgid "Email \"%s\" already exists. No new customer got created."
@@ -102,7 +110,7 @@ msgstr ""
 "Die Email Adresse \"%s\" existiert bereits. Es wurde kein neuer Kunde "
 "erstellt."
 
-#: templates/backend/backend-options-page-template.php:38
+#: templates/backend/backend-options-page-template.php:39
 msgid "Email Content:"
 msgstr "Email Inhalt:"
 
@@ -116,7 +124,7 @@ msgstr "Email wurde an den neuen Kunden %s geschickt"
 msgid "Email Subject for new accounts created"
 msgstr "Betreff für die Email des neuen Kontos."
 
-#: templates/backend/backend-options-page-template.php:34
+#: templates/backend/backend-options-page-template.php:35
 msgid "Email Subject:"
 msgstr "Email Betreff:"
 
@@ -145,6 +153,10 @@ msgstr "Fehler beim senden der Email Benachrichtigung an den Kunden."
 msgid "General"
 msgstr "Allgemein"
 
+#: templates/backend/backend-options-page-support.php:22
+msgid "Github.com"
+msgstr "Github.com"
+
 #: templates/email/new-account.php:28
 #, php-format
 msgid "Hi, %s"
@@ -166,6 +178,18 @@ msgid ""
 msgstr ""
 "Wenn dies gewählt ist, werden Kunden automatisch aktualisiert wenn die "
 "Bestellung aktualisiert wird."
+
+#: templates/backend/backend-options-page-support.php:17
+msgid "If you find yourself having trouble, please let me know by writing to:"
+msgstr "Solltest du Probleme haben mit dem Plugin, lass es mich bitte wissen:"
+
+#: templates/backend/backend-options-page-support.php:26
+msgid ""
+"If you like this plugin and want to give me something back, here are some "
+"ways to do so:"
+msgstr ""
+"Wenn dir das Plugin gefällt und du etwas zurückgeben willst, hier ein paar "
+"Möglichkeiten:"
 
 #: templates/email/new-account.php:33
 msgid "In order to login, you have to define a password for your account."
@@ -194,12 +218,14 @@ msgstr "Ungültige Email Adresse"
 msgid "Log Type not found!"
 msgstr "Log-Typ nicht gefunden."
 
-#: templates/backend/backend-options-page.php:51
+#: templates/backend/backend-options-page.php:55
 msgid "Made with ❤️ by Dan's Art"
 msgstr "Mit viel ❤️ von Dan's Art erstellt"
 
 #: include/classes/wac-backend.php:59
-msgid "Main Settings"
+#, fuzzy
+#| msgid "Main Settings"
+msgid "Main settings"
 msgstr "Haupteinstellungen"
 
 #: templates/email/new-account.php:26
@@ -222,7 +248,7 @@ msgstr ""
 "Neues Nutzerkonto konnte nicht durch das Add Customer Plugin hinzugefügt "
 "werden. Bitte benachrichtige den Plugin Author."
 
-#: templates/backend/backend-options-page-template.php:49
+#: templates/backend/backend-options-page-template.php:50
 msgid "Reload template"
 msgstr "Template new laden"
 
@@ -255,6 +281,15 @@ msgstr "Absender Email"
 msgid "Set the password for your account"
 msgstr "Setze das Passwort für dein Konto"
 
+#: templates/backend/backend-options-page-support.php:14
+#: templates/backend/backend-options-page.php:27
+msgid "Support"
+msgstr "Unterstützung"
+
+#: templates/backend/backend-options-page-support.php:24
+msgid "Support me"
+msgstr "Unterstütze mich"
+
 #: include/classes/wac-backend.php:119
 msgid "Supported tags:"
 msgstr "Unterstützte Platzhalter:"
@@ -263,13 +298,30 @@ msgstr "Unterstützte Platzhalter:"
 msgid "Template"
 msgstr "Template"
 
-#: templates/backend/backend-options-page-template.php:43
+#: templates/backend/backend-options-page-template.php:44
 msgid "Template loaded from:"
 msgstr "Template wurde geladen von:"
 
 #: include/classes/wac-backend.php:60
 msgid "Template Settings"
 msgstr "Einstellung für das Template"
+
+#: templates/backend/backend-options-page-template.php:32
+msgid "Template settings"
+msgstr "Template Einstellungen"
+
+#: templates/backend/backend-options-page-support.php:16
+msgid ""
+"Thanks for using this Plugin. It was crafted with a lot of care and love, "
+"but errors and incompatibilities with other plugins can occur."
+msgstr ""
+"Danke das du dieses Plugin nutzt. Es wurde mit viel Sorgfalt und liebe "
+"erstellt. Trotzdem sind Fehler oder Inkompatibilitäten nie ganz "
+"auszuschliessen."
+
+#: templates/backend/backend-options-page-support.php:29
+msgid "Thanks!"
+msgstr "Danke!"
 
 #: include/tools/helper.php:258
 #, php-format
@@ -291,7 +343,7 @@ msgid ""
 "The subject / header for the email which are sended to the new customers"
 msgstr "Der Betreff der Email, welche an den neuen Kunden geschickt wird"
 
-#: templates/backend/backend-options-page.php:44
+#: templates/backend/backend-options-page.php:48
 #, php-format
 msgid ""
 "There have been %d customers added and %d customers edited by the plugin"
@@ -310,6 +362,14 @@ msgstr "Aktualisiere neuen Kunden standardmässig"
 #: templates/order/update-checkbox.php:24
 msgid "Updates the existing customer"
 msgstr "Aktualisiert den existierenden Kunden"
+
+#: templates/backend/backend-options-page-support.php:21
+msgid "Wordpress.org"
+msgstr "Wordpress.org"
+
+#: templates/backend/backend-options-page-support.php:27
+msgid "Write a review and give me 5 stars on Wordpress.com"
+msgstr "Schreibe ein Review und gib mir 5 Sterne auf Wordpress.com"
 
 #: include/classes/wac-backend.php:118
 msgid "You can use the supported tags below wrapping them in [ ]"
