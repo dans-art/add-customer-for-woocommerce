@@ -7,14 +7,14 @@
  * Contributors: dansart
  * Contributors URL: http://dev.dans-art.ch
  * Tags: woocommerce, customer, tools, helper
- * Version: 1.6.3
- * Stable tag: 1.6.3
+ * Version: 1.6.4
+ * Stable tag: 1.6.4
  * 
  * Requires at least: 5.4.0
- * Tested up to: 6.1
+ * Tested up to: 6.1.1
  * 
  * WC requires at least: 4.7.0
- * WC tested up to: 6.9.1
+ * WC tested up to: 7.2.2
  * 
  * Requires PHP: 7.4
  * 
@@ -41,9 +41,15 @@ require_once('include/tools/helper.php');
 require_once('include/classes/wac.php');
 require_once('include/classes/wac-admin.php');
 require_once('include/classes/wac-backend.php');
+require_once('include/classes/wac-compatibility.php');
 
 //Make sure all other Plugins are loaded, before running this.
 add_action('plugins_loaded', function () {
     $wac = new woo_add_customer();
     $wac->wac_admin_init();
+    //Add fixes to prevent plugin incompatibilities
+});
+
+add_action('admin_init', function () {
+    wac_compatibility::add_fixes();
 });
