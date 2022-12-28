@@ -24,11 +24,15 @@ $current_tab = (isset($_GET['tab'])) ? $_GET['tab'] : null;
 <nav class="nav-tab-wrapper">
     <a href="?page=wac-options" class="nav-tab <?php if ($current_tab === null) {echo 'nav-tab-active';} ?>"><?php echo __('General', 'wac'); ?></a>
     <a href="?page=wac-options&tab=template" class="nav-tab <?php if ($current_tab === 'template') {echo 'nav-tab-active';} ?>"><?php echo __('Template', 'wac'); ?></a>
+    <a href="?page=wac-options&tab=support" class="nav-tab <?php if ($current_tab === 'support') {echo 'nav-tab-active';} ?>"><?php echo __('Support', 'wac'); ?></a>
 </nav>
 
 <div class="wac-options-tab tab-content">
     <?php
     switch ($current_tab) {
+        case 'support':
+            echo $wac->load_template_to_var('backend-options-page-support', 'backend/');
+            break;
         case 'template':
             echo $wac->load_template_to_var('backend-options-page-template', 'backend/');
             break;

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Add Customer for WooCommerce\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-11-12 15:01+0000\n"
+"POT-Creation-Date: 2022-12-28 18:07+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -91,12 +91,20 @@ msgstr ""
 msgid "Dan's Art"
 msgstr ""
 
+#: templates/backend/backend-options-page-support.php:19
+msgid "Development"
+msgstr ""
+
+#: templates/backend/backend-options-page-support.php:28
+msgid "Donate something on PayPal"
+msgstr ""
+
 #: include/tools/helper.php:226
 #, php-format
 msgid "Email \"%s\" already exists. No new customer got created."
 msgstr ""
 
-#: templates/backend/backend-options-page-template.php:38
+#: templates/backend/backend-options-page-template.php:39
 msgid "Email Content:"
 msgstr ""
 
@@ -109,7 +117,7 @@ msgstr ""
 msgid "Email Subject for new accounts created"
 msgstr ""
 
-#: templates/backend/backend-options-page-template.php:34
+#: templates/backend/backend-options-page-template.php:35
 msgid "Email Subject:"
 msgstr ""
 
@@ -136,6 +144,10 @@ msgstr ""
 msgid "General"
 msgstr ""
 
+#: templates/backend/backend-options-page-support.php:22
+msgid "Github.com"
+msgstr ""
+
 #: templates/email/new-account.php:28
 #, php-format
 msgid "Hi, %s"
@@ -153,6 +165,16 @@ msgstr ""
 msgid ""
 "If this is checked, the existing customer data will be updated when the "
 "order is updated."
+msgstr ""
+
+#: templates/backend/backend-options-page-support.php:17
+msgid "If you find yourself having trouble, please let me know by writing to:"
+msgstr ""
+
+#: templates/backend/backend-options-page-support.php:26
+msgid ""
+"If you like this plugin and want to give me something back, here are some "
+"ways to do so:"
 msgstr ""
 
 #: templates/email/new-account.php:33
@@ -178,12 +200,12 @@ msgstr ""
 msgid "Log Type not found!"
 msgstr ""
 
-#: templates/backend/backend-options-page.php:51
+#: templates/backend/backend-options-page.php:55
 msgid "Made with ❤️ by Dan's Art"
 msgstr ""
 
 #: include/classes/wac-backend.php:59
-msgid "Main Settings"
+msgid "Main settings"
 msgstr ""
 
 #: templates/email/new-account.php:26
@@ -201,7 +223,7 @@ msgid ""
 "Plugin Author."
 msgstr ""
 
-#: templates/backend/backend-options-page-template.php:49
+#: templates/backend/backend-options-page-template.php:50
 msgid "Reload template"
 msgstr ""
 
@@ -231,6 +253,15 @@ msgstr ""
 msgid "Set the password for your account"
 msgstr ""
 
+#: templates/backend/backend-options-page-support.php:14
+#: templates/backend/backend-options-page.php:27
+msgid "Support"
+msgstr ""
+
+#: templates/backend/backend-options-page-support.php:24
+msgid "Support me"
+msgstr ""
+
 #: include/classes/wac-backend.php:119
 msgid "Supported tags:"
 msgstr ""
@@ -239,12 +270,26 @@ msgstr ""
 msgid "Template"
 msgstr ""
 
-#: templates/backend/backend-options-page-template.php:43
+#: templates/backend/backend-options-page-template.php:44
 msgid "Template loaded from:"
 msgstr ""
 
 #: include/classes/wac-backend.php:60
 msgid "Template Settings"
+msgstr ""
+
+#: templates/backend/backend-options-page-template.php:32
+msgid "Template settings"
+msgstr ""
+
+#: templates/backend/backend-options-page-support.php:16
+msgid ""
+"Thanks for using this Plugin. It was crafted with a lot of care and love, "
+"but errors and incompatibilities with other plugins can occur."
+msgstr ""
+
+#: templates/backend/backend-options-page-support.php:29
+msgid "Thanks!"
 msgstr ""
 
 #: include/tools/helper.php:258
@@ -265,7 +310,7 @@ msgid ""
 "The subject / header for the email which are sended to the new customers"
 msgstr ""
 
-#: templates/backend/backend-options-page.php:44
+#: templates/backend/backend-options-page.php:48
 #, php-format
 msgid ""
 "There have been %d customers added and %d customers edited by the plugin"
@@ -281,6 +326,14 @@ msgstr ""
 
 #: templates/order/update-checkbox.php:24
 msgid "Updates the existing customer"
+msgstr ""
+
+#: templates/backend/backend-options-page-support.php:21
+msgid "Wordpress.org"
+msgstr ""
+
+#: templates/backend/backend-options-page-support.php:27
+msgid "Write a review and give me 5 stars on Wordpress.com"
 msgstr ""
 
 #: include/classes/wac-backend.php:118

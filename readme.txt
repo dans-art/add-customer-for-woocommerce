@@ -76,6 +76,8 @@ Are there any hooks I can use?
 == Changelog ==
 = [1.6.4] 2022-12-28 =
 * Fixed: Compatibility issues with the plugin https://wordpress.org/plugins/simple-cloudflare-turnstile
+* Added: Support page
+* Added 12 new language strings, 1 updated
 
 = [1.6.3] 2022-11-12 =
 
