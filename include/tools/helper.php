@@ -63,7 +63,7 @@ class woo_add_customer_helper
     public function get_domain_name()
     {
         $custom_format = $this->get_wac_option('wac_fakemail_format');
-        $exp = explode('@', $custom_format);
+        $exp = ($custom_format !== null) ? explode('@', $custom_format) : null;
         //$exp[0] = email Name, $exp[1] = domain name
         if (isset($exp[1])) {
             return $exp[1];
@@ -260,6 +260,7 @@ class woo_add_customer_helper
                 break;
             case 'failed_to_add_user':
                 $message = __('New customer could not be added by Add Customer Plugin. Please contact the Plugin Author.', 'wac');
+                $message .= (isset($args[0])) ? '<br/>' . json_encode($args[0]) : '';
                 $type = 'error';
                 $additional_log = array('wc_create_new_customer' => $args[0], 'user' => $args[1], 'email' => $args[2]);
                 error_log($message . " - " . htmlspecialchars(json_encode($args))); //Prints the args with the error message from wc_create_new_customer to the error log
@@ -500,14 +501,14 @@ class woo_add_customer_helper
         //Replaces the cyrillic letters
         $orig_email = $email;
         //Make sure that the Intl extension is installed
-        if(function_exists('transliterator_transliterate')){
+        if (function_exists('transliterator_transliterate')) {
             //Converts to latin characters
             $email = transliterator_transliterate('Any-Latin; Latin-ASCII; [\u0100-\u7fff] remove', $email);
-        }elseif(!is_email($email)){
+        } elseif (!is_email($email)) {
             //Display notice if email is not valid and php intl extension is not installed
             $this->wac_set_notice(__('Intl PHP extension not installed. Please install it to make your email valid', 'wac'), 'error', get_the_ID());
         }
-        
+
 
         $email = sanitize_email($email, true); //Remove all un-allowed characters
 
@@ -525,13 +526,12 @@ class woo_add_customer_helper
         //Replaces the cyrillic letters
         $orig_user = $user;
         //Make sure that the Intl extension is installed
-        if(function_exists('transliterator_transliterate')){
+        if (function_exists('transliterator_transliterate')) {
             //Converts to latin characters
             $user = transliterator_transliterate('Any-Latin; Latin-ASCII; [\u0100-\u7fff] remove', $user);
-        }elseif($user !== sanitize_user($user, true)){
+        } elseif ($user !== sanitize_user($user, true)) {
             //Display notice if user is not valid and php intl extension is not installed
             $this->wac_set_notice(__('Intl PHP extension not installed. Please install it to make your username valid', 'wac'), 'error', get_the_ID());
-            
         }
         $user = sanitize_user($user, true); //Remove all un-allowed characters
 

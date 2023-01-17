@@ -6,7 +6,7 @@ Donate link: <https://paypal.me/dansart13>
 Tags: woocommerce, customer, tools, helper
 Requires at least: 5.4.0
 Tested up to: 6.1.1
-Stable tag: 1.6.4
+Stable tag: 1.6.5
 License: GPLv3 or later
 License URI: <http://www.gnu.org/licenses/gpl-2.0.html>
 WC requires at least: 4.7.0
@@ -74,6 +74,9 @@ Are there any hooks I can use?
 
 
 == Changelog ==
+= [1.6.5] 2023-01-17 =
+* Fixed: Better error messages if creation of customer fails
+
 = [1.6.4] 2022-12-28 =
 * Fixed: Compatibility issues with the plugin https://wordpress.org/plugins/simple-cloudflare-turnstile
 * Added: Support page
