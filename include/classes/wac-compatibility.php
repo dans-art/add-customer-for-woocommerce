@@ -1,10 +1,11 @@
 <?php
 
 /**
- * Plugin Name: Add Customer for WooCommerce
- * Class description: Class for managing the compatibility issues
- * Author: Dan's Art
- * Author URI: http://dev.dans-art.ch
+ * Class for managing the compatibility issues
+ * 
+ * @class       wac_compatibility
+ * @version     1.6.5
+ * @package     WAC\classes
  */
 
 if (!defined('ABSPATH')) {
@@ -24,6 +25,5 @@ class wac_compatibility
         if (is_admin() and is_plugin_active('simple-cloudflare-turnstile/simple-cloudflare-turnstile.php')) {
             remove_action('woocommerce_register_post', 'cfturnstile_woo_register_check');
         }
-
     }
 }

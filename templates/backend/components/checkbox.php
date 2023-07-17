@@ -4,7 +4,8 @@
  * This Template render checkbox input field at the settings page.
  * Wordpress Backend -> Settings -> Add Customer Settings
  * 
- * @version 1.5
+ * @version     1.6.5
+ * @package     WAC\Templates
  */
 
 if (!defined('ABSPATH')) {

@@ -3,7 +3,8 @@
 /**
  * The update customer data checkbox
  * 
- * @version 1.5
+ * @version     1.6.5
+ * @package     WAC\BackendTemplate
  */
 
 if (!defined('ABSPATH')) {

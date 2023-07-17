@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Plugin Name: Add Customer for WooCommerce
- * Class description: Main Class. Includes the plugins functionalities to front- and backend. 
- * Author: Dan's Art
- * Author URI: http://dev.dans-art.ch
- *
+ * Main Class. Includes the plugins functionalities to front- and backend. 
+ * 
+ * @class       woo_add_customer
+ * @version     1.6.5
+ * @package     WAC\classes
  */
 if (!defined('ABSPATH')) {
     exit;

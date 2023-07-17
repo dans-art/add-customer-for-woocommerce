@@ -4,7 +4,8 @@
  * This Template renders the backend page of the template preview.
  * Wordpress Backend -> Settings -> Add Customer Settings -> [Tab]Template
  * 
- * @version 1.4
+ * @version     1.6.5
+ * @package     WAC\Templates
  */
 
 if (!defined('ABSPATH')) {

@@ -1,10 +1,11 @@
 <?php
 
 /**
- * Plugin Name: Add Customer for WooCommerce
- * Class description: Various helper methods.
- * Author: Dan's Art
- * Author URI: http://dev.dans-art.ch
+ * Various helper methods. 
+ * 
+ * @class       woo_add_customer_helper
+ * @version     1.6.5
+ * @package     WAC\classes
  *
  */
 
@@ -280,6 +281,21 @@ class woo_add_customer_helper
     }
 
     /**
+     * Logs a message to the simple history logger and prints it out as a notice
+     *
+     * @param string $log_message
+     * @param int $order_id
+     * @param string $type - null, error, or success
+     * @return void
+     */
+    public function log_event_message($log_message, $order_id, $type = 'null')
+    {
+        apply_filters('simple_history_log', "{$log_message} - by Add Customer");
+        $this->wac_set_notice($log_message, $type, $order_id);
+        return;
+    }
+
+    /**
      * Loads template to variable.
      * @param string $template_name - Name of the template without extension
      * @param string $subfolder - Name of the Subfolder(s). Base folder is Plugin_dir/templates/
@@ -430,6 +446,7 @@ class woo_add_customer_helper
                 $classes = 'notice notice-info';
                 break;
         }
+
         $notice = "<div class='{$classes}'><p>{$notice}</p></div>";
         $trans_notices = get_transient($trans_id);
         if (is_array($trans_notices)) {
@@ -439,7 +456,7 @@ class woo_add_customer_helper
         }
         return set_transient($trans_id, $trans_notices, 45);
     }
-
+    
     /**
      * Displays the stored messages as admin_notices
      *
@@ -447,19 +464,26 @@ class woo_add_customer_helper
      */
     public function wac_display_notices()
     {
-        add_action('admin_notices', function () {
-            $user_id = get_current_user_id();
-            $order_id = (!empty($_GET['post'])) ? $_GET['post'] : 0;
-            $trans_id = "wac_admin_notice_{$user_id}_{$order_id}";
-
-            $notices = get_transient($trans_id);
-            if (is_array($notices)) {
-                foreach ($notices as $notice) {
-                    echo $notice;
-                }
+        echo '<div class="notice notice-warning"><p>This is an important 3 notice for administrators.</p></div>';
+        
+        $user_id = get_current_user_id();
+        if(isset($_GET['id'])){
+            $order_id = $_GET['id'];
+        }
+        else if(isset($_GET['post'])){
+            $order_id = $_GET['post'];
+        }
+        else{
+            return;
+        }
+        $trans_id = "wac_admin_notice_{$user_id}_{$order_id}";
+        $notices = get_transient($trans_id);
+        if (is_array($notices)) {
+            foreach ($notices as $notice) {
+                echo $notice;
             }
-            delete_transient($trans_id);
-        });
+        }
+        delete_transient($trans_id);
     }
 
     /**
