@@ -454,6 +454,7 @@ class woo_add_customer_helper
         } else {
             $trans_notices = array($notice);
         }
+        error_log("Transient set");
         return set_transient($trans_id, $trans_notices, 45);
     }
     
@@ -463,9 +464,8 @@ class woo_add_customer_helper
      * @return void
      */
     public function wac_display_notices()
-    {
-        echo '<div class="notice notice-warning"><p>This is an important 3 notice for administrators.</p></div>';
-        
+    {        
+        error_log("Transient read");
         $user_id = get_current_user_id();
         if(isset($_GET['id'])){
             $order_id = $_GET['id'];
