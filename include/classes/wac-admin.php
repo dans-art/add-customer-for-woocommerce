@@ -149,7 +149,6 @@ class woo_add_customer_admin extends woo_add_customer_helper
     {
         //Load the order
         $order = wc_get_order($order_id);
-
         if (!$order) {
             $this->log_event_message(__('No Order found', 'wac'), $order_id, 'error');
             return;
@@ -192,6 +191,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
                 $this->log_event("customer_updated", $order_id, $update_customer, $user_id);
                 $this->increase_wac_counter('edit');
             }
+
             do_action('wac_after_insert_updated_customer', $user_id, $order_id);
         }
         return;
