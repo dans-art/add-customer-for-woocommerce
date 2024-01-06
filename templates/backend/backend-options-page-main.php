@@ -11,7 +11,6 @@
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
-
 ?>
 
 <form id='wac_options_page' action="options.php" method="post" enctype="multipart/form-data">

@@ -75,6 +75,9 @@ Are there any hooks I can use?
 
 == Changelog ==
 
+= [1.7] 2024-01-06 =
+* Fixed: Security issue
+
 = [1.7] 2023-09-22 =
 * Added support for WooCommerce HPOS.
 * Increased minimum WooCommerce version to 7.4.1 

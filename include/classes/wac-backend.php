@@ -161,14 +161,29 @@ class woo_add_customer_backend extends woo_add_customer_helper
 
     /**
      * Validates the Input of the options page
-     * @todo Validate the inputs
      *
-     * @param string $input - The input to validate
-     * @return void
+     * @param array $input - The input to validate
+     * @return array
      */
     public function wac_options_validate($input)
     {
-
+        foreach($input as $key => $value){
+            switch ($key) {
+                case 'wac_fakemail_format':
+                    $input[$key] = $this -> sanitize_placeholder_email($value, $key);
+                    break;
+                    case 'wac_template_subject_add_account':
+                        $input[$key] = htmlspecialchars($value);
+                    break;
+                case 'wac_email_from':
+                    $input[$key] = sanitize_email($value);
+                    break;
+                
+                default:
+                    # code...
+                    break;
+            }
+        }
         return $input;
     }
 
@@ -208,6 +223,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
         $options = (array) get_option($args['page']);
         $default_value = (!empty($args['default_value'])) ? $args['default_value'] : '';
         $options_val = (!empty($options[$label_for])) ? $options[$label_for] : '';
+
         switch ($type) {
             case 'checkbox':
                 echo $this->load_template_to_var('checkbox', 'backend/components', $label_for, $options_val, $default_value, $args);

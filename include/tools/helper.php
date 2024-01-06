@@ -426,10 +426,10 @@ class woo_add_customer_helper
      *
      * @param string $notice - The message to display
      * @param string $type - Type of message (success, error)
-     * @param int $order_id - The order_id / post_id
+     * @param int|string $order_id - The order_id / post_id or a string as an identifier
      * @return bool True on success, false on error
      */
-    public function wac_set_notice(string $notice, string $type, $order_id)
+    public function wac_set_notice(string $notice, string $type, $order_id = 0)
     {
         $user_id = get_current_user_id();
         $trans_id = "wac_admin_notice_{$user_id}_{$order_id}";
@@ -456,26 +456,28 @@ class woo_add_customer_helper
         }
         return set_transient($trans_id, $trans_notices, 45);
     }
-    
+
     /**
      * Displays the stored messages as admin_notices
      *
+     * @param int|string $id_to_get The Id to get
      * @return void
      */
-    public function wac_display_notices()
-    {        
+    public function wac_display_notices($id_to_get = null)
+    {
         $user_id = get_current_user_id();
-        if(isset($_GET['id'])){
+        if (isset($_GET['id'])) {
             $order_id = $_GET['id'];
-        }
-        else if(isset($_GET['post'])){
+        } else if (isset($_GET['post'])) {
             $order_id = $_GET['post'];
-        }
-        else{
+        } else if (!empty($id_to_get)) {
+            $order_id = $id_to_get;
+        } else {
             return;
         }
         $trans_id = "wac_admin_notice_{$user_id}_{$order_id}";
         $notices = get_transient($trans_id);
+
         if (is_array($notices)) {
             foreach ($notices as $notice) {
                 echo $notice;
@@ -535,6 +537,99 @@ class woo_add_customer_helper
         $email = sanitize_email($email, true); //Remove all un-allowed characters
 
         return apply_filters('wac_make_email_valid', $email, $orig_email);
+    }
+
+    /**
+     * Checks if the given email is valid. Similar to sanitize_email but allowing the special characters []
+     *
+     * @param string $email
+     * @param string $fieldname
+     * @return string The sanitized email
+     */
+    public function sanitize_placeholder_email($email, $fieldname)
+    {
+        // Test for the minimum length the email can be.
+        if (strlen($email) < 6) {
+            $this->wac_set_notice(esc_html__('Email is to short', 'wac'), "error", $fieldname);
+            return htmlspecialchars($email);
+        }
+
+        // Test for an @ character after the first position.
+        if (strpos($email, '@', 1) === false) {
+            $this->wac_set_notice(esc_html__('Email must contain one @', 'wac'), "error", $fieldname);
+            return htmlspecialchars($email);
+        }
+
+        // Split out the local and domain parts.
+        list($local, $domain) = explode('@', $email, 2);
+
+        /*
+             * LOCAL PART
+             * Test for invalid characters.
+             */
+        $local = preg_replace('/[^a-zA-Z0-9!#$%&\[\]\'*+\/=?^_`{|}~\.-]/', '', $local);
+        if ('' === $local) {
+            $this->wac_set_notice(esc_html__('Email contains forbidden characters or is empty', 'wac'), "error", $fieldname);
+            return htmlspecialchars($email);
+        }
+
+        /*
+             * DOMAIN PART
+             * Test for sequences of periods.
+             */
+        $domain = preg_replace('/\.{2,}/', '', $domain);
+        if ('' === $domain) {
+            $this->wac_set_notice(esc_html__('Domain parts must contain at least one dot', 'wac'), "error", $fieldname);
+            return htmlspecialchars($email);
+        }
+
+        // Test for leading and trailing periods and whitespace.
+        $domain = trim($domain, " \t\n\r\0\x0B.");
+        if ('' === $domain) {
+            $this->wac_set_notice(esc_html__('Domain parts is invalid', 'wac'), "error", $fieldname);
+            return htmlspecialchars($email);
+        }
+
+        // Split the domain into subs.
+        $subs = explode('.', $domain);
+
+        // Assume the domain will have at least two subs.
+        if (2 > count($subs)) {
+            $this->wac_set_notice(esc_html__('Domain parts is invalid', 'wac'), "error", $fieldname);
+            return htmlspecialchars($email);
+        }
+
+        // Create an array that will contain valid subs.
+        $new_subs = array();
+
+        // Loop through each sub.
+        foreach ($subs as $sub) {
+            // Test for leading and trailing hyphens.
+            $sub = trim($sub, " \t\n\r\0\x0B-");
+
+            // Test for invalid characters.
+            $sub = preg_replace('/[^a-z0-9-]+/i', '', $sub);
+
+            // If there's anything left, add it to the valid subs.
+            if ('' !== $sub) {
+                $new_subs[] = $sub;
+            }
+        }
+
+        // If there aren't 2 or more valid subs.
+        if (2 > count($new_subs)) {
+            $this->wac_set_notice(esc_html__('Domain parts is invalid', 'wac'), "error", $fieldname);
+            return htmlspecialchars($email);
+        }
+
+        // Join valid subs into the new domain.
+        $domain = implode('.', $new_subs);
+
+        // Put the email back together.
+        $sanitized_email = $local . '@' . $domain;
+
+        // Congratulations, your email made it!
+        return $sanitized_email;
     }
 
     /**
