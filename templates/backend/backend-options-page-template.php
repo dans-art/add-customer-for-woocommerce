@@ -26,9 +26,9 @@ $message = $this->load_template_to_var('new-account', 'email/', $user->user_emai
 //Apply the style
 $woo = new WC_Email;
 $message = $woo->style_inline($message);
-
 $subject = $wac->get_mail_subject('wac_template_subject_add_account');
 
+$message_esc = htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
 ?>
 <h2><?php echo __('Template settings', 'wac'); ?></h2>
 <div id="template_preview_container">
@@ -38,7 +38,10 @@ $subject = $wac->get_mail_subject('wac_template_subject_add_account');
     </div>
     <div class="main_content">
         <div><?php echo __('Email Content:', 'wac'); ?></div>
-        <div class="message"><?php echo $message; ?></div>
+        <div id="message-con" class="message">
+
+
+        </div>
     </div>
 </div>
 <div id="load_location_container">
@@ -52,3 +55,11 @@ $subject = $wac->get_mail_subject('wac_template_subject_add_account');
         ?>
     </form>
 </div>
+
+<script type="text/javascript">
+    const host = document.querySelector("#message-con");
+    const shadow = host.attachShadow({
+        mode: "open"
+    });
+    shadow.innerHTML = `<?php echo addslashes($message); ?>`;
+</script>

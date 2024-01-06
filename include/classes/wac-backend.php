@@ -4,7 +4,7 @@
  * Class for managing the Admin Menu.
  *
  * @class       woo_add_customer_backend
- * @version     1.6.5
+ * @version     1.7.1
  * @package     WAC\classes
  */
 
@@ -167,20 +167,16 @@ class woo_add_customer_backend extends woo_add_customer_helper
      */
     public function wac_options_validate($input)
     {
-        foreach($input as $key => $value){
+        foreach ($input as $key => $value) {
             switch ($key) {
                 case 'wac_fakemail_format':
-                    $input[$key] = $this -> sanitize_placeholder_email($value, $key);
-                    break;
-                    case 'wac_template_subject_add_account':
-                        $input[$key] = htmlspecialchars($value);
+                    $input[$key] = $this->sanitize_placeholder_email($value, $key);
                     break;
                 case 'wac_email_from':
                     $input[$key] = sanitize_email($value);
                     break;
-                
                 default:
-                    # code...
+                    $input[$key] = htmlspecialchars($value);
                     break;
             }
         }

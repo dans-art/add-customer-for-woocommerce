@@ -540,7 +540,7 @@ class woo_add_customer_helper
     }
 
     /**
-     * Checks if the given email is valid. Similar to sanitize_email but allowing the special characters []
+     * Checks if the given email is valid. Same as sanitize_email but allowing the special characters []
      *
      * @param string $email
      * @param string $fieldname
@@ -550,7 +550,7 @@ class woo_add_customer_helper
     {
         // Test for the minimum length the email can be.
         if (strlen($email) < 6) {
-            $this->wac_set_notice(esc_html__('Email is to short', 'wac'), "error", $fieldname);
+            $this->wac_set_notice(esc_html__('Email is too short', 'wac'), "error", $fieldname);
             return htmlspecialchars($email);
         }
 
