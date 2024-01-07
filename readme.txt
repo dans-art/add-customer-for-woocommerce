@@ -5,12 +5,12 @@ Contributors URL: <http://dev.dans-art.ch>
 Donate link: <https://paypal.me/dansart13>
 Tags: woocommerce, customer, tools, helper
 Requires at least: 5.4.0
-Tested up to: 6.3.1
-Stable tag: 1.7
+Tested up to: 6.4.2
+Stable tag: 1.7.1
 License: GPLv3 or later
 License URI: <http://www.gnu.org/licenses/gpl-2.0.html>
 WC requires at least: 7.4.1
-WC tested up to: 8.1.1
+WC tested up to: 8.4.0
 Requires PHP: 7.4
 
 Adds a new checkbox to the orders page to add a new customer/user.
@@ -75,8 +75,10 @@ Are there any hooks I can use?
 
 == Changelog ==
 
-= [1.7] 2024-01-06 =
-* Fixed: Security issue
+= [1.7.1] 2024-01-07 =
+* Fixed: XSS Security issue
+* Fixed: Fatal error when creating a fake email
+* Updated tested up version
 
 = [1.7] 2023-09-22 =
 * Added support for WooCommerce HPOS.
