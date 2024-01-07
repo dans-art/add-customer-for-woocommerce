@@ -31,3 +31,11 @@ if (!defined('ABSPATH')) {
 </p>
 
 </div>
+<?php 
+//Testing
+//This section is intended to test internal functions
+/*
+$helper = new woo_add_customer_helper();
+s($helper -> create_fake_email('test'));
+*/
+?>

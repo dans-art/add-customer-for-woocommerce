@@ -46,8 +46,14 @@ class woo_add_customer_helper
         $number = '';
         $name = $this->create_fake_email_name($username);
         //Add a number if email already exists
-        while (get_user_by('email', $name . $number . '@' . $domain_name) !== false) {
-            $number = (int)($number === '') ? 1 : $number++;
+        while ((get_user_by('email', $name . $number . '@' . $domain_name) !== false) AND $number < 100) {
+            if(empty($number)){
+                $number = 0;
+            }
+            $number++;
+        }
+        if ($number == 100) {
+            return false;
         }
         $email = $name . $number . '@' . $domain_name;
         $email = str_replace(' ', '_', $email); //Replace the spaces with underlines

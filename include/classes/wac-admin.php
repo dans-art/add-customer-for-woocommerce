@@ -222,7 +222,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
             $email = $this->create_fake_email($user);
             $email_is_fake = true;
         }
-
+        
         //Add hook to allow to modify the email
         $email = $this->make_email_valid($email);
         $email = apply_filters('wac_add_customer_email', $email, $user);
