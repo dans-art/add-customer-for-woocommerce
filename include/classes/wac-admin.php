@@ -153,13 +153,11 @@ class woo_add_customer_admin extends woo_add_customer_helper
             $this->log_event_message(__('No Order found', 'wac'), $order_id, 'error');
             return;
         }
-
         if (isset($_REQUEST['wac_add_customer']) and $_REQUEST['wac_add_customer'] == 'true') {
             //Add new customer
             $email = isset($_REQUEST['_billing_email']) ? sanitize_email($_REQUEST['_billing_email']) : false;
             $existing_user = get_user_by('email', $email);
             $user_id = null;
-
             if ($existing_user === false) {
                 $new_customer_id = $this->wac_add_customer($email, $order_id);
                 if ($new_customer_id) {
@@ -251,7 +249,6 @@ class woo_add_customer_admin extends woo_add_customer_helper
 
         if ($user !== false) {
             $user_id = wc_create_new_customer($email, $user, $password);
-            //$this->log_event("failed_to_add_user", $user_id, $user, $email);
             if (is_integer($user_id)) {
                 $user_data = array('ID' => $user_id, 'first_name' => $user_first, 'last_name' => $user_last);
                 wp_update_user($user_data);

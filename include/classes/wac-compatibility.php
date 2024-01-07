@@ -25,5 +25,15 @@ class wac_compatibility
         if (is_admin() and is_plugin_active('simple-cloudflare-turnstile/simple-cloudflare-turnstile.php')) {
             remove_action('woocommerce_register_post', 'cfturnstile_woo_register_check');
         }
+
+        //Workaround for Dokan – Best WooCommerce Multivendor Marketplace Solution – Build Your Own Amazon, eBay, Etsy
+        //https://wordpress.org/plugins/dokan-lite/
+        //Tested with Version: 3.9.5
+        //Removes the nonce check on wc-orders page
+        if (is_admin() and isset($_REQUEST['wac_add_customer']) and $_REQUEST['wac_add_customer'] == 'true') {
+            add_filter('dokan_register_nonce_check', function () {
+                return false;
+            });
+        }
     }
 }
