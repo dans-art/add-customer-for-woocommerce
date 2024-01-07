@@ -4,13 +4,13 @@
  * This Template renders the backend page for the main settings.
  * Wordpress Backend -> Settings -> Add Customer Settings
  * 
- * @version 1.4
+ * @version     1.6.5
+ * @package     WAC\Templates
  */
 
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
-
 ?>
 
 <form id='wac_options_page' action="options.php" method="post" enctype="multipart/form-data">

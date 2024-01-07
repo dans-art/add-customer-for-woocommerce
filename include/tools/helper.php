@@ -1,10 +1,11 @@
 <?php
 
 /**
- * Plugin Name: Add Customer for WooCommerce
- * Class description: Various helper methods.
- * Author: Dan's Art
- * Author URI: http://dev.dans-art.ch
+ * Various helper methods. 
+ * 
+ * @class       woo_add_customer_helper
+ * @version     1.6.5
+ * @package     WAC\classes
  *
  */
 
@@ -45,8 +46,14 @@ class woo_add_customer_helper
         $number = '';
         $name = $this->create_fake_email_name($username);
         //Add a number if email already exists
-        while (get_user_by('email', $name . $number . '@' . $domain_name) !== false) {
-            $number = (int)($number === '') ? 1 : $number++;
+        while ((get_user_by('email', $name . $number . '@' . $domain_name) !== false) AND $number < 100) {
+            if(empty($number)){
+                $number = 0;
+            }
+            $number++;
+        }
+        if ($number == 100) {
+            return false;
         }
         $email = $name . $number . '@' . $domain_name;
         $email = str_replace(' ', '_', $email); //Replace the spaces with underlines
@@ -63,7 +70,7 @@ class woo_add_customer_helper
     public function get_domain_name()
     {
         $custom_format = $this->get_wac_option('wac_fakemail_format');
-        $exp = explode('@', $custom_format);
+        $exp = ($custom_format !== null) ? explode('@', $custom_format) : null;
         //$exp[0] = email Name, $exp[1] = domain name
         if (isset($exp[1])) {
             return $exp[1];
@@ -260,6 +267,7 @@ class woo_add_customer_helper
                 break;
             case 'failed_to_add_user':
                 $message = __('New customer could not be added by Add Customer Plugin. Please contact the Plugin Author.', 'wac');
+                $message .= (isset($args[0])) ? '<br/>' . json_encode($args[0]) : '';
                 $type = 'error';
                 $additional_log = array('wc_create_new_customer' => $args[0], 'user' => $args[1], 'email' => $args[2]);
                 error_log($message . " - " . htmlspecialchars(json_encode($args))); //Prints the args with the error message from wc_create_new_customer to the error log
@@ -275,6 +283,21 @@ class woo_add_customer_helper
         }
         apply_filters('simple_history_log', "{$msg_trans} - by Add Customer", $additional_log);
         $this->wac_set_notice($msg_trans, $type, $order_id);
+        return;
+    }
+
+    /**
+     * Logs a message to the simple history logger and prints it out as a notice
+     *
+     * @param string $log_message
+     * @param int $order_id
+     * @param string $type - null, error, or success
+     * @return void
+     */
+    public function log_event_message($log_message, $order_id, $type = 'null')
+    {
+        apply_filters('simple_history_log', "{$log_message} - by Add Customer");
+        $this->wac_set_notice($log_message, $type, $order_id);
         return;
     }
 
@@ -409,10 +432,10 @@ class woo_add_customer_helper
      *
      * @param string $notice - The message to display
      * @param string $type - Type of message (success, error)
-     * @param int $order_id - The order_id / post_id
+     * @param int|string $order_id - The order_id / post_id or a string as an identifier
      * @return bool True on success, false on error
      */
-    public function wac_set_notice(string $notice, string $type, $order_id)
+    public function wac_set_notice(string $notice, string $type, $order_id = 0)
     {
         $user_id = get_current_user_id();
         $trans_id = "wac_admin_notice_{$user_id}_{$order_id}";
@@ -429,6 +452,7 @@ class woo_add_customer_helper
                 $classes = 'notice notice-info';
                 break;
         }
+
         $notice = "<div class='{$classes}'><p>{$notice}</p></div>";
         $trans_notices = get_transient($trans_id);
         if (is_array($trans_notices)) {
@@ -442,23 +466,30 @@ class woo_add_customer_helper
     /**
      * Displays the stored messages as admin_notices
      *
+     * @param int|string $id_to_get The Id to get
      * @return void
      */
-    public function wac_display_notices()
+    public function wac_display_notices($id_to_get = null)
     {
-        add_action('admin_notices', function () {
-            $user_id = get_current_user_id();
-            $order_id = (!empty($_GET['post'])) ? $_GET['post'] : 0;
-            $trans_id = "wac_admin_notice_{$user_id}_{$order_id}";
+        $user_id = get_current_user_id();
+        if (isset($_GET['id'])) {
+            $order_id = $_GET['id'];
+        } else if (isset($_GET['post'])) {
+            $order_id = $_GET['post'];
+        } else if (!empty($id_to_get)) {
+            $order_id = $id_to_get;
+        } else {
+            return;
+        }
+        $trans_id = "wac_admin_notice_{$user_id}_{$order_id}";
+        $notices = get_transient($trans_id);
 
-            $notices = get_transient($trans_id);
-            if (is_array($notices)) {
-                foreach ($notices as $notice) {
-                    echo $notice;
-                }
+        if (is_array($notices)) {
+            foreach ($notices as $notice) {
+                echo $notice;
             }
-            delete_transient($trans_id);
-        });
+        }
+        delete_transient($trans_id);
     }
 
     /**
@@ -500,18 +531,111 @@ class woo_add_customer_helper
         //Replaces the cyrillic letters
         $orig_email = $email;
         //Make sure that the Intl extension is installed
-        if(function_exists('transliterator_transliterate')){
+        if (function_exists('transliterator_transliterate')) {
             //Converts to latin characters
             $email = transliterator_transliterate('Any-Latin; Latin-ASCII; [\u0100-\u7fff] remove', $email);
-        }elseif(!is_email($email)){
+        } elseif (!is_email($email)) {
             //Display notice if email is not valid and php intl extension is not installed
             $this->wac_set_notice(__('Intl PHP extension not installed. Please install it to make your email valid', 'wac'), 'error', get_the_ID());
         }
-        
+
 
         $email = sanitize_email($email, true); //Remove all un-allowed characters
 
         return apply_filters('wac_make_email_valid', $email, $orig_email);
+    }
+
+    /**
+     * Checks if the given email is valid. Same as sanitize_email but allowing the special characters []
+     *
+     * @param string $email
+     * @param string $fieldname
+     * @return string The sanitized email
+     */
+    public function sanitize_placeholder_email($email, $fieldname)
+    {
+        // Test for the minimum length the email can be.
+        if (strlen($email) < 6) {
+            $this->wac_set_notice(esc_html__('Email is too short', 'wac'), "error", $fieldname);
+            return htmlspecialchars($email);
+        }
+
+        // Test for an @ character after the first position.
+        if (strpos($email, '@', 1) === false) {
+            $this->wac_set_notice(esc_html__('Email must contain one @', 'wac'), "error", $fieldname);
+            return htmlspecialchars($email);
+        }
+
+        // Split out the local and domain parts.
+        list($local, $domain) = explode('@', $email, 2);
+
+        /*
+             * LOCAL PART
+             * Test for invalid characters.
+             */
+        $local = preg_replace('/[^a-zA-Z0-9!#$%&\[\]\'*+\/=?^_`{|}~\.-]/', '', $local);
+        if ('' === $local) {
+            $this->wac_set_notice(esc_html__('Email contains forbidden characters or is empty', 'wac'), "error", $fieldname);
+            return htmlspecialchars($email);
+        }
+
+        /*
+             * DOMAIN PART
+             * Test for sequences of periods.
+             */
+        $domain = preg_replace('/\.{2,}/', '', $domain);
+        if ('' === $domain) {
+            $this->wac_set_notice(esc_html__('Domain parts must contain at least one dot', 'wac'), "error", $fieldname);
+            return htmlspecialchars($email);
+        }
+
+        // Test for leading and trailing periods and whitespace.
+        $domain = trim($domain, " \t\n\r\0\x0B.");
+        if ('' === $domain) {
+            $this->wac_set_notice(esc_html__('Domain parts is invalid', 'wac'), "error", $fieldname);
+            return htmlspecialchars($email);
+        }
+
+        // Split the domain into subs.
+        $subs = explode('.', $domain);
+
+        // Assume the domain will have at least two subs.
+        if (2 > count($subs)) {
+            $this->wac_set_notice(esc_html__('Domain parts is invalid', 'wac'), "error", $fieldname);
+            return htmlspecialchars($email);
+        }
+
+        // Create an array that will contain valid subs.
+        $new_subs = array();
+
+        // Loop through each sub.
+        foreach ($subs as $sub) {
+            // Test for leading and trailing hyphens.
+            $sub = trim($sub, " \t\n\r\0\x0B-");
+
+            // Test for invalid characters.
+            $sub = preg_replace('/[^a-z0-9-]+/i', '', $sub);
+
+            // If there's anything left, add it to the valid subs.
+            if ('' !== $sub) {
+                $new_subs[] = $sub;
+            }
+        }
+
+        // If there aren't 2 or more valid subs.
+        if (2 > count($new_subs)) {
+            $this->wac_set_notice(esc_html__('Domain parts is invalid', 'wac'), "error", $fieldname);
+            return htmlspecialchars($email);
+        }
+
+        // Join valid subs into the new domain.
+        $domain = implode('.', $new_subs);
+
+        // Put the email back together.
+        $sanitized_email = $local . '@' . $domain;
+
+        // Congratulations, your email made it!
+        return $sanitized_email;
     }
 
     /**
@@ -525,13 +649,12 @@ class woo_add_customer_helper
         //Replaces the cyrillic letters
         $orig_user = $user;
         //Make sure that the Intl extension is installed
-        if(function_exists('transliterator_transliterate')){
+        if (function_exists('transliterator_transliterate')) {
             //Converts to latin characters
             $user = transliterator_transliterate('Any-Latin; Latin-ASCII; [\u0100-\u7fff] remove', $user);
-        }elseif($user !== sanitize_user($user, true)){
+        } elseif ($user !== sanitize_user($user, true)) {
             //Display notice if user is not valid and php intl extension is not installed
             $this->wac_set_notice(__('Intl PHP extension not installed. Please install it to make your username valid', 'wac'), 'error', get_the_ID());
-            
         }
         $user = sanitize_user($user, true); //Remove all un-allowed characters
 

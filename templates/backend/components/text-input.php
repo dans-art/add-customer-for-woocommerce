@@ -4,7 +4,8 @@
  * This Template render text input field at the settings page.
  * Wordpress Backend -> Settings -> Add Customer Settings
  * 
- * @version 1.5
+ * @version     1.6.5
+ * @package     WAC\Templates
  */
 
 if (!defined('ABSPATH')) {
@@ -29,7 +30,11 @@ $class = (isset($args['class'])) ? $args['class'] : '';
     </td>
 </tr>
 <tr class='<?php echo $class; ?>-field-errors wac-field-errors'>
-    <td><?php echo $backend_class->check_option($label_for, $options_val); ?></td>
+    <td>
+        <?php
+        //get the error messages
+        echo $this->wac_display_notices($label_for); ?>
+    </td>
 </tr>
 <tr class='<?php echo $class; ?>-description'>
     <td><?php echo $description; ?></td>

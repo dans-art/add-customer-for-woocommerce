@@ -4,7 +4,8 @@
  * This Template renders the backend page of the template preview.
  * Wordpress Backend -> Settings -> Add Customer Settings -> [Tab]Template
  * 
- * @version 1.4
+ * @version     1.6.5
+ * @package     WAC\Templates
  */
 
 if (!defined('ABSPATH')) {
@@ -30,3 +31,11 @@ if (!defined('ABSPATH')) {
 </p>
 
 </div>
+<?php 
+//Testing
+//This section is intended to test internal functions
+/*
+$helper = new woo_add_customer_helper();
+s($helper -> create_fake_email('test'));
+*/
+?>

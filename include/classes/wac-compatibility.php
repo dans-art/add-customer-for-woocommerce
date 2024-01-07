@@ -1,10 +1,11 @@
 <?php
 
 /**
- * Plugin Name: Add Customer for WooCommerce
- * Class description: Class for managing the compatibility issues
- * Author: Dan's Art
- * Author URI: http://dev.dans-art.ch
+ * Class for managing the compatibility issues
+ * 
+ * @class       wac_compatibility
+ * @version     1.6.5
+ * @package     WAC\classes
  */
 
 if (!defined('ABSPATH')) {
@@ -25,5 +26,14 @@ class wac_compatibility
             remove_action('woocommerce_register_post', 'cfturnstile_woo_register_check');
         }
 
+        //Workaround for Dokan – Best WooCommerce Multivendor Marketplace Solution – Build Your Own Amazon, eBay, Etsy
+        //https://wordpress.org/plugins/dokan-lite/
+        //Tested with Version: 3.9.5
+        //Removes the nonce check on wc-orders page
+        if (is_admin() and isset($_REQUEST['wac_add_customer']) and $_REQUEST['wac_add_customer'] == 'true') {
+            add_filter('dokan_register_nonce_check', function () {
+                return false;
+            });
+        }
     }
 }

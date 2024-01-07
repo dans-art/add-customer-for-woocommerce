@@ -1,10 +1,13 @@
 <?php
 
 /**
- * Plugin Name: Add Customer for WooCommerce
- * Class description: Class for managing the Admin Backend. Add field, process data on order save. 
+ * Class for managing the Admin Backend. Add field, process data on order save. 
  * Author: Dan's Art
  * Author URI: http://dev.dans-art.ch
+ * 
+ * @class       woo_add_customer_admin
+ * @version     1.7
+ * @package     WAC\classes
  */
 
 if (!defined('ABSPATH')) {
@@ -39,19 +42,30 @@ class woo_add_customer_admin extends woo_add_customer_helper
         add_action('woocommerce_admin_order_data_after_billing_address', [$this, 'wac_add_checkbox'], 10, 1);
         add_action('woocommerce_created_customer', [$this, 'wac_disable_new_customer_mail'], 1, 1);
         add_action('woocommerce_process_shop_order_meta', [$this, 'wac_save_order'], 99, 2);
-
+        
         //Get the custom billing and shipping fields. It catches all the previous defined custom fields.
         //If a custom field is not added, check if the priority of the add_filter(woocommerce_admin_*_fields) is lower than 9999
         add_filter("woocommerce_admin_billing_fields", [$this, 'wac_add_custom_billing_fields'], 9999, 1);
         add_filter("woocommerce_admin_shipping_fields", [$this, 'wac_add_custom_shipping_fields'], 9999, 1);
-
+        
         add_filter('woocommerce_ajax_get_customer_details', [$this, 'wac_ajax_get_customer_details'], 10, 3);
-
+        
         //Add Admin Menu
         $backend_class = new woo_add_customer_backend;
         add_action('admin_menu', [$backend_class, 'setup_options']);
         add_action('admin_init', [$backend_class, 'wac_register_settings']);
-        $this->wac_display_notices();
+        
+        //Show Admin notices
+        add_action('admin_notices', [$this, 'wac_display_notices'], 10000);
+        
+        //Mark the plugin as HPOS compatible
+        add_action( 'before_woocommerce_init', function() {
+            if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+                \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', 'add-customer-for-woocommerce/add-customer-for-woocommerce.php', true );
+            }else{
+            }
+        } );
+        
     }
 
     /**
@@ -133,33 +147,39 @@ class woo_add_customer_admin extends woo_add_customer_helper
      */
     public function wac_save_order($order_id, $posted)
     {
+        //Load the order
+        $order = wc_get_order($order_id);
+        if (!$order) {
+            $this->log_event_message(__('No Order found', 'wac'), $order_id, 'error');
+            return;
+        }
         if (isset($_REQUEST['wac_add_customer']) and $_REQUEST['wac_add_customer'] == 'true') {
             //Add new customer
             $email = isset($_REQUEST['_billing_email']) ? sanitize_email($_REQUEST['_billing_email']) : false;
             $existing_user = get_user_by('email', $email);
             $user_id = null;
-
             if ($existing_user === false) {
                 $new_customer_id = $this->wac_add_customer($email, $order_id);
                 if ($new_customer_id) {
                     //Link the Order to the Customer
                     $_REQUEST['customer_user'] = $new_customer_id;
-                    update_post_meta($order_id, '_customer_user', $new_customer_id);
+                    $order->set_customer_id($new_customer_id);
                     $user_id = $new_customer_id;
                 }
             } else {
                 //Link Order to Customer
                 $this->log_event("existing_account", $order_id, $email);
                 $_REQUEST['customer_user'] = $existing_user->ID;
-                update_post_meta($order_id, '_customer_user', $existing_user->ID);
                 $user_id =  $existing_user->ID;
+                $order->set_customer_id($user_id);
             }
             do_action('wac_after_insert_new_customer', $user_id, $order_id);
+            $order->save();
             return true;
         }
         if (isset($_REQUEST['wac_update_customer']) and $_REQUEST['wac_update_customer'] == 'true') {
             //Update the customer Data
-            $user_id = get_post_meta($order_id, '_customer_user', true);
+            $user_id = $order->get_customer_id();
             if ($user_id === false or empty($user_id)) {
                 $this->log_event("no_user_id", $order_id);
                 return false;
@@ -169,6 +189,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
                 $this->log_event("customer_updated", $order_id, $update_customer, $user_id);
                 $this->increase_wac_counter('edit');
             }
+
             do_action('wac_after_insert_updated_customer', $user_id, $order_id);
         }
         return;
@@ -190,12 +211,18 @@ class woo_add_customer_admin extends woo_add_customer_helper
         $password = wp_generate_password();
         $email_is_fake = false;
 
+        $order = wc_get_order($order_id);
+        if (!$order) {
+            $this->log_event_message(__('No Order found', 'wac'), $order_id, 'error');
+            return;
+        }
+
         if (empty($email)) {
             //create new 'fake' email
             $email = $this->create_fake_email($user);
             $email_is_fake = true;
         }
-
+        
         //Add hook to allow to modify the email
         $email = $this->make_email_valid($email);
         $email = apply_filters('wac_add_customer_email', $email, $user);
@@ -208,7 +235,8 @@ class woo_add_customer_admin extends woo_add_customer_helper
         }
 
         //Save the email to the order
-        update_post_meta($order_id, '_billing_email', $email);
+        $order->update_meta_data('billing_email', $email);
+        $order->save();
 
         if (get_user_by('email', $email) !== false) {
             //User Exists already. This should never happen, but if it does, it does.
@@ -217,11 +245,10 @@ class woo_add_customer_admin extends woo_add_customer_helper
         }
 
         //Make the username valid
-        $user = $this -> make_user_valid($user);
-        
+        $user = $this->make_user_valid($user);
+
         if ($user !== false) {
             $user_id = wc_create_new_customer($email, $user, $password);
-            //$this->log_event("failed_to_add_user", $user_id, $user, $email);
             if (is_integer($user_id)) {
                 $user_data = array('ID' => $user_id, 'first_name' => $user_first, 'last_name' => $user_last);
                 wp_update_user($user_data);

@@ -4,7 +4,8 @@
  * This Template renders the backend page of the settings.
  * Wordpress Backend -> Settings -> Add Customer Settings
  * 
- * @version 1.4
+ * @version     1.6.5
+ * @package     WAC\Templates
  */
 
 if (!defined('ABSPATH')) {
