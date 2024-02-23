@@ -46,8 +46,8 @@ class woo_add_customer_helper
         $number = '';
         $name = $this->create_fake_email_name($username);
         //Add a number if email already exists
-        while ((get_user_by('email', $name . $number . '@' . $domain_name) !== false) AND $number < 100) {
-            if(empty($number)){
+        while ((get_user_by('email', $name . $number . '@' . $domain_name) !== false) and $number < 100) {
+            if (empty($number)) {
                 $number = 0;
             }
             $number++;
@@ -207,9 +207,9 @@ class woo_add_customer_helper
     public function wac_enqueue_admin_scripts()
     {
         if (WP_DEBUG) {
-            wp_enqueue_script('wac-admin-script', get_option('siteurl') . '/wp-content/plugins/add-customer-for-woocommerce/include/js/wac-main-script.js', array('jquery'), $this->version);
+            wp_enqueue_script('wac-admin-script', get_option('siteurl') . '/wp-content/plugins/add-customer-for-woocommerce/include/js/wac-main-script.js', array('jquery', 'wp-i18n'), $this->version);
         } else {
-            wp_enqueue_script('wac-admin-script', get_option('siteurl') . '/wp-content/plugins/add-customer-for-woocommerce/include/js/wac-main-script.min.js', array('jquery'), $this->version);
+            wp_enqueue_script('wac-admin-script', get_option('siteurl') . '/wp-content/plugins/add-customer-for-woocommerce/include/js/wac-main-script.min.js', array('jquery', 'wp-i18n'), $this->version);
         }
     }
 
@@ -271,6 +271,10 @@ class woo_add_customer_helper
                 $type = 'error';
                 $additional_log = array('wc_create_new_customer' => $args[0], 'user' => $args[1], 'email' => $args[2]);
                 error_log($message . " - " . htmlspecialchars(json_encode($args))); //Prints the args with the error message from wc_create_new_customer to the error log
+                break;
+            case 'user_role_not_allowed':
+                $message = __('The given user role is not allowed. Please select another one', 'wac');
+                $type = 'error';
                 break;
             default:
                 $message = __('Log Type not found!', 'wac');
@@ -659,5 +663,25 @@ class woo_add_customer_helper
         $user = sanitize_user($user, true); //Remove all un-allowed characters
 
         return apply_filters('wac_make_user_valid', $user, $orig_user);
+    }
+
+    /**
+     * Returns a array with user roles. If the current user is not an admin, it will remove the admin role from the results
+     * 
+     * @return array The roles. ['slug' => 'Name']
+     */
+    public function get_user_role_array()
+    {
+        $current_user = wp_get_current_user();
+        $user_is_admin = (array_search('administrator', $current_user->caps) !== false) ? true : false;
+        $wp_roles = new WP_Roles();
+        $roles = [];
+        foreach ($wp_roles->role_names as $key => $value) {
+            if (!$user_is_admin and $key === 'administrator') {
+                continue;
+            }
+            $roles[$key] = $value;
+        }
+        return apply_filters('wac_get_user_roles', $roles);
     }
 }

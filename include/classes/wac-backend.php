@@ -108,6 +108,36 @@ class woo_add_customer_backend extends woo_add_customer_helper
             )
         );
         add_settings_field(
+            'wac_define_user_role',
+            __('Define user role individually', 'wac'),
+            [$this, 'get_settings_option'],
+            'wac_general_options',
+            'wac_main_settings',
+            array(
+                'label_for' => 'wac_define_user_role',
+                'type' => 'checkbox',
+                'class' => 'wac_preselect',
+                'description' => __('Allow the user role to be selected before a new customer gets created', 'wac'),
+                'page' => 'wac_general_options'
+            )
+        );
+        add_settings_field(
+            'wac_default_user_role',
+            __('Default user role for new customer', 'wac'),
+            [$this, 'get_settings_option'],
+            'wac_general_options',
+            'wac_main_settings',
+            array(
+                'label_for' => 'wac_default_user_role',
+                'type' => 'select',
+                'class' => 'wac_select_input',
+                'description' => __('Define the user role new customers get. If you select "Choose on creation" you will be able to set the role individually before the account gets created', 'wac'),
+                'page' => 'wac_general_options',
+                'values_array' => array_merge( $wac->get_user_role_array()),
+                'default_value' => 'customer'
+            )
+        );
+        add_settings_field(
             'wac_fakemail_format',
             __('Auto-Generated eMail Format', 'wac'),
             [$this, 'get_settings_option'],
@@ -170,7 +200,20 @@ class woo_add_customer_backend extends woo_add_customer_helper
         foreach ($input as $key => $value) {
             switch ($key) {
                 case 'wac_fakemail_format':
-                    $input[$key] = $this->sanitize_placeholder_email($value, $key);
+                    if (!empty($value)) {
+                        $input[$key] = $this->sanitize_placeholder_email($value, $key);
+                    } else {
+                        $input[$key] = '';
+                    }
+                    break;
+                case 'wac_default_user_role':
+                    $wac = new woo_add_customer();
+                    $allowed_roles = $wac->get_user_role_array();
+                    if (!$allowed_roles[$value]) {
+                        $this->wac_set_notice(esc_html__('You are not allowed to set this user role', 'wac'), "error", $key);
+                    } else {
+                        $input[$key] = htmlspecialchars($value);
+                    }
                     break;
                 case 'wac_email_from':
                     $input[$key] = sanitize_email($value);
@@ -226,6 +269,9 @@ class woo_add_customer_backend extends woo_add_customer_helper
                 break;
             case 'text':
                 echo $this->load_template_to_var('text-input', 'backend/components', $label_for, $options_val, $default_value, $args);
+                break;
+            case 'select':
+                echo $this->load_template_to_var('select-input', 'backend/components', $label_for, $options_val, $default_value, $args);
                 break;
 
             default:

@@ -34,6 +34,7 @@ Style for the settings page
 .wac_text_input th{
     padding-bottom: 0.2em;
 }
+.wac_select_input.select-input td,
 .wac_text_input.text-input td{
     width: 95%;
     padding-bottom: 0;

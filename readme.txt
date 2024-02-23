@@ -6,7 +6,7 @@ Donate link: <https://paypal.me/dansart13>
 Tags: woocommerce, customer, tools, helper
 Requires at least: 5.4.0
 Tested up to: 6.4.2
-Stable tag: 1.7.1
+Stable tag: 1.8.0
 License: GPLv3 or later
 License URI: <http://www.gnu.org/licenses/gpl-2.0.html>
 WC requires at least: 7.4.1
@@ -64,9 +64,10 @@ Is it possible to change the email format?
 - Yes. You can set the desired format in the Settings menu of the plugin.
 
 Are there any hooks I can use?
-- Sure thing! There are currently two filters:
+- Sure thing! There are currently three filters:
     wac_add_customer_email - To modify the email saved by the plugin
     wac_supported_fake_email_parts - To add support for custom fields
+    wac_get_user_roles - A array with the user roles a user is allowed to set.
 - And two actions:
    wac_after_insert_new_customer to hook in after new customer got created
    wac_after_insert_updated_customer to hook in after new customer got updated
