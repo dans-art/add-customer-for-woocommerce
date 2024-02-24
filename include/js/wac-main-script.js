@@ -6,6 +6,7 @@
  */
 let wac_scripts = {
 
+    __ : wp.i18n.__,
 
     construct() {
 
@@ -91,7 +92,7 @@ let wac_scripts = {
     },
 
     show_admin_user_warning(){
-        alert(__('You choose the administrator as default user for new customer. This is not recommended and can lead to an increased attack surface. Customer is the recommended user','wac'));
+        alert(this.__('You choose the administrator as default user for new customer. This is not recommended and can lead to an increased attack surface. "Customer" is the recommended user to set','wac'));
     },
 
     //Helper functions
