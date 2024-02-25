@@ -72,7 +72,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
             array(
                 'label_for' => 'wac_preselect',
                 'type' => 'checkbox',
-                'class' => 'wac_preselect',
+                'class' => 'wac-checkbox wac_preselect',
                 'description' => __('Select this box if you like to have the "Add Customer" Checkbox activated by default.', 'wac'),
                 'page' => 'wac_general_options'
 
@@ -87,7 +87,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
             array(
                 'label_for' => 'wac_preselect_update',
                 'type' => 'checkbox',
-                'class' => 'wac_preselect_update',
+                'class' => 'wac-checkbox wac_preselect_update',
                 'description' => __('If this is checked, the existing customer data will be updated when the order is updated.', 'wac'),
                 'page' => 'wac_general_options'
 
@@ -102,7 +102,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
             array(
                 'label_for' => 'wac_send_notification',
                 'type' => 'checkbox',
-                'class' => 'wac_preselect',
+                'class' => 'wac-checkbox wac_preselect',
                 'description' => __('Check this to send a "Account created" email to the customer after account creation.', 'wac'),
                 'page' => 'wac_general_options'
             )
@@ -116,21 +116,21 @@ class woo_add_customer_backend extends woo_add_customer_helper
             array(
                 'label_for' => 'wac_define_user_role',
                 'type' => 'checkbox',
-                'class' => 'wac_preselect',
+                'class' => 'wac-checkbox wac_preselect',
                 'description' => __('Allow the user role to be selected before a new customer gets created', 'wac'),
                 'page' => 'wac_general_options'
             )
         );
         add_settings_field(
             'wac_default_user_role',
-            __('Default user role for new customer', 'wac'),
+            __('User role for new customer', 'wac'),
             [$this, 'get_settings_option'],
             'wac_general_options',
             'wac_main_settings',
             array(
                 'label_for' => 'wac_default_user_role',
                 'type' => 'select',
-                'class' => 'wac_select_input',
+                'class' => 'wac-select-input',
                 'description' => __('Define the user role new customers get. If you select "Choose on creation" you will be able to set the role individually before the account gets created', 'wac'),
                 'page' => 'wac_general_options',
                 'values_array' => array_merge( $wac->get_user_role_array()),
@@ -146,11 +146,11 @@ class woo_add_customer_backend extends woo_add_customer_helper
             array(
                 'label_for' => 'wac_fakemail_format',
                 'type' => 'text',
-                'class' => 'wac_text_input',
+                'class' => 'wac-text-input',
                 'description' =>
                 __('The Format you like to have for the automatic generated eMail.', 'wac') . ' ' .
                     __('You can use the supported tags below wrapping them in [ ]', 'wac') . '<br/>' .
-                    __('Supported tags:', 'wac') . ' ' . implode(', ', apply_filters('wac_supported_fake_email_parts', $wac->supported_fake_email_parts)),
+                    __('Supported tags:', 'wac') . ' <strong>' . implode(', ', apply_filters('wac_supported_fake_email_parts', $wac->supported_fake_email_parts)).'</strong>',
                 'page' => 'wac_general_options',
                 'default_value' => '[first_name].[last_name].[company]@' . $wac->get_domain_name()
             )
@@ -166,7 +166,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
             array(
                 'label_for' => 'wac_template_subject_add_account',
                 'type' => 'text',
-                'class' => 'wac_text_input',
+                'class' => 'wac-text-input',
                 'description' => __('The subject / header for the email which are sended to the new customers', 'wac'),
                 'page' => 'wac_general_options',
                 'default_value' => sprintf(__("New account created at %s", 'wac'), $blog_name)
@@ -181,7 +181,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
             array(
                 'label_for' => 'wac_email_from',
                 'type' => 'text',
-                'class' => 'wac_text_input',
+                'class' => 'wac-text-input',
                 'description' => __('The sender email', 'wac'),
                 'page' => 'wac_general_options',
                 'default_value' => $default_email_from

@@ -22,16 +22,18 @@ $checked = ($wac->get_wac_option('wac_preselect') === 'yes' and $order_status ==
 $checked_notify = ($wac->get_wac_option('wac_send_notification') === 'yes') ? 'checked' : '';
 
 $set_role = $wac->get_wac_option('wac_define_user_role');
-$user_role_to_set = $wac->get_wac_option('wac_default_user_role');
+$user_role_to_set = $wac -> get_default_user_role();
 
 ?>
 
 <div id='wac_add_customer_con' class="edit_address">
     <div class="_add_customer_fields">
         <label><?php echo __('Add new Customer', 'wac'); ?></label>
-        <p class="wac_add_customer_field">
+        <div class="wac-checkbox-container">
             <input type="checkbox" name="wac_add_customer" id="wac_add_customer" value="true" placeholder="" autocomplete="off">
             <label for="wac_add_customer"><?php echo ($set_role === 'yes') ? __('Save as new customer with role: ', 'string') : __('Save as new customer', 'wac'); ?></label>
+        </div>
+        <div class="wac-customer-role-container">
             <?php
             //Add the options field to choose a user role
             if ($set_role === 'yes') : ?>
@@ -42,7 +44,7 @@ $user_role_to_set = $wac->get_wac_option('wac_default_user_role');
                     <?php endforeach; ?>
                 </select>
             <?php endif; ?>
-        </p>
+        </div>
         <p class="wac_add_customer_notify_field" style="display: none;">
             <input type="checkbox" name="wac_add_customer_notify" id="wac_add_customer_notify" value="true" placeholder="" autocomplete="off" <?php echo $checked_notify; ?>>
             <label for="wac_add_customer_notify"><?php echo __('Send email to new customer', 'wac'); ?></label>

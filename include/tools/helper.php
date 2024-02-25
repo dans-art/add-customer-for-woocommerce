@@ -368,6 +368,17 @@ class woo_add_customer_helper
     }
 
     /**
+     * Gets the default user role. If no role is set, it will return "customer"
+     *
+     * @return string The user role
+     */
+    public function get_default_user_role()
+    {
+        $role = $this->get_wac_option('wac_default_user_role');
+        return (empty($role)) ? 'customer' : $role;
+    }
+
+    /**
      * Sends a email with email and password reset link to the new customer
      *  @param string $email - The email address of the recipient
      *  @param string $name - The first name of the user

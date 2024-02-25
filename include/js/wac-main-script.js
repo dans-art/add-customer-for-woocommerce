@@ -91,6 +91,9 @@ let wac_scripts = {
         }
     },
 
+    /**
+     * Displays an alert if the user selects the administrator as an default user.
+     */
     show_admin_user_warning(){
         alert(this.__('You choose the administrator as default user for new customer. This is not recommended and can lead to an increased attack surface. "Customer" is the recommended user to set','wac'));
     },

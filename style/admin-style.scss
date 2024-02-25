@@ -5,10 +5,10 @@
  * Author URI: http://dev.dans-art.ch
  */
 
- /*
+/*
  Fixes the display of the checkbox
  */
-#wac_add_customer_con{
+#wac_add_customer_con {
     clear: both;
     float: left;
     width: 100%;
@@ -16,56 +16,73 @@
     color: #777;
 }
 
-#wac_add_customer_con .wac_add_customer_field{
+#wac_add_customer_con .wac_add_customer_field {
     margin: 0;
 }
 
-#wac_add_customer_con .wac_add_customer_notify_field{
+#wac_add_customer_con .wac-customer-role-container {
+    select {
+        width: 100%;
+    }
+}
+
+#wac_add_customer_con .wac-checkbox-container {
+    margin-bottom: 0.5rem;
+
+}
+
+#wac_add_customer_con .wac_add_customer_notify_field {
     margin-top: 0.5em;
 }
 
-#wac_options_page .form-table{
+#wac_options_page .form-table {
     margin-left: 5%;
     width: 90%;
 }
+
 /*
 Style for the settings page
 */
-.wac_text_input th{
+
+.wac-options-container.wac-checkbox {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.wac-text-input th {
     padding-bottom: 0.2em;
 }
-.wac_select_input.select-input td,
-.wac_text_input.text-input td{
+
+.wac-select-input.select-input td,
+.wac-text-input.text-input td {
     width: 95%;
     padding-bottom: 0;
 }
 
-.wac-field-errors td{
+.wac-field-errors td {
     padding: 0.1em 0;
 }
 
-.wac_text_input-description td{
+.wac-text-input-description td {
     padding-top: 0.4rem;
 }
 
-.wac-options-tab .main_content .message{
+.wac-options-tab .main_content .message {
     background-color: white;
 }
 
-.wac_preselect,
-.wac_preselect_update{
-    display: flex;
-}
 
 .wac-options-tab #load_location_container,
 .wac-options-tab .main_content,
-.wac-options-tab .subject_content{
+.wac-options-tab .subject_content {
     margin: 1rem 0;
 }
 
 @media (min-width: 782px) {
-    .wac_text_input.text-input,
-    .wac_text_input.text-input input{
+
+    .wac-text-input.text-input,
+    .wac-text-input.text-input input {
         width: 100%;
         max-width: 666px;
     }

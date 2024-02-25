@@ -26,9 +26,12 @@ $class = (isset($args['class'])) ? $args['class'] : '';
 $description = (isset($args['description'])) ? $args['description'] : '';
 ?>
 
-<tr class='<?php echo $class; ?>'>
-    <th><label><input name="<?php echo $page; ?>[<?php echo $label_for; ?>]" id="<?php echo $label_for; ?>" type="checkbox" value="yes" <?php echo $checked; ?> />
-            <?php echo __('Activated', 'wac'); ?>
-        </label></th>
-    <td><?php echo $description; ?></td>
-</tr>
+
+<fieldset class="<?php echo $class; ?>">
+    <label for="<?php echo $label_for; ?>">
+        <input name="<?php echo $label_for; ?>" type="checkbox" id="<?php echo $label_for; ?>" value="yes" <?php echo $checked; ?>>
+        <?php echo __('Activated', 'wac'); ?></label>
+    <p class="description">
+        <?php echo $description; ?>
+    </p>
+</fieldset>

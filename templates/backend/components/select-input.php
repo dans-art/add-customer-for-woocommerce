@@ -30,8 +30,7 @@ if (!is_array($options)) {
 }
 ?>
 
-<tr class='<?php echo $class; ?> select-input'>
-    <td>
+<div class='<?php echo $class; ?> select-input'>
         <select name="wac_general_options[<?php echo $label_for; ?>]" id="<?php echo $label_for; ?>">
             <?php foreach ($options as $id => $name) : ?>
                 <?php
@@ -40,15 +39,12 @@ if (!is_array($options)) {
                 <option value="<?php echo $id; ?>" <?php echo $selected; ?>><?php echo $name; ?></option>
             <?php endforeach; ?>
         </select>
-    </td>
-</tr>
-<tr class='<?php echo $class; ?>-field-errors wac-field-errors'>
-    <td>
+</div>
+<div class='<?php echo $class; ?>-field-errors wac-field-errors'>
         <?php
         //get the error messages
         echo $this->wac_display_notices($label_for); ?>
-    </td>
-</tr>
-<tr class='<?php echo $class; ?>-description'>
-    <td><?php echo $description; ?></td>
-</tr>
+</div>
+<p class='<?php echo $class; ?>-description description'>
+    <?php echo $description; ?>
+</p>

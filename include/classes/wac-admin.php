@@ -203,13 +203,14 @@ class woo_add_customer_admin extends woo_add_customer_helper
      */
     public function wac_add_customer($email, $order_id)
     {
+
         $user_first = (isset($_REQUEST['_billing_first_name']) and !empty($_REQUEST['_billing_first_name'])) ? sanitize_text_field($_REQUEST['_billing_first_name']) : '';
         $user_last = (isset($_REQUEST['_billing_last_name']) and !empty($_REQUEST['_billing_last_name'])) ? sanitize_text_field($_REQUEST['_billing_last_name']) : '';
         $user_company = (isset($_REQUEST['_billing_company']) and !empty($_REQUEST['_billing_company'])) ? sanitize_text_field($_REQUEST['_billing_company']) : '';
         $user = $this->wac_get_unique_user($user_first . '.' . $user_last . '.' . $user_company);
         $password = wp_generate_password();
         $email_is_fake = false;
-        $user_role = (isset($_REQUEST['wac_add_customer_role'])) ? sanitize_key($_REQUEST['wac_add_customer_role']) : 'customer';
+        $user_role = (isset($_REQUEST['wac_add_customer_role'])) ? sanitize_key($_REQUEST['wac_add_customer_role']) : $this->get_default_user_role();
 
         $order = wc_get_order($order_id);
         if (!$order) {
@@ -243,7 +244,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
         }else{
             //Add the role
             add_filter('woocommerce_new_customer_data', function($data){
-                $user_role = (isset($_REQUEST['wac_add_customer_role'])) ? sanitize_key($_REQUEST['wac_add_customer_role']) : 'customer';
+                $user_role = (isset($_REQUEST['wac_add_customer_role'])) ? sanitize_key($_REQUEST['wac_add_customer_role']) : $this->get_default_user_role();
                 $data['role'] = $user_role;
                 return $data;
             });
