@@ -108,6 +108,20 @@ class woo_add_customer_backend extends woo_add_customer_helper
             )
         );
         add_settings_field(
+            'wac_add_customer_order_to_user',
+            __('Link customer orders', 'wac'),
+            [$this, 'get_settings_option'],
+            'wac_general_options',
+            'wac_main_settings',
+            array(
+                'label_for' => 'wac_add_customer_order_to_user',
+                'type' => 'checkbox',
+                'class' => 'wac-checkbox',
+                'description' => __('Check this to link orders, created in the frontend by the user to the username. The Email will be used as an identifier.', 'wac'),
+                'page' => 'wac_general_options'
+            )
+        );
+        add_settings_field(
             'wac_define_user_role',
             __('Define user role individually', 'wac'),
             [$this, 'get_settings_option'],

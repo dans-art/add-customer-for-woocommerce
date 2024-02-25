@@ -49,7 +49,7 @@ Upload the plugin files to the /wp-content/plugins/add-customer-for-woocommerce 
 
 == Frequently Asked Questions ==
 What role the new user will have?
-- Customer
+- Customer per default. You can select any available role in the options menu
 
 What happens, if an email already exists?
 - There will be no new user created. The plugin will assign the order to the existing customer.
@@ -75,6 +75,12 @@ Are there any hooks I can use?
 
 
 == Changelog ==
+
+= [1.8.0] 2024-01-07 =
+* Updated style of the options menu
+* Added setting to select the default user role
+* Added setting to allow the user role to be set before user creation
+
 
 = [1.7.1] 2024-01-07 =
 * Fixed: XSS Security issue
