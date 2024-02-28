@@ -117,7 +117,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
                 'label_for' => 'wac_add_customer_order_to_user',
                 'type' => 'checkbox',
                 'class' => 'wac-checkbox',
-                'description' => __('Check this to link orders, created in the frontend by the user to the username. The Email will be used as an identifier.', 'wac'),
+                'description' => __('Check this to link orders created in the frontend. The Email will be used as an identifier. Only works if the user creates an order as an guest', 'wac'),
                 'page' => 'wac_general_options'
             )
         );
@@ -147,7 +147,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
                 'class' => 'wac-select-input',
                 'description' => __('Define the user role new customers get. If you select "Choose on creation" you will be able to set the role individually before the account gets created', 'wac'),
                 'page' => 'wac_general_options',
-                'values_array' => array_merge( $wac->get_user_role_array()),
+                'values_array' => array_merge($wac->get_user_role_array()),
                 'default_value' => 'customer'
             )
         );
@@ -164,7 +164,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
                 'description' =>
                 __('The Format you like to have for the automatic generated eMail.', 'wac') . ' ' .
                     __('You can use the supported tags below wrapping them in [ ]', 'wac') . '<br/>' .
-                    __('Supported tags:', 'wac') . ' <strong>' . implode(', ', apply_filters('wac_supported_fake_email_parts', $wac->supported_fake_email_parts)).'</strong>',
+                    __('Supported tags:', 'wac') . ' <strong>' . implode(', ', apply_filters('wac_supported_fake_email_parts', $wac->supported_fake_email_parts)) . '</strong>',
                 'page' => 'wac_general_options',
                 'default_value' => '[first_name].[last_name].[company]@' . $wac->get_domain_name()
             )

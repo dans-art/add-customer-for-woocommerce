@@ -276,6 +276,15 @@ class woo_add_customer_helper
                 $message = __('The given user role is not allowed. Please select another one', 'wac');
                 $type = 'error';
                 break;
+            case 'order_linked_to_account':
+                $message = __('Order got linked to the user', 'wac');
+                $additional_log = array('order_id' => $order_id, 'email' => $args[0]);
+                break;
+            case 'order_linked_to_account_failed':
+                $message = __('Failed to link the order to the customer', 'wac');
+                $additional_log = array('order_id' => $order_id, 'email' => $args[0], 'message' => $args[1]);
+                $type = 'error';
+                break;
             default:
                 $message = __('Log Type not found!', 'wac');
                 break;

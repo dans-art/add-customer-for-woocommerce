@@ -43,6 +43,8 @@ class woo_add_customer_admin extends woo_add_customer_helper
         add_action('woocommerce_created_customer', [$this, 'wac_disable_new_customer_mail'], 1, 1);
         add_action('woocommerce_process_shop_order_meta', [$this, 'wac_save_order'], 99, 2);
 
+        add_action('woocommerce_checkout_order_created', [$this, 'wac_checkout_order_created_action'], 99, 2);
+
         //Get the custom billing and shipping fields. It catches all the previous defined custom fields.
         //If a custom field is not added, check if the priority of the add_filter(woocommerce_admin_*_fields) is lower than 9999
         add_filter("woocommerce_admin_billing_fields", [$this, 'wac_add_custom_billing_fields'], 9999, 1);
@@ -195,6 +197,39 @@ class woo_add_customer_admin extends woo_add_customer_helper
     }
 
     /**
+     * Action that runs after checkout and when the order is created.
+     * Links order to users if exists.
+     *
+     * @param WC_Order $order
+     * @return void
+     */
+    public function wac_checkout_order_created_action($order)
+    {
+        if ($this->get_wac_option('wac_add_customer_order_to_user') !== 'yes') {
+            return;
+        }
+        //Try to link order to user if user exists
+        $email = $order->get_billing_email();
+        $order_id = $order->get_id();
+ 
+        if ($order->get_customer_id() > 0) {
+            $this->log_event("order_linked_to_account_failed", $order_id, $email, __('This order is already linked to an user','wac'));
+            return;
+        }
+        $user = get_user_by('email', $email);
+        if($user === false){
+            $this->log_event("order_linked_to_account_failed", $order_id, $email, __('No user found with the given email','wac'));
+            return;
+        }
+        $order->set_customer_id($user -> ID);
+        if ($order->save()) {
+            $this->log_event("order_linked_to_account", $order_id, $email);
+        } else {
+            $this->log_event("order_linked_to_account_failed", $order_id, $email, __('Failed to save the order','wac'));
+        }
+    }
+
+    /**
      * Adds a new Customer and saves the billing and shipping address of the current order
      *
      * @param string $email - email of new user
@@ -236,14 +271,14 @@ class woo_add_customer_admin extends woo_add_customer_helper
         }
 
         //Validate the user role. This should never return false, except if someone alters the select selection
-        $valid_user_roles = $this -> get_user_role_array();
-        if(!isset($valid_user_roles[$user_role])){
+        $valid_user_roles = $this->get_user_role_array();
+        if (!isset($valid_user_roles[$user_role])) {
             //User role does not exist, or is not allowed
             $this->log_event("user_role_not_allowed", $order_id, $user_role);
             return false;
-        }else{
+        } else {
             //Add the role
-            add_filter('woocommerce_new_customer_data', function($data){
+            add_filter('woocommerce_new_customer_data', function ($data) {
                 $user_role = (isset($_REQUEST['wac_add_customer_role'])) ? sanitize_key($_REQUEST['wac_add_customer_role']) : $this->get_default_user_role();
                 $data['role'] = $user_role;
                 return $data;
