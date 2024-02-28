@@ -24,6 +24,15 @@ If no e-mail is provided, it will create a unique one for you. It uses your site
 You can customize the auto-generated email to your liking.
 By default, the newly created user will not get any emails while creating the account. But he will eventually on order change.
 In the settings menu, there are options for checking the box by default and send login credentials to the new customer.
+Additional options:
+- Update new customer by default
+- Link customer orders
+- Define user role individually
+- User role for new customer
+- Auto-Generated eMail Format
+- Email Subject for new accounts created
+- Sender email
+
 
 Settings Menu:
 Settings -> Add Customer Settings
@@ -49,10 +58,13 @@ Upload the plugin files to the /wp-content/plugins/add-customer-for-woocommerce 
 
 == Frequently Asked Questions ==
 What role the new user will have?
-- Customer per default. You can select any available role in the options menu
+- Customer per default. You can select the default role to any available role in the options menu
 
 What happens, if an email already exists?
 - There will be no new user created. The plugin will assign the order to the existing customer.
+
+How can I link guest orders to users?
+- You can activate the option "Link customer orders" to link guest orders to existing users.
 
 Does the new user get a notification of the created account?
 - No, not per default. It can be enabled on the settings page. The Email will send the login credentials including a random password to the customer.
@@ -78,9 +90,9 @@ Are there any hooks I can use?
 
 = [1.8.0] 2024-01-07 =
 * Updated style of the options menu
-* Added setting to select the default user role
-* Added setting to allow the user role to be set before user creation
-
+* Added option to select the default user role
+* Added option to allow the user role to be set before user creation
+* Added option to link orders to existing user
 
 = [1.7.1] 2024-01-07 =
 * Fixed: XSS Security issue
