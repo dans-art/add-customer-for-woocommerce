@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Add Customer for WooCommerce\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-29 12:30+0000\n"
+"POT-Creation-Date: 2024-02-29 12:20+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -102,7 +102,9 @@ msgid "Dan's Art"
 msgstr ""
 
 #: include/classes/wac-backend.php:148
-msgid "Define the user role for new customers"
+msgid ""
+"Define the user role new customers get. If you select \"Choose on creation\" "
+"you will be able to set the role individually before the account gets created"
 msgstr ""
 
 #: include/classes/wac-backend.php:126
@@ -244,7 +246,7 @@ msgid "Invalid eMail address"
 msgstr ""
 
 #: include/classes/wac-backend.php:112
-msgid "Link orders to customer"
+msgid "Link customer orders"
 msgstr ""
 
 #: include/tools/helper.php:289

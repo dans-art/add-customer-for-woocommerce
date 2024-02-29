@@ -109,7 +109,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
         );
         add_settings_field(
             'wac_add_customer_order_to_user',
-            __('Link customer orders', 'wac'),
+            __('Link orders to customer', 'wac'),
             [$this, 'get_settings_option'],
             'wac_general_options',
             'wac_main_settings',
@@ -145,7 +145,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
                 'label_for' => 'wac_default_user_role',
                 'type' => 'select',
                 'class' => 'wac-select-input',
-                'description' => __('Define the user role new customers get. If you select "Choose on creation" you will be able to set the role individually before the account gets created', 'wac'),
+                'description' => __('Define the user role for new customers', 'wac'),
                 'page' => 'wac_general_options',
                 'values_array' => array_merge($wac->get_user_role_array()),
                 'default_value' => 'customer'
