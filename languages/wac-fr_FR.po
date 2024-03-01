@@ -3,10 +3,10 @@ msgstr ""
 "Project-Id-Version: Add Customer for WooCommerce\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-28 18:07+0000\n"
-"PO-Revision-Date: 2024-02-29 12:30+0000\n"
+"PO-Revision-Date: 2024-03-01 22:38+0000\n"
 "Last-Translator: Patrice de Saint Steban\n"
 "Language-Team: Français\n"
-"Language: fr_FR\n"
+"Language: fr-FR\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,6 +47,8 @@ msgstr "Client ajouté : %s <%s>"
 #: include/classes/wac-backend.php:134
 msgid "Allow the user role to be selected before a new customer gets created"
 msgstr ""
+"Autoriser la sélection du rôle d'utilisateur avant la création d'un nouveau "
+"client"
 
 #. Description of the plugin
 msgid ""
@@ -64,6 +66,9 @@ msgid ""
 "Check this to link orders created in the frontend. The Email will be used as "
 "an identifier. Only works if the user creates an order as an guest"
 msgstr ""
+"Cochez ceci pour lier les commandes créées dans le frontend. L'Email servira "
+"d'identifiant. Fonctionne uniquement si l'utilisateur crée une commande en "
+"tant qu'invité"
 
 #: include/classes/wac-backend.php:106
 msgid ""
@@ -106,24 +111,24 @@ msgstr "L'art de Dan"
 
 #: include/classes/wac-backend.php:148
 msgid "Define the user role for new customers"
-msgstr ""
+msgstr "Définir le rôle utilisateur pour les nouveaux clients"
 
 #: include/classes/wac-backend.php:126
 msgid "Define user role individually"
-msgstr ""
+msgstr "Définir le rôle de l'utilisateur individuellement"
 
 #: templates/backend/backend-options-page-support.php:20
 msgid "Development"
 msgstr "Développement"
 
-#: include/tools/helper.php:619 include/tools/helper.php:628
+#: include/tools/helper.php:619 include/tools/helper.php:628 
 #: include/tools/helper.php:651
 msgid "Domain parts is invalid"
-msgstr ""
+msgstr "Le domaine de l'email n'est pas valide"
 
 #: include/tools/helper.php:612
 msgid "Domain parts must contain at least one dot"
-msgstr ""
+msgstr "Le domaine de l'email doit contenir au moins un point"
 
 #: templates/backend/backend-options-page-support.php:29
 msgid "Donate something on PayPal"
@@ -136,7 +141,7 @@ msgstr "L'e-mail \"%s\" existe déjà. Aucun nouveau client n'a été créé."
 
 #: include/tools/helper.php:602
 msgid "Email contains forbidden characters or is empty"
-msgstr ""
+msgstr "L'e-mail contient des caractères interdits ou est vide"
 
 #: templates/backend/backend-options-page-template.php:40
 msgid "Email Content:"
@@ -144,11 +149,11 @@ msgstr "Contenu de l'e-mail :"
 
 #: include/tools/helper.php:583
 msgid "Email is too short"
-msgstr ""
+msgstr "L'e-mail est trop court"
 
 #: include/tools/helper.php:589
 msgid "Email must contain one @"
-msgstr ""
+msgstr "L'e-mail doit contenir un @"
 
 #: include/tools/helper.php:244
 #, php-format
@@ -183,11 +188,11 @@ msgstr ""
 
 #: include/tools/helper.php:284
 msgid "Failed to link the order to the customer"
-msgstr ""
+msgstr "Impossible de lier la commande au client"
 
 #: include/classes/wac-admin.php:228
 msgid "Failed to save the order"
-msgstr ""
+msgstr "Échec de l'enregistrement de la commande"
 
 #: include/tools/helper.php:257
 msgid "Failed to send email notification to customer."
@@ -262,7 +267,7 @@ msgstr "Adresse e-mail invalide"
 
 #: include/classes/wac-backend.php:112
 msgid "Link orders to customer"
-msgstr ""
+msgstr "Lier les commandes au client"
 
 #: include/tools/helper.php:289
 msgid "Log Type not found!"
@@ -295,19 +300,19 @@ msgstr ""
 
 #: include/classes/wac-admin.php:154 include/classes/wac-admin.php:252
 msgid "No Order found"
-msgstr ""
+msgstr "Aucune commande trouvée"
 
 #: include/classes/wac-admin.php:221
 msgid "No user found with the given email"
-msgstr ""
+msgstr "Aucun utilisateur trouvé avec l'e-mail donné"
 
 #: templates/backend/components/select-input.php:28
 msgid "Options must be formatted as a array"
-msgstr ""
+msgstr "Les options doivent être formatées sous forme de tableau"
 
 #: include/tools/helper.php:280
 msgid "Order got linked to the user"
-msgstr ""
+msgstr "La commande a été liée à l'utilisateur"
 
 #: templates/backend/backend-options-page-template.php:54
 msgid "Reload template"
@@ -341,7 +346,7 @@ msgstr "E-mail de l'expéditeur"
 msgid "Set the password for your account"
 msgstr "Définir le mot de passe de votre compte"
 
-#: templates/backend/backend-options-page-support.php:15
+#: templates/backend/backend-options-page-support.php:15 
 #: templates/backend/backend-options-page.php:28
 msgid "Support"
 msgstr "Soutien"
@@ -396,6 +401,8 @@ msgstr ""
 #: include/tools/helper.php:276
 msgid "The given user role is not allowed. Please select another one"
 msgstr ""
+"Le rôle utilisateur donné n'est pas autorisé. Veuillez en sélectionner un "
+"autre"
 
 #: include/classes/wac-backend.php:199
 msgid "The sender email"
@@ -413,7 +420,7 @@ msgstr "Il y a eu %d clients ajoutés et %d clients modifiés par le plugin"
 
 #: include/classes/wac-admin.php:216
 msgid "This order is already linked to an user"
-msgstr ""
+msgstr "Cette commande est déjà liée à un utilisateur"
 
 #: templates/order/update-checkbox.php:22
 msgid "Update Customer"
@@ -429,7 +436,7 @@ msgstr "Met à jour le client existant"
 
 #: include/classes/wac-backend.php:140
 msgid "User role for new customer"
-msgstr ""
+msgstr "Rôle d'utilisateur pour les nouveaux clients"
 
 #: templates/backend/backend-options-page-support.php:22
 msgid "Wordpress.org"
@@ -441,7 +448,7 @@ msgstr "Écrivez un avis et donnez-moi 5 étoiles sur Wordpress.com"
 
 #: include/classes/wac-backend.php:227
 msgid "You are not allowed to set this user role"
-msgstr ""
+msgstr "Vous n'êtes pas autorisé à définir ce rôle utilisateur"
 
 #: include/classes/wac-backend.php:166
 msgid "You can use the supported tags below wrapping them in [ ]"
@@ -455,6 +462,9 @@ msgid ""
 "recommended and can lead to an increased attack surface. \"Customer\" is the "
 "recommended role"
 msgstr ""
+"Vous choisissez l'administrateur comme utilisateur par défaut pour les "
+"nouveaux clients. Ceci n’est pas recommandé et peut entraîner une "
+"augmentation des possibilités d'attaque. \"Client\" est le rôle recommandé"
 
 #: templates/email/new-account.php:29
 #, php-format
