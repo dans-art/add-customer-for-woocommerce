@@ -151,7 +151,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
         //Load the order
         $order = wc_get_order($order_id);
         if (!$order) {
-            $this->log_event_message(__('No Order found', 'wac'), $order_id, 'error');
+            $this->log_event_message(__('No order found', 'wac'), $order_id, 'error');
             return;
         }
         if (isset($_REQUEST['wac_add_customer']) and $_REQUEST['wac_add_customer'] == 'true') {
@@ -213,7 +213,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
         $order_id = $order->get_id();
  
         if ($order->get_customer_id() > 0) {
-            $this->log_event("order_linked_to_account_failed", $order_id, $email, __('This order is already linked to an user','wac'));
+            $this->log_event("order_linked_to_account_failed", $order_id, $email, __('This order is already linked to a user','wac'));
             return;
         }
         $user = get_user_by('email', $email);
@@ -249,7 +249,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
 
         $order = wc_get_order($order_id);
         if (!$order) {
-            $this->log_event_message(__('No Order found', 'wac'), $order_id, 'error');
+            $this->log_event_message(__('No order found', 'wac'), $order_id, 'error');
             return;
         }
 

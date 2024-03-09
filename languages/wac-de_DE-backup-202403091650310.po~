@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Add Customer for WooCommerce\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-22 15:15+0000\n"
-"PO-Revision-Date: 2024-02-29 12:21+0000\n"
+"PO-Revision-Date: 2024-02-29 12:30+0000\n"
 "Last-Translator: \n"
 "Language-Team: German\n"
 "Language: de_DE\n"
@@ -64,6 +64,9 @@ msgid ""
 "Check this to link orders created in the frontend. The Email will be used as "
 "an identifier. Only works if the user creates an order as an guest"
 msgstr ""
+"Wähle diese Option um die Bestellungen, welche vom Kunden erstellt werden "
+"automatisch mit dem Kunden zu verknüpfen. Dies funktioniert nur wenn die "
+"Bestellung als Gast getätigt wird"
 
 #: include/classes/wac-backend.php:106
 msgid ""
@@ -109,11 +112,11 @@ msgstr "Dan's Art"
 msgid ""
 "Define the user role new customers get. If you select \"Choose on creation\" "
 "you will be able to set the role individually before the account gets created"
-msgstr ""
+msgstr "Definiere die Benutzerrolle für neue Kunden."
 
 #: include/classes/wac-backend.php:126
 msgid "Define user role individually"
-msgstr ""
+msgstr "Definiere die Benutzerrolle individuell"
 
 #: templates/backend/backend-options-page-support.php:20
 msgid "Development"
@@ -122,11 +125,11 @@ msgstr "Entwicklung"
 #: include/tools/helper.php:619 include/tools/helper.php:628
 #: include/tools/helper.php:651
 msgid "Domain parts is invalid"
-msgstr ""
+msgstr "Domain-Teil ist ungültig"
 
 #: include/tools/helper.php:612
 msgid "Domain parts must contain at least one dot"
-msgstr ""
+msgstr "Domain-Teil muss mindestens ein Punkt enthalten"
 
 #: templates/backend/backend-options-page-support.php:29
 msgid "Donate something on PayPal"
@@ -141,7 +144,7 @@ msgstr ""
 
 #: include/tools/helper.php:602
 msgid "Email contains forbidden characters or is empty"
-msgstr ""
+msgstr "Die Email enthält ungültige Zeichen oder ist leer"
 
 #: templates/backend/backend-options-page-template.php:40
 msgid "Email Content:"
@@ -149,11 +152,11 @@ msgstr "Email Inhalt:"
 
 #: include/tools/helper.php:583
 msgid "Email is too short"
-msgstr ""
+msgstr "Email ist zu kurz"
 
 #: include/tools/helper.php:589
 msgid "Email must contain one @"
-msgstr ""
+msgstr "Email muss ein @ enthalten"
 
 #: include/tools/helper.php:244
 #, php-format
@@ -188,11 +191,11 @@ msgstr ""
 
 #: include/tools/helper.php:284
 msgid "Failed to link the order to the customer"
-msgstr ""
+msgstr "Verlinken der Bestellung mit dem Kunden fehlgeschlagen"
 
 #: include/classes/wac-admin.php:228
 msgid "Failed to save the order"
-msgstr ""
+msgstr "Speichern der Bestellung ist fehlgeschlagen"
 
 #: include/tools/helper.php:257
 msgid "Failed to send email notification to customer."
@@ -265,7 +268,7 @@ msgstr "Ungültige Email Adresse"
 
 #: include/classes/wac-backend.php:112
 msgid "Link customer orders"
-msgstr ""
+msgstr "Verknüpfe Bestellungen mit dem Kunden"
 
 #: include/tools/helper.php:289
 msgid "Log Type not found!"
@@ -276,7 +279,6 @@ msgid "Made with ❤️ by Dan's Art"
 msgstr "Mit viel ❤️ von Dan's Art erstellt"
 
 #: include/classes/wac-backend.php:63
-#, fuzzy
 #| msgid "Main Settings"
 msgid "Main settings"
 msgstr "Haupteinstellungen"
@@ -303,19 +305,19 @@ msgstr ""
 
 #: include/classes/wac-admin.php:154 include/classes/wac-admin.php:252
 msgid "No Order found"
-msgstr ""
+msgstr "Keine Bestellung gefunden"
 
 #: include/classes/wac-admin.php:221
 msgid "No user found with the given email"
-msgstr ""
+msgstr "Keine Benutzer gefunden mit dieser Email"
 
 #: templates/backend/components/select-input.php:28
 msgid "Options must be formatted as a array"
-msgstr ""
+msgstr "Optionen müssen als Array formatiert sein"
 
 #: include/tools/helper.php:280
 msgid "Order got linked to the user"
-msgstr ""
+msgstr "Bestellung wurde verlinkt mit dem Kunden"
 
 #: templates/backend/backend-options-page-template.php:54
 msgid "Reload template"
@@ -405,7 +407,7 @@ msgstr ""
 
 #: include/tools/helper.php:276
 msgid "The given user role is not allowed. Please select another one"
-msgstr ""
+msgstr "Diese Rolle ist nicht erlaubt. Bitte wähle eine andere Rolle."
 
 #: include/classes/wac-backend.php:199
 msgid "The sender email"
@@ -425,7 +427,7 @@ msgstr ""
 
 #: include/classes/wac-admin.php:216
 msgid "This order is already linked to an user"
-msgstr ""
+msgstr "Diese Bestellung ist bereits mit einem Kunden verknüpft"
 
 #: templates/order/update-checkbox.php:22
 msgid "Update Customer"
@@ -441,7 +443,7 @@ msgstr "Aktualisiert den existierenden Kunden"
 
 #: include/classes/wac-backend.php:140
 msgid "User role for new customer"
-msgstr ""
+msgstr "Benutzerrolle für neuen Kunden"
 
 #: templates/backend/backend-options-page-support.php:22
 msgid "Wordpress.org"
@@ -453,7 +455,7 @@ msgstr "Schreibe ein Review und gib mir 5 Sterne auf Wordpress.com"
 
 #: include/classes/wac-backend.php:227
 msgid "You are not allowed to set this user role"
-msgstr ""
+msgstr "Du bist nicht berechtigt, diese Benutzerrolle zu nutzen"
 
 #: include/classes/wac-backend.php:166
 msgid "You can use the supported tags below wrapping them in [ ]"
@@ -461,7 +463,6 @@ msgstr ""
 "Du kannst die folgenden Platzhalter verwenden indem du sie in [ ] setzt."
 
 #: include/js/wac-main-script.js:98
-#, fuzzy
 #| msgid ""
 #| "You choose the administrator as default user for new customer. This is "
 #| "not recommended and can lead to an increased attack surface. \"Customer\" "

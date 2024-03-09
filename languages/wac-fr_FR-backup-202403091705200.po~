@@ -1,49 +1,52 @@
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Add Customer for WooCommerce\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-09 16:49+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: \n"
-"Language: \n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"POT-Creation-Date: 2022-12-28 18:07+0000\n"
+"PO-Revision-Date: 2024-03-09 17:05+0000\n"
+"Last-Translator: Patrice de Saint Steban\n"
+"Language-Team: French (France)\n"
+"Language: fr_FR\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco https://localise.biz/\n"
-"X-Loco-Version: 2.5.4; wp-5.8.1\n"
+"X-Loco-Version: 2.6.6; wp-6.4.3\n"
 "X-Domain: wac"
 
 #: templates/backend/components/checkbox.php:32
 msgid "Activated"
-msgstr ""
+msgstr "Activé par défaut"
 
 #. Name of the plugin
 msgid "Add Customer for WooCommerce"
-msgstr ""
+msgstr "Ajouter un client pour WooCommerce"
 
 #: templates/backend/backend-options-page.php:19
+#| msgid "Add Customer for Woocommerce Settings"
 msgid "Add Customer for WooCommerce settings"
-msgstr ""
+msgstr "Ajouter un client pour Woocommerce : Paramètres"
 
 #: include/classes/wac-backend.php:33
+#, fuzzy
+#| msgid "Add Customer Settings"
 msgid "Add customer settings"
-msgstr ""
+msgstr "Ajouter un Client : Paramètre"
 
 #: templates/order/add-checkbox.php:31
+#| msgid "Add new Customer"
 msgid "Add new customer"
-msgstr ""
+msgstr "Ajouter un nouveau client"
 
 #: include/classes/wac-backend.php:68
 msgid "Add new customer by default"
-msgstr ""
+msgstr "Ajouter un nouveau client : action par défaut"
 
 #: include/tools/helper.php:240
 #, php-format
 msgid "Added customer: %s <%s>"
-msgstr ""
+msgstr "Client ajouté : %s <%s>"
 
 #: include/classes/wac-backend.php:134
 msgid "Allow user role selection before creating a new customer"
@@ -55,196 +58,241 @@ msgid ""
 msgstr ""
 
 #: include/classes/wac-backend.php:156
+#| msgid "Auto-Generated eMail Format"
 msgid "Auto-generated email format"
-msgstr ""
+msgstr "Format d'e-mail généré automatiquement"
 
 #: include/classes/wac-backend.php:120
+#| msgid ""
+#| "Check this to link orders created in the frontend. The Email will be used "
+#| "as an identifier. Only works if the user creates an order as an guest"
 msgid ""
 "Check this to link orders created in the frontend. The email will be used as "
 "an identifier. Only works if the user creates an order as a guest."
 msgstr ""
+"Cochez ceci pour lier les commandes créées dans le frontend. L'Email servira "
+"d'identifiant. Fonctionne uniquement si l'utilisateur crée une commande en "
+"tant qu'invité"
 
 #: include/classes/wac-backend.php:106
+#| msgid ""
+#| "Check this to send a \"Account created\" email to the customer after "
+#| "account creation."
 msgid ""
 "Check this to send an \"account created\" email to the customer after "
 "account creation."
 msgstr ""
+"Cochez ceci pour envoyer un e-mail « Compte créé » au client après la "
+"création du compte."
 
 #: include/tools/helper.php:253
+#| msgid "Could not save customer. No Name provided."
 msgid "Could not save customer. No name provided."
-msgstr ""
+msgstr "Impossible de sauver le client. Aucun nom fourni."
 
 #: include/classes/wac-admin.php:370
 #, php-format
 msgid "Could not save the \"%s\" billing field"
-msgstr ""
+msgstr "Impossible d'enregistrer le champ de facturation \"%s\""
 
 #: include/classes/wac-admin.php:385
 #, php-format
 msgid "Could not save the \"%s\" shipping field"
-msgstr ""
+msgstr "Impossible d'enregistrer le champ d'expédition \"%s\""
 
 #: include/classes/wac-admin.php:356
 #, php-format
 msgid "Could not save the default field \"%s\""
-msgstr ""
+msgstr "Impossible d'enregistrer le champ par défaut \"%s\""
 
 #: include/tools/helper.php:236
 msgid "Could not update the customer, because the customer was not found."
-msgstr ""
+msgstr "Impossible de mettre à jour le client, car celui-ci est introuvable."
 
 #: include/tools/helper.php:248
 msgid "Customer successfully updated."
-msgstr ""
+msgstr "Le client a été mis à jour avec succès."
 
 #. Author of the plugin
 msgid "Dan's Art"
-msgstr ""
+msgstr "Dan's Art"
 
 #: include/classes/wac-backend.php:148
 msgid "Define the user role for new customers"
-msgstr ""
+msgstr "Définir le rôle utilisateur pour les nouveaux clients"
 
 #: include/classes/wac-backend.php:126
 msgid "Define user role individually"
-msgstr ""
+msgstr "Définir le rôle de l'utilisateur individuellement"
 
 #: templates/backend/backend-options-page-support.php:20
 msgid "Development"
-msgstr ""
+msgstr "Développement"
 
 #: include/tools/helper.php:619 include/tools/helper.php:628
 #: include/tools/helper.php:651
+#| msgid "Domain parts is invalid"
 msgid "Domain parts are invalid"
-msgstr ""
+msgstr "Le domaine de l'email n'est pas valide"
 
 #: include/tools/helper.php:612
 msgid "Domain parts must contain at least one dot"
-msgstr ""
+msgstr "Le domaine de l'email doit contenir au moins un point"
 
 #: include/tools/helper.php:233
 #, php-format
+#| msgid "Email \"%s\" already exists. No new customer got created."
 msgid "Email \"%s\" already exists. New customer not created."
-msgstr ""
+msgstr "L'e-mail \"%s\" existe déjà. Aucun nouveau client n'a été créé."
 
 #: include/tools/helper.php:602
 msgid "Email contains forbidden characters or is empty"
-msgstr ""
+msgstr "L'e-mail contient des caractères interdits ou est vide"
 
 #: templates/backend/backend-options-page-template.php:40
+#| msgid "Email Content:"
 msgid "Email content:"
-msgstr ""
+msgstr "Contenu de l'e-mail :"
 
 #: include/tools/helper.php:583
 msgid "Email is too short"
-msgstr ""
+msgstr "L'e-mail est trop court"
 
 #: include/tools/helper.php:589
 msgid "Email must contain one @"
-msgstr ""
+msgstr "L'e-mail doit contenir un @"
 
 #: include/tools/helper.php:244
 #, php-format
+#| msgid "Email send to new customer: %s"
 msgid "Email sent to new customer: %s"
-msgstr ""
+msgstr "E-mail envoyé au nouveau client : %s"
 
 #: templates/backend/backend-options-page-template.php:36
+#| msgid "Email Subject:"
 msgid "Email subject:"
-msgstr ""
+msgstr "Sujet du courriel:"
 
 #: include/tools/helper.php:261
+#| msgid "Email was not send to user because no email was provided."
 msgid "Email was not sent to user because no email was provided."
 msgstr ""
+"L'e-mail n'a pas été envoyé à l'utilisateur car aucun e-mail n'a été fourni."
 
 #: templates/email/new-account.php:30
 #, php-format
 msgid "Email: %s"
-msgstr ""
+msgstr "E-mail : %s"
 
 #: templates/backend/backend-options-page-template.php:16
+#| msgid ""
+#| "Error: WooCommerce Email Class not found. Make sure that you have the "
+#| "newest version of WooCommerce installed."
 msgid ""
 "Error: WooCommerce Email Class not found. Make sure you have the newest "
 "version of WooCommerce installed."
 msgstr ""
+"Erreur : classe de courrier électronique WooCommerce introuvable. Assurez-"
+"vous que la dernière version de WooCommerce est installée."
 
 #: include/tools/helper.php:284
 msgid "Failed to link the order to the customer"
-msgstr ""
+msgstr "Impossible de lier la commande au client"
 
 #: include/classes/wac-admin.php:228
 msgid "Failed to save the order"
-msgstr ""
+msgstr "Échec de l'enregistrement de la commande"
 
 #: include/tools/helper.php:257
 msgid "Failed to send email notification to customer."
-msgstr ""
+msgstr "Échec de l'envoi d'une notification par e-mail au client."
 
 #: templates/backend/backend-options-page.php:26
 msgid "General"
-msgstr ""
+msgstr "Général"
 
 #: templates/backend/backend-options-page-support.php:23
 msgid "Github.com"
-msgstr ""
+msgstr "Github.com"
 
 #: templates/email/new-account.php:28
 #, php-format
 msgid "Hi, %s"
-msgstr ""
+msgstr "Bonjour, %s"
 
 #. Author URI of the plugin
 msgid "https://dev.dans-art.ch"
-msgstr ""
+msgstr "https://dev.dans-art.ch"
 
 #. URI of the plugin
 msgid "https://dev.dans-art.ch/blog/wordpress/add-customer-for-woocommerce/"
-msgstr ""
+msgstr "https://dev.dans-art.ch/blog/wordpress/add-customer-for-woocommerce/"
 
 #: include/classes/wac-backend.php:91
 msgid ""
 "If this is checked, the existing customer data will be updated when the "
 "order is updated."
 msgstr ""
+"Si cette case est cochée, les données client existantes seront mises à jour "
+"lors de la mise à jour de la commande."
 
 #: templates/backend/backend-options-page-support.php:27
 msgid ""
 "If you like this plugin and want to give me something back, here are some "
 "ways to do so:"
 msgstr ""
+"Si vous aimez ce plugin et souhaitez me rendre quelque chose en retour, "
+"voici quelques façons de le faire :"
 
 #: templates/backend/backend-options-page-support.php:18
+#| msgid ""
+#| "If you find yourself having trouble, please let me know by writing to:"
 msgid "If you're having trouble, please let me know by writing to:"
 msgstr ""
+"Si vous rencontrez des difficultés, n'hésitez pas à me le faire savoir en "
+"écrivant à :"
 
 #: include/tools/helper.php:563
+#| msgid ""
+#| "Intl PHP extension not installed. Please install it to make your email "
+#| "valid"
 msgid ""
 "Intl PHP extension not installed. Please install it to validate the emails."
 msgstr ""
+"Extension PHP internationale non installée. Veuillez l'installer pour rendre "
+"votre email valide"
 
 #: include/tools/helper.php:681
+#| msgid ""
+#| "Intl PHP extension not installed. Please install it to make your username "
+#| "valid"
 msgid ""
 "Intl PHP extension not installed. Please install it to validate username."
 msgstr ""
+"Extension PHP internationale non installée. Veuillez l'installer pour rendre "
+"votre nom d'utilisateur valide"
 
 #: include/classes/wac-backend.php:256
+#| msgid "Invalid eMail address"
 msgid "Invalid email address"
-msgstr ""
+msgstr "Adresse e-mail invalide"
 
 #: include/classes/wac-backend.php:112
 msgid "Link orders to customer"
-msgstr ""
+msgstr "Lier les commandes au client"
 
 #: include/tools/helper.php:289
+#| msgid "Log Type not found!"
 msgid "Log type not found!"
-msgstr ""
+msgstr "Type de journal introuvable !"
 
 #: templates/backend/backend-options-page.php:56
 msgid "Made with ❤️ by Dan's Art"
-msgstr ""
+msgstr "Réalisé avec ❤️ par Dan's Art"
 
 #: include/classes/wac-backend.php:63
 msgid "Main settings"
-msgstr ""
+msgstr "Réglages principaux"
 
 #: templates/backend/backend-options-page-support.php:29
 msgid "Make a donation on PayPal"
@@ -252,12 +300,12 @@ msgstr ""
 
 #: templates/email/new-account.php:26
 msgid "New account created"
-msgstr ""
+msgstr "Nouveau compte créé"
 
 #: include/classes/wac-backend.php:186 include/tools/helper.php:430
 #, php-format
 msgid "New account created at %s"
-msgstr ""
+msgstr "Nouveau compte créé à %s"
 
 #: include/classes/wac-backend.php:176
 msgid "New account created email subject"
@@ -268,101 +316,116 @@ msgid ""
 "New customer could not be added by Add Customer Plugin. Please contact the "
 "Plugin Author."
 msgstr ""
+"Le nouveau client n'a pas pu être ajouté par le plugin Ajouter un client. "
+"Veuillez contacter l'auteur du plugin."
 
 #: include/classes/wac-admin.php:154 include/classes/wac-admin.php:252
+#| msgid "No Order found"
 msgid "No order found"
-msgstr ""
+msgstr "Aucune commande trouvée"
 
 #: include/classes/wac-admin.php:221
 msgid "No user found with the given email"
-msgstr ""
+msgstr "Aucun utilisateur trouvé avec l'e-mail donné"
 
 #: templates/backend/components/select-input.php:28
+#| msgid "Options must be formatted as a array"
 msgid "Options must be formatted as an array"
-msgstr ""
+msgstr "Les options doivent être formatées sous forme de tableau"
 
 #: include/tools/helper.php:280
 msgid "Order got linked to the user"
-msgstr ""
+msgstr "La commande a été liée à l'utilisateur"
 
 #: templates/backend/backend-options-page-template.php:54
 msgid "Reload template"
-msgstr ""
+msgstr "Recharger le modèle"
 
 #: templates/order/add-checkbox.php:34
 msgid "Save as new customer"
-msgstr ""
+msgstr "Enregistrer en tant que nouveau client"
 
 #: include/classes/wac-backend.php:76
+#| msgid ""
+#| "Select this box if you like to have the \"Add Customer\" Checkbox "
+#| "activated by default."
 msgid ""
 "Select this box if you'd like to have the \"Add Customer\" Checkbox "
 "activated by default."
 msgstr ""
+"Cochez cette case si vous souhaitez que la case « Ajouter un client » soit "
+"activée par défaut."
 
 #: templates/order/add-checkbox.php:50
 msgid "Send email to new customer"
-msgstr ""
+msgstr "Envoyer un e-mail au nouveau client"
 
 #: include/classes/wac-backend.php:98
+#| msgid "Send Notifications to new user"
 msgid "Send notifications to new user"
-msgstr ""
+msgstr "Envoyer des notifications au nouvel utilisateur : action par défaut"
 
 #: include/classes/wac-backend.php:191
 msgid "Sender email"
-msgstr ""
+msgstr "E-mail de l'expéditeur"
 
 #: templates/email/new-account.php:34
 msgid "Set the password for your account"
-msgstr ""
+msgstr "Définir le mot de passe de votre compte"
 
 #: templates/backend/backend-options-page-support.php:15
 #: templates/backend/backend-options-page.php:28
 msgid "Support"
-msgstr ""
+msgstr "Soutien"
 
 #: templates/backend/backend-options-page-support.php:25
 msgid "Support me"
-msgstr ""
+msgstr "Me soutenir"
 
 #: include/classes/wac-backend.php:167
 msgid "Supported tags:"
-msgstr ""
+msgstr "Balises prises en charge :"
 
 #: templates/backend/backend-options-page.php:27
 msgid "Template"
-msgstr ""
+msgstr "Modèle"
 
 #: templates/backend/backend-options-page-template.php:48
 msgid "Template loaded from:"
-msgstr ""
+msgstr "Modèle chargé depuis :"
 
 #: include/classes/wac-backend.php:64
 #: templates/backend/backend-options-page-template.php:33
 msgid "Template settings"
-msgstr ""
+msgstr "Paramètres du modèle"
 
 #: templates/backend/backend-options-page-support.php:17
 msgid ""
 "Thanks for using this Plugin. It was crafted with a lot of care and love, "
 "but errors and incompatibilities with other plugins can occur."
 msgstr ""
+"Merci d'utiliser ce plugin. Il a été conçu avec beaucoup de soin et d’amour, "
+"mais des erreurs et des incompatibilités avec d’autres plugins peuvent "
+"survenir."
 
 #: templates/backend/backend-options-page-support.php:30
 msgid "Thanks!"
-msgstr ""
+msgstr "Merci!"
 
 #: include/tools/helper.php:265
 #, php-format
 msgid "The email \"%s\" is not valid."
-msgstr ""
+msgstr "L'e-mail \"%s\" n'est pas valide."
 
 #: include/classes/wac-backend.php:165
+#| msgid "The Format you like to have for the automatic generated eMail."
 msgid "The format you'd like to have for the automatically generated email."
 msgstr ""
+"Le format que vous souhaitez avoir pour l'e-mail généré automatiquement."
 
 #: include/classes/wac-backend.php:199
 msgid "The sender email"
-msgstr ""
+msgstr "L'e-mail de l'expéditeur"
 
 #: include/classes/wac-backend.php:184
 msgid "The subject / header for the email sent to new customers"
@@ -373,58 +436,71 @@ msgid "The user role you provided is not allowed. Please select another one."
 msgstr ""
 
 #: templates/backend/backend-options-page.php:49
+#| msgid ""
+#| "There have been %d customers added and %d customers edited by the plugin"
 msgid ""
 "There have been %d customers added and %d customers edited by the Plugin"
-msgstr ""
+msgstr "Il y a eu %d clients ajoutés et %d clients modifiés par le plugin"
 
 #: include/classes/wac-admin.php:216
+#| msgid "This order is already linked to an user"
 msgid "This order is already linked to a user"
-msgstr ""
+msgstr "Cette commande est déjà liée à un utilisateur"
 
 #: templates/email/new-account.php:33
 msgid "To log in, you have to create a password for your account."
 msgstr ""
 
 #: templates/order/update-checkbox.php:22
+#| msgid "Update Customer"
 msgid "Update customer"
-msgstr ""
+msgstr "Mettre à jour le client"
 
 #: include/classes/wac-backend.php:83
 msgid "Update new customer by default"
-msgstr ""
+msgstr "Mettre à jour le nouveau client : action par défaut"
 
 #: templates/order/update-checkbox.php:25
 msgid "Updates the existing customer"
-msgstr ""
+msgstr "Met à jour le client existant"
 
 #: include/classes/wac-backend.php:140
 msgid "User role for new customer"
-msgstr ""
+msgstr "Rôle d'utilisateur pour les nouveaux clients"
 
 #: templates/backend/backend-options-page-support.php:22
 msgid "Wordpress.org"
-msgstr ""
+msgstr "Wordpress.org"
 
 #: templates/backend/backend-options-page-support.php:28
 msgid "Write a review and give me 5 stars on Wordpress.com"
-msgstr ""
+msgstr "Écrivez un avis et donnez-moi 5 étoiles sur Wordpress.com"
 
 #: include/classes/wac-backend.php:227
 msgid "You are not allowed to set this user role"
-msgstr ""
+msgstr "Vous n'êtes pas autorisé à définir ce rôle utilisateur"
 
 #: include/classes/wac-backend.php:166
 msgid "You can use the supported tags below wrapping them in [ ]"
 msgstr ""
+"Vous pouvez utiliser les balises prises en charge ci-dessous en les "
+"enveloppant par [ ]"
 
 #: include/js/wac-main-script.js:98
+#| msgid ""
+#| "You choose the administrator as default user for new customer. This is "
+#| "not recommended and can lead to an increased attack surface. \"Customer\" "
+#| "is the recommended role"
 msgid ""
 "You chose \"Administrator\" as the default role for a new customer. This is "
 "not recommended and can lead to an increased attack surface. \"Customer\" is "
 "the recommended role."
 msgstr ""
+"Vous choisissez l'administrateur comme utilisateur par défaut pour les "
+"nouveaux clients. Ceci n’est pas recommandé et peut entraîner une "
+"augmentation des possibilités d'attaque. \"Client\" est le rôle recommandé"
 
 #: templates/email/new-account.php:29
 #, php-format
 msgid "Your account on %s has been created."
-msgstr ""
+msgstr "Votre compte sur le site %s a été créé."

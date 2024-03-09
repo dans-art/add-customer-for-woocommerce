@@ -19,7 +19,7 @@ $checked = ($wac->get_wac_option('wac_preselect_update') === 'yes') ? 'checked' 
 
 <div id='wac_add_customer_con' class="edit_address">
 <div class="_add_customer_fields">
-    <label><?php echo __('Update Customer', 'wac'); ?></label>
+    <label><?php echo __('Update customer', 'wac'); ?></label>
     <p class="wac_update_customer_field">
         <input type="checkbox" name="wac_update_customer" id="wac_update_customer" value="true" placeholder="" autocomplete="off">
         <label for="wac_update_customer"><?php echo __('Updates the existing customer', 'wac'); ?></label>

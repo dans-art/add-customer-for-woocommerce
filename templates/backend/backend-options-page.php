@@ -16,7 +16,7 @@ $this->wac_enqueue_admin_scripts();
 $this->wac_enqueue_admin_style();
 ?>
 
-<h2><?php echo __('Add Customer for Woocommerce Settings', 'wac'); ?></h2>
+<h2><?php echo __('Add Customer for WooCommerce settings', 'wac'); ?></h2>
 
 <?php
 $current_tab = (isset($_GET['tab'])) ? $_GET['tab'] : null;
@@ -46,7 +46,7 @@ $current_tab = (isset($_GET['tab'])) ? $_GET['tab'] : null;
 <div class="wac-statistics">
     <?php
     echo sprintf(
-        __('There have been %d customers added and %d customers edited by the plugin', 'wac'),
+        __('There have been %d customers added and %d customers edited by the Plugin', 'wac'),
         intval(get_option('wac_add_customer_count')),
         intval(get_option('wac_edit_customer_count'))
     );

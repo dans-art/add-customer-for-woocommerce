@@ -230,7 +230,7 @@ class woo_add_customer_helper
 
         switch ($log_type) {
             case 'existing_account':
-                $message = htmlspecialchars(__('Email "%s" already exists. No new customer got created.', 'wac'));
+                $message = htmlspecialchars(__('Email "%s" already exists. New customer not created.', 'wac'));
                 break;
             case 'no_user_id':
                 $message = __('Could not update the customer, because the customer was not found.', 'wac');
@@ -241,7 +241,7 @@ class woo_add_customer_helper
                 $type = 'success';
                 break;
             case 'email_send':
-                $message = __('Email send to new customer: %s', 'wac');
+                $message = __('Email sent to new customer: %s', 'wac');
                 $type = 'success';
                 break;
             case 'customer_updated':
@@ -250,7 +250,7 @@ class woo_add_customer_helper
                 $additional_log = array('changed_fields' => $args[0], 'changed_user_id' => $args[1]);
                 break;
             case 'no_name':
-                $message = __('Could not save customer. No Name provided.', 'wac');
+                $message = __('Could not save customer. No name provided.', 'wac');
                 $type = 'null';
                 break;
             case 'failed_to_send_user_mail':
@@ -258,7 +258,7 @@ class woo_add_customer_helper
                 $type = 'error';
                 break;
             case 'failed_to_send_user_mail_fakemail':
-                $message = __('Email was not send to user because no email was provided.', 'wac');
+                $message = __('Email was not sent to user because no email was provided.', 'wac');
                 $type = 'null';
                 break;
             case 'invalid_email':
@@ -273,7 +273,7 @@ class woo_add_customer_helper
                 error_log($message . " - " . htmlspecialchars(json_encode($args))); //Prints the args with the error message from wc_create_new_customer to the error log
                 break;
             case 'user_role_not_allowed':
-                $message = __('The given user role is not allowed. Please select another one', 'wac');
+                $message = __('The user role you provided is not allowed. Please select another one.', 'wac');
                 $type = 'error';
                 break;
             case 'order_linked_to_account':
@@ -286,7 +286,7 @@ class woo_add_customer_helper
                 $type = 'error';
                 break;
             default:
-                $message = __('Log Type not found!', 'wac');
+                $message = __('Log type not found!', 'wac');
                 break;
         }
         if (!empty($args)) {
@@ -560,7 +560,7 @@ class woo_add_customer_helper
             $email = transliterator_transliterate('Any-Latin; Latin-ASCII; [\u0100-\u7fff] remove', $email);
         } elseif (!is_email($email)) {
             //Display notice if email is not valid and php intl extension is not installed
-            $this->wac_set_notice(__('Intl PHP extension not installed. Please install it to make your email valid', 'wac'), 'error', get_the_ID());
+            $this->wac_set_notice(__('Intl PHP extension not installed. Please install it to validate the emails.', 'wac'), 'error', get_the_ID());
         }
 
 
@@ -616,7 +616,7 @@ class woo_add_customer_helper
         // Test for leading and trailing periods and whitespace.
         $domain = trim($domain, " \t\n\r\0\x0B.");
         if ('' === $domain) {
-            $this->wac_set_notice(esc_html__('Domain parts is invalid', 'wac'), "error", $fieldname);
+            $this->wac_set_notice(esc_html__('Domain parts are invalid', 'wac'), "error", $fieldname);
             return htmlspecialchars($email);
         }
 
@@ -625,7 +625,7 @@ class woo_add_customer_helper
 
         // Assume the domain will have at least two subs.
         if (2 > count($subs)) {
-            $this->wac_set_notice(esc_html__('Domain parts is invalid', 'wac'), "error", $fieldname);
+            $this->wac_set_notice(esc_html__('Domain parts are invalid', 'wac'), "error", $fieldname);
             return htmlspecialchars($email);
         }
 
@@ -648,7 +648,7 @@ class woo_add_customer_helper
 
         // If there aren't 2 or more valid subs.
         if (2 > count($new_subs)) {
-            $this->wac_set_notice(esc_html__('Domain parts is invalid', 'wac'), "error", $fieldname);
+            $this->wac_set_notice(esc_html__('Domain parts are invalid', 'wac'), "error", $fieldname);
             return htmlspecialchars($email);
         }
 
@@ -678,7 +678,7 @@ class woo_add_customer_helper
             $user = transliterator_transliterate('Any-Latin; Latin-ASCII; [\u0100-\u7fff] remove', $user);
         } elseif ($user !== sanitize_user($user, true)) {
             //Display notice if user is not valid and php intl extension is not installed
-            $this->wac_set_notice(__('Intl PHP extension not installed. Please install it to make your username valid', 'wac'), 'error', get_the_ID());
+            $this->wac_set_notice(__('Intl PHP extension not installed. Please install it to validate username.', 'wac'), 'error', get_the_ID());
         }
         $user = sanitize_user($user, true); //Remove all un-allowed characters
 

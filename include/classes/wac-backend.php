@@ -30,7 +30,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
      */
     public function setup_options()
     {
-        $title = __('Add Customer Settings', 'wac');
+        $title = __('Add customer settings', 'wac');
         add_options_page($title, $title, 'manage_options', 'wac-options', [$this, 'render_options']);
     }
 
@@ -61,7 +61,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
         register_setting('wac_general_options', 'wac_general_options', [$this, 'wac_options_validate']);
 
         add_settings_section('wac_main_settings', __('Main settings', 'wac'), null, 'wac_general_options');
-        add_settings_section('wac_template_settings', __('Template Settings', 'wac'), null, 'wac_general_options');
+        add_settings_section('wac_template_settings', __('Template settings', 'wac'), null, 'wac_general_options');
 
         add_settings_field(
             'wac_preselect',
@@ -73,7 +73,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
                 'label_for' => 'wac_preselect',
                 'type' => 'checkbox',
                 'class' => 'wac-checkbox wac_preselect',
-                'description' => __('Select this box if you like to have the "Add Customer" Checkbox activated by default.', 'wac'),
+                'description' => __('Select this box if you\'d like to have the "Add Customer" Checkbox activated by default.', 'wac'),
                 'page' => 'wac_general_options'
 
             )
@@ -95,7 +95,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
         );
         add_settings_field(
             'wac_send_notification',
-            __('Send Notifications to new user', 'wac'),
+            __('Send notifications to new user', 'wac'),
             [$this, 'get_settings_option'],
             'wac_general_options',
             'wac_main_settings',
@@ -103,7 +103,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
                 'label_for' => 'wac_send_notification',
                 'type' => 'checkbox',
                 'class' => 'wac-checkbox wac_preselect',
-                'description' => __('Check this to send a "Account created" email to the customer after account creation.', 'wac'),
+                'description' => __('Check this to send an "account created" email to the customer after account creation.', 'wac'),
                 'page' => 'wac_general_options'
             )
         );
@@ -117,7 +117,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
                 'label_for' => 'wac_add_customer_order_to_user',
                 'type' => 'checkbox',
                 'class' => 'wac-checkbox',
-                'description' => __('Check this to link orders created in the frontend. The Email will be used as an identifier. Only works if the user creates an order as an guest', 'wac'),
+                'description' => __('Check this to link orders created in the frontend. The email will be used as an identifier. Only works if the user creates an order as a guest.', 'wac'),
                 'page' => 'wac_general_options'
             )
         );
@@ -131,7 +131,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
                 'label_for' => 'wac_define_user_role',
                 'type' => 'checkbox',
                 'class' => 'wac-checkbox wac_preselect',
-                'description' => __('Allow the user role to be selected before a new customer gets created', 'wac'),
+                'description' => __('Allow user role selection before creating a new customer', 'wac'),
                 'page' => 'wac_general_options'
             )
         );
@@ -153,7 +153,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
         );
         add_settings_field(
             'wac_fakemail_format',
-            __('Auto-Generated eMail Format', 'wac'),
+            __('Auto-generated email format', 'wac'),
             [$this, 'get_settings_option'],
             'wac_general_options',
             'wac_main_settings',
@@ -162,7 +162,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
                 'type' => 'text',
                 'class' => 'wac-text-input',
                 'description' =>
-                __('The Format you like to have for the automatic generated eMail.', 'wac') . ' ' .
+                __('The format you\'d like to have for the automatically generated email.', 'wac') . ' ' .
                     __('You can use the supported tags below wrapping them in [ ]', 'wac') . '<br/>' .
                     __('Supported tags:', 'wac') . ' <strong>' . implode(', ', apply_filters('wac_supported_fake_email_parts', $wac->supported_fake_email_parts)) . '</strong>',
                 'page' => 'wac_general_options',
@@ -173,7 +173,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
         //Template settings fields
         add_settings_field(
             'wac_template_subject_add_account',
-            __('Email Subject for new accounts created', 'wac'),
+            __('New account created email subject', 'wac'),
             [$this, 'get_settings_option'],
             'wac_general_options',
             'wac_template_settings',
@@ -181,7 +181,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
                 'label_for' => 'wac_template_subject_add_account',
                 'type' => 'text',
                 'class' => 'wac-text-input',
-                'description' => __('The subject / header for the email which are sended to the new customers', 'wac'),
+                'description' => __('The subject / header for the email sent to new customers', 'wac'),
                 'page' => 'wac_general_options',
                 'default_value' => sprintf(__("New account created at %s", 'wac'), $blog_name)
             )
@@ -253,7 +253,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
             case 'wac_fakemail_format':
                 //Check if multiple @ exists
                 if (!empty($value) and substr_count($value, '@') !== 1) {
-                    return "<div class='notice notice-error'><p>" . __('Invalid eMail address', 'wac') . "</p></div>";
+                    return "<div class='notice notice-error'><p>" . __('Invalid email address', 'wac') . "</p></div>";
                 }
                 break;
 
