@@ -93,7 +93,8 @@ Are there any hooks I can use?
 * Added option to select the default user role
 * Added option to allow the user role to be set before user creation
 * Added option to link orders to existing user
-* Fixed spelling and wording in english language (thanks Naakai)
+* Fixed spelling and wording in English language (thanks Naakai)
+* French language added (thanks patou)
 
 = [1.7.1] 2024-01-07 =
 * Fixed: XSS Security issue
