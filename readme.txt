@@ -5,7 +5,7 @@ Contributors URL: <http://dev.dans-art.ch>
 Donate link: <https://paypal.me/dansart13>
 Tags: woocommerce, customer, tools, helper
 Requires at least: 5.4.0
-Tested up to: 6.4.2
+Tested up to: 6.4.3
 Stable tag: 1.8.0
 License: GPLv3 or later
 License URI: <http://www.gnu.org/licenses/gpl-2.0.html>
@@ -13,8 +13,7 @@ WC requires at least: 7.4.1
 WC tested up to: 8.4.0
 Requires PHP: 7.4
 
-Adds a new checkbox to the orders page to add a new customer/user.
-It creates a new user, based on the billing data. If no email is provided, it will create a fake email (firstname.lastname@your-site.com).
+Adds a new checkbox to the orders page to add a new customer/user and links orders to existing accounts
 
 == Description ==
 This plugin is designed to simplify the process of creating new users/customers. It's particularly useful if you receive client orders via phone or email and want to integrate these orders into WooCommerce for stock and order management.

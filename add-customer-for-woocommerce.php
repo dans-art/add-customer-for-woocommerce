@@ -11,7 +11,7 @@
  * Stable tag: 1.8.0
  * 
  * Requires at least: 5.4.0
- * Tested up to: 6.3.1
+ * Tested up to: 6.4.3
  * 
  * WC requires at least: 7.4.1
  * WC tested up to: 8.1.1
