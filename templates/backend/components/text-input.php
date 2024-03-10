@@ -24,18 +24,14 @@ $description = (isset($args['description'])) ? $args['description'] : '';
 $class = (isset($args['class'])) ? $args['class'] : '';
 ?>
 
-<tr class='<?php echo $class; ?> text-input'>
-    <td>
-        <input name="wac_general_options[<?php echo $label_for; ?>]" id="<?php echo $label_for; ?>" type="text" value="<?php echo $options_val; ?>" placeholder="<?php echo $default_value; ?>" />
-    </td>
-</tr>
-<tr class='<?php echo $class; ?>-field-errors wac-field-errors'>
-    <td>
-        <?php
-        //get the error messages
-        echo $this->wac_display_notices($label_for); ?>
-    </td>
-</tr>
-<tr class='<?php echo $class; ?>-description'>
-    <td><?php echo $description; ?></td>
-</tr>
+<div class='<?php echo $class; ?> text-input'>
+    <input name="wac_general_options[<?php echo $label_for; ?>]" id="<?php echo $label_for; ?>" type="text" value="<?php echo $options_val; ?>" placeholder="<?php echo $default_value; ?>" />
+</div>
+<div class='<?php echo $class; ?>-field-errors wac-field-errors'>
+    <?php
+    //get the error messages
+    echo $this->wac_display_notices($label_for); ?>
+</div>
+<p class='<?php echo $class; ?>-description description'>
+    <?php echo $description; ?>
+</p>

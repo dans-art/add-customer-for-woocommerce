@@ -6,7 +6,7 @@ Donate link: <https://paypal.me/dansart13>
 Tags: woocommerce, customer, tools, helper
 Requires at least: 5.4.0
 Tested up to: 6.4.2
-Stable tag: 1.7.1
+Stable tag: 1.8.0
 License: GPLv3 or later
 License URI: <http://www.gnu.org/licenses/gpl-2.0.html>
 WC requires at least: 7.4.1
@@ -14,24 +14,34 @@ WC tested up to: 8.4.0
 Requires PHP: 7.4
 
 Adds a new checkbox to the orders page to add a new customer/user.
-It creates a new user, based on the billing data. If no e-mail is provided, it will create a fake email (firstname.lastname@your-site.com).
+It creates a new user, based on the billing data. If no email is provided, it will create a fake email (firstname.lastname@your-site.com).
 
 == Description ==
-This Plugin is designed to help you to create new users/customers with ease.
-Especially useful if the client is ordering via phone or email and you like to take advantage of the stock- and order management in WooCommerce.
-It adds a simple checkbox at the end of the billing address. If the box is checked, it will create a new user with the role "customer".
-If no e-mail is provided, it will create a unique one for you. It uses your site’s domain as the domain part and the name as the name part. E.g. firstname.lastname@your-site.com.
-You can customize the auto-generated email to your liking.
-By default, the newly created user will not get any emails while creating the account. But he will eventually on order change.
-In the settings menu, there are options for checking the box by default and send login credentials to the new customer.
+This plugin is designed to simplify the process of creating new users/customers. It's particularly useful if you receive client orders via phone or email and want to integrate these orders into WooCommerce for stock and order management.
+The plugin adds a checkbox at the end of the billing address form. When this box is checked, it creates a new user with the role "customer." If an email is not provided, the plugin generates a unique one using your site’s domain as the email domain and the customer's name as the local part (e.g., firstname.lastname@your-site.com). You have the option to customize this auto-generated email format.
+
+By default, the newly created user does not receive any emails during account creation, though they will probably on order updates.
+
+In the settings menu, there are options to:
+- Check the box by default
+- Send login credentials to the new customer
+
+There are also additional options:
+- Update new customer information by default
+- Link customer orders
+- Define the user role individually
+- Set the user role for new customers
+- Customize the auto-generated email format
+- Edit the email subject for accounts created
+- Change the sender's email address
 
 Settings Menu:
-Settings -> Add Customer Settings
+Settings -> Add customer settings
 
 Required Plugins: WooCommerce 4.7.0 or higher
 Required PHP extension: Intl
 
-If you like the Plugin, please leave some Stars or spent me a coffee. Thanks!
+If you like the plugin, please leave some stars or buy me a coffee. Thank you!
 
 == Installation ==
 1. Upload the plugin files to the /wp-content/plugins/add-customer-for-woocommerce directory, or install the plugin through the WordPress plugins screen directly.
@@ -39,41 +49,52 @@ If you like the Plugin, please leave some Stars or spent me a coffee. Thanks!
 3. Enjoy
 
 == Screenshots ==
-1. The billing part of a new order. With the checkbox selected, it will create a new user.
+1. The billing section of a new order. When the checkboxes are selected, it creates a new user who will receive a notification.
+2. Selection of the role when "Define user role individually" is activated
 2. The order after saving. A new customer was created and assigned to the order.
-3. The settings menu.
-4. The template preview menu and look of the Email received by the new customer.
+3. The main settings menu.
+4. The template preview menu and the design of the email that the new customer receives.
 
 == Upgrade Notice ==
 Upload the plugin files to the /wp-content/plugins/add-customer-for-woocommerce directory, or update the plugin through the WordPress plugins screen directly.
 
 == Frequently Asked Questions ==
-What role the new user will have?
-- Customer
+What role will the new user have?
+- By default, the new user will have the "Customer" role. You can select a different default role from any available roles in the options menu.
 
-What happens, if an email already exists?
-- There will be no new user created. The plugin will assign the order to the existing customer.
+What happens if an email already exists?
+- A new user will not be created. The plugin will assign the order to the existing user with that email.
 
-Does the new user get a notification of the created account?
-- No, not per default. It can be enabled on the settings page. The Email will send the login credentials including a random password to the customer.
+How can I link guest orders to users?
+- Activate the option "Link customer orders" to associate guest orders with existing users.
 
-Can I change how the email template for the new customer?
-- Yes, you can. Just copy the "new-account.php" from "wp-content\plugins\add-customer-for-woocommerce\templates\email" to "\wp-content\themes\[theme/child-theme]\woocommerce\add-customer\email" and do your changes.
+Does the new user receive a notification about the created account?
+- No, not by default. This can be enabled on the settings page. An email will then be sent to the customer with login credentials, including a random password.
+
+Can I change the email template for the new customer?
+- Yes, you can. Copy "new-account.php" from "wp-content/plugins/add-customer-for-woocommerce/templates/email" to "wp-content/themes/[your-theme/child-theme]/woocommerce/add-customer/email" and make your changes there.
 
 Is it possible to change the email format?
-- Yes. You can set the desired format in the Settings menu of the plugin.
+- Yes. You can select the preferred format in the Settings menu of the plugin.
 
 Are there any hooks I can use?
-- Sure thing! There are currently two filters:
-    wac_add_customer_email - To modify the email saved by the plugin
-    wac_supported_fake_email_parts - To add support for custom fields
+- Certainly! There are currently three filters:
+ wac_add_customer_email - To modify the email saved by the plugin.
+ wac_supported_fake_email_parts - To add custom fields support.
+ wac_get_user_roles - An array with the user roles a user is allowed to set.
 - And two actions:
-   wac_after_insert_new_customer to hook in after new customer got created
-   wac_after_insert_updated_customer to hook in after new customer got updated
-
-
+ wac_after_insert_new_customer - To execute after a new customer has been created.
+ wac_after_insert_updated_customer - To execute after an existing customer has been updated.
 
 == Changelog ==
+
+= [1.8.0] 2024-03-09 =
+* Updated style of the options menu
+* Added option to select the default user role
+* Added option to allow the user role to be set before user creation
+* Added option to link orders to existing user
+* Fixed spelling and wording in English language (thanks Naakai)
+* French language added (thanks patou)
 
 = [1.7.1] 2024-01-07 =
 * Fixed: XSS Security issue

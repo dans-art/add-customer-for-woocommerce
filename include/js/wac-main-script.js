@@ -6,7 +6,10 @@
  */
 let wac_scripts = {
 
+    __ : wp.i18n.__,
+
     construct() {
+
         /**
          * Fires on change of the wac checkbox. If selected, the "Notify customer" checkbox will be shown.
          */
@@ -34,6 +37,15 @@ let wac_scripts = {
         });
 
         /**
+         * Shows a warning if the user selects the admin as a user role
+         */
+        jQuery('#wac_default_user_role').change((e) => {
+            if(e.currentTarget.value === 'administrator'){
+                this.show_admin_user_warning();
+            }
+        });
+
+        /**
          * Fires when the edit address button is clicked
          */
         jQuery('#order_data a.edit_address').on('click', () => {
@@ -46,6 +58,7 @@ let wac_scripts = {
         wac_scripts.wac_checkbox_checker();
         /*jQuery(document).ready(function () {
         });*/
+
     },
 
     /**
@@ -76,6 +89,13 @@ let wac_scripts = {
         if (window.sep_variables.default_options.add_customer === 'checked') {
             jQuery('#wac_add_customer').prop("checked", true);
         }
+    },
+
+    /**
+     * Displays an alert if the user selects the administrator as an default user.
+     */
+    show_admin_user_warning(){
+        alert(this.__('You chose "Administrator" as the default role for a new customer. This is not recommended and can lead to an increased attack surface. "Customer" is the recommended role.','wac'));
     },
 
     //Helper functions

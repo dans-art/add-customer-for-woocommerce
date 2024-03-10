@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 }
 
 if (!class_exists('WC_Email')) {
-    echo __('Error: WooCommerce Email Class not found. Make sure that you have the newest version of WooCommerce installed.', 'wac');
+    echo __('Error: WooCommerce Email Class not found. Make sure you have the newest version of WooCommerce installed.', 'wac');
     return;
 }
 
@@ -33,11 +33,11 @@ $message_esc = htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
 <h2><?php echo __('Template settings', 'wac'); ?></h2>
 <div id="template_preview_container">
     <div class="subject_content">
-        <div><?php echo __('Email Subject:', 'wac'); ?></div>
+        <div><?php echo __('Email subject:', 'wac'); ?></div>
         <div class="subject"><strong><?php echo $subject; ?></strong></div>
     </div>
     <div class="main_content">
-        <div><?php echo __('Email Content:', 'wac'); ?></div>
+        <div><?php echo __('Email content:', 'wac'); ?></div>
         <div id="message-con" class="message">
 
 

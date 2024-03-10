@@ -42,30 +42,31 @@ class woo_add_customer_admin extends woo_add_customer_helper
         add_action('woocommerce_admin_order_data_after_billing_address', [$this, 'wac_add_checkbox'], 10, 1);
         add_action('woocommerce_created_customer', [$this, 'wac_disable_new_customer_mail'], 1, 1);
         add_action('woocommerce_process_shop_order_meta', [$this, 'wac_save_order'], 99, 2);
-        
+
+        add_action('woocommerce_checkout_order_created', [$this, 'wac_checkout_order_created_action'], 99, 2);
+
         //Get the custom billing and shipping fields. It catches all the previous defined custom fields.
         //If a custom field is not added, check if the priority of the add_filter(woocommerce_admin_*_fields) is lower than 9999
         add_filter("woocommerce_admin_billing_fields", [$this, 'wac_add_custom_billing_fields'], 9999, 1);
         add_filter("woocommerce_admin_shipping_fields", [$this, 'wac_add_custom_shipping_fields'], 9999, 1);
-        
+
         add_filter('woocommerce_ajax_get_customer_details', [$this, 'wac_ajax_get_customer_details'], 10, 3);
-        
+
         //Add Admin Menu
         $backend_class = new woo_add_customer_backend;
         add_action('admin_menu', [$backend_class, 'setup_options']);
         add_action('admin_init', [$backend_class, 'wac_register_settings']);
-        
+
         //Show Admin notices
         add_action('admin_notices', [$this, 'wac_display_notices'], 10000);
-        
+
         //Mark the plugin as HPOS compatible
-        add_action( 'before_woocommerce_init', function() {
-            if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
-                \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', 'add-customer-for-woocommerce/add-customer-for-woocommerce.php', true );
-            }else{
+        add_action('before_woocommerce_init', function () {
+            if (class_exists(\Automattic\WooCommerce\Utilities\FeaturesUtil::class)) {
+                \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility('custom_order_tables', 'add-customer-for-woocommerce/add-customer-for-woocommerce.php', true);
+            } else {
             }
-        } );
-        
+        });
     }
 
     /**
@@ -150,7 +151,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
         //Load the order
         $order = wc_get_order($order_id);
         if (!$order) {
-            $this->log_event_message(__('No Order found', 'wac'), $order_id, 'error');
+            $this->log_event_message(__('No order found', 'wac'), $order_id, 'error');
             return;
         }
         if (isset($_REQUEST['wac_add_customer']) and $_REQUEST['wac_add_customer'] == 'true') {
@@ -196,6 +197,39 @@ class woo_add_customer_admin extends woo_add_customer_helper
     }
 
     /**
+     * Action that runs after checkout and when the order is created.
+     * Links order to users if exists.
+     *
+     * @param WC_Order $order
+     * @return void
+     */
+    public function wac_checkout_order_created_action($order)
+    {
+        if ($this->get_wac_option('wac_add_customer_order_to_user') !== 'yes') {
+            return;
+        }
+        //Try to link order to user if user exists
+        $email = $order->get_billing_email();
+        $order_id = $order->get_id();
+ 
+        if ($order->get_customer_id() > 0) {
+            $this->log_event("order_linked_to_account_failed", $order_id, $email, __('This order is already linked to a user','wac'));
+            return;
+        }
+        $user = get_user_by('email', $email);
+        if($user === false){
+            $this->log_event("order_linked_to_account_failed", $order_id, $email, __('No user found with the given email','wac'));
+            return;
+        }
+        $order->set_customer_id($user -> ID);
+        if ($order->save()) {
+            $this->log_event("order_linked_to_account", $order_id, $email);
+        } else {
+            $this->log_event("order_linked_to_account_failed", $order_id, $email, __('Failed to save the order','wac'));
+        }
+    }
+
+    /**
      * Adds a new Customer and saves the billing and shipping address of the current order
      *
      * @param string $email - email of new user
@@ -204,16 +238,18 @@ class woo_add_customer_admin extends woo_add_customer_helper
      */
     public function wac_add_customer($email, $order_id)
     {
+
         $user_first = (isset($_REQUEST['_billing_first_name']) and !empty($_REQUEST['_billing_first_name'])) ? sanitize_text_field($_REQUEST['_billing_first_name']) : '';
         $user_last = (isset($_REQUEST['_billing_last_name']) and !empty($_REQUEST['_billing_last_name'])) ? sanitize_text_field($_REQUEST['_billing_last_name']) : '';
         $user_company = (isset($_REQUEST['_billing_company']) and !empty($_REQUEST['_billing_company'])) ? sanitize_text_field($_REQUEST['_billing_company']) : '';
         $user = $this->wac_get_unique_user($user_first . '.' . $user_last . '.' . $user_company);
         $password = wp_generate_password();
         $email_is_fake = false;
+        $user_role = (isset($_REQUEST['wac_add_customer_role'])) ? sanitize_key($_REQUEST['wac_add_customer_role']) : $this->get_default_user_role();
 
         $order = wc_get_order($order_id);
         if (!$order) {
-            $this->log_event_message(__('No Order found', 'wac'), $order_id, 'error');
+            $this->log_event_message(__('No order found', 'wac'), $order_id, 'error');
             return;
         }
 
@@ -222,7 +258,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
             $email = $this->create_fake_email($user);
             $email_is_fake = true;
         }
-        
+
         //Add hook to allow to modify the email
         $email = $this->make_email_valid($email);
         $email = apply_filters('wac_add_customer_email', $email, $user);
@@ -232,6 +268,21 @@ class woo_add_customer_admin extends woo_add_customer_helper
             //User Exists already. This should never happen, but if it does, it does.
             $this->log_event("invalid_email", $order_id, $email);
             return false;
+        }
+
+        //Validate the user role. This should never return false, except if someone alters the select selection
+        $valid_user_roles = $this->get_user_role_array();
+        if (!isset($valid_user_roles[$user_role])) {
+            //User role does not exist, or is not allowed
+            $this->log_event("user_role_not_allowed", $order_id, $user_role);
+            return false;
+        } else {
+            //Add the role
+            add_filter('woocommerce_new_customer_data', function ($data) {
+                $user_role = (isset($_REQUEST['wac_add_customer_role'])) ? sanitize_key($_REQUEST['wac_add_customer_role']) : $this->get_default_user_role();
+                $data['role'] = $user_role;
+                return $data;
+            });
         }
 
         //Save the email to the order

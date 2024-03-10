@@ -46,8 +46,8 @@ class woo_add_customer_helper
         $number = '';
         $name = $this->create_fake_email_name($username);
         //Add a number if email already exists
-        while ((get_user_by('email', $name . $number . '@' . $domain_name) !== false) AND $number < 100) {
-            if(empty($number)){
+        while ((get_user_by('email', $name . $number . '@' . $domain_name) !== false) and $number < 100) {
+            if (empty($number)) {
                 $number = 0;
             }
             $number++;
@@ -207,9 +207,9 @@ class woo_add_customer_helper
     public function wac_enqueue_admin_scripts()
     {
         if (WP_DEBUG) {
-            wp_enqueue_script('wac-admin-script', get_option('siteurl') . '/wp-content/plugins/add-customer-for-woocommerce/include/js/wac-main-script.js', array('jquery'), $this->version);
+            wp_enqueue_script('wac-admin-script', get_option('siteurl') . '/wp-content/plugins/add-customer-for-woocommerce/include/js/wac-main-script.js', array('jquery', 'wp-i18n'), $this->version);
         } else {
-            wp_enqueue_script('wac-admin-script', get_option('siteurl') . '/wp-content/plugins/add-customer-for-woocommerce/include/js/wac-main-script.min.js', array('jquery'), $this->version);
+            wp_enqueue_script('wac-admin-script', get_option('siteurl') . '/wp-content/plugins/add-customer-for-woocommerce/include/js/wac-main-script.min.js', array('jquery', 'wp-i18n'), $this->version);
         }
     }
 
@@ -230,7 +230,7 @@ class woo_add_customer_helper
 
         switch ($log_type) {
             case 'existing_account':
-                $message = htmlspecialchars(__('Email "%s" already exists. No new customer got created.', 'wac'));
+                $message = htmlspecialchars(__('Email "%s" already exists. New customer not created.', 'wac'));
                 break;
             case 'no_user_id':
                 $message = __('Could not update the customer, because the customer was not found.', 'wac');
@@ -241,7 +241,7 @@ class woo_add_customer_helper
                 $type = 'success';
                 break;
             case 'email_send':
-                $message = __('Email send to new customer: %s', 'wac');
+                $message = __('Email sent to new customer: %s', 'wac');
                 $type = 'success';
                 break;
             case 'customer_updated':
@@ -250,7 +250,7 @@ class woo_add_customer_helper
                 $additional_log = array('changed_fields' => $args[0], 'changed_user_id' => $args[1]);
                 break;
             case 'no_name':
-                $message = __('Could not save customer. No Name provided.', 'wac');
+                $message = __('Could not save customer. No name provided.', 'wac');
                 $type = 'null';
                 break;
             case 'failed_to_send_user_mail':
@@ -258,7 +258,7 @@ class woo_add_customer_helper
                 $type = 'error';
                 break;
             case 'failed_to_send_user_mail_fakemail':
-                $message = __('Email was not send to user because no email was provided.', 'wac');
+                $message = __('Email was not sent to user because no email was provided.', 'wac');
                 $type = 'null';
                 break;
             case 'invalid_email':
@@ -272,8 +272,21 @@ class woo_add_customer_helper
                 $additional_log = array('wc_create_new_customer' => $args[0], 'user' => $args[1], 'email' => $args[2]);
                 error_log($message . " - " . htmlspecialchars(json_encode($args))); //Prints the args with the error message from wc_create_new_customer to the error log
                 break;
+            case 'user_role_not_allowed':
+                $message = __('The user role you provided is not allowed. Please select another one.', 'wac');
+                $type = 'error';
+                break;
+            case 'order_linked_to_account':
+                $message = __('Order got linked to the user', 'wac');
+                $additional_log = array('order_id' => $order_id, 'email' => $args[0]);
+                break;
+            case 'order_linked_to_account_failed':
+                $message = __('Failed to link the order to the customer', 'wac');
+                $additional_log = array('order_id' => $order_id, 'email' => $args[0], 'message' => $args[1]);
+                $type = 'error';
+                break;
             default:
-                $message = __('Log Type not found!', 'wac');
+                $message = __('Log type not found!', 'wac');
                 break;
         }
         if (!empty($args)) {
@@ -361,6 +374,17 @@ class woo_add_customer_helper
             return null;
         }
         return $options[$options_name];
+    }
+
+    /**
+     * Gets the default user role. If no role is set, it will return "customer"
+     *
+     * @return string The user role
+     */
+    public function get_default_user_role()
+    {
+        $role = $this->get_wac_option('wac_default_user_role');
+        return (empty($role)) ? 'customer' : $role;
     }
 
     /**
@@ -536,7 +560,7 @@ class woo_add_customer_helper
             $email = transliterator_transliterate('Any-Latin; Latin-ASCII; [\u0100-\u7fff] remove', $email);
         } elseif (!is_email($email)) {
             //Display notice if email is not valid and php intl extension is not installed
-            $this->wac_set_notice(__('Intl PHP extension not installed. Please install it to make your email valid', 'wac'), 'error', get_the_ID());
+            $this->wac_set_notice(__('Intl PHP extension not installed. Please install it to validate the emails.', 'wac'), 'error', get_the_ID());
         }
 
 
@@ -592,7 +616,7 @@ class woo_add_customer_helper
         // Test for leading and trailing periods and whitespace.
         $domain = trim($domain, " \t\n\r\0\x0B.");
         if ('' === $domain) {
-            $this->wac_set_notice(esc_html__('Domain parts is invalid', 'wac'), "error", $fieldname);
+            $this->wac_set_notice(esc_html__('Domain parts are invalid', 'wac'), "error", $fieldname);
             return htmlspecialchars($email);
         }
 
@@ -601,7 +625,7 @@ class woo_add_customer_helper
 
         // Assume the domain will have at least two subs.
         if (2 > count($subs)) {
-            $this->wac_set_notice(esc_html__('Domain parts is invalid', 'wac'), "error", $fieldname);
+            $this->wac_set_notice(esc_html__('Domain parts are invalid', 'wac'), "error", $fieldname);
             return htmlspecialchars($email);
         }
 
@@ -624,7 +648,7 @@ class woo_add_customer_helper
 
         // If there aren't 2 or more valid subs.
         if (2 > count($new_subs)) {
-            $this->wac_set_notice(esc_html__('Domain parts is invalid', 'wac'), "error", $fieldname);
+            $this->wac_set_notice(esc_html__('Domain parts are invalid', 'wac'), "error", $fieldname);
             return htmlspecialchars($email);
         }
 
@@ -654,10 +678,30 @@ class woo_add_customer_helper
             $user = transliterator_transliterate('Any-Latin; Latin-ASCII; [\u0100-\u7fff] remove', $user);
         } elseif ($user !== sanitize_user($user, true)) {
             //Display notice if user is not valid and php intl extension is not installed
-            $this->wac_set_notice(__('Intl PHP extension not installed. Please install it to make your username valid', 'wac'), 'error', get_the_ID());
+            $this->wac_set_notice(__('Intl PHP extension not installed. Please install it to validate username.', 'wac'), 'error', get_the_ID());
         }
         $user = sanitize_user($user, true); //Remove all un-allowed characters
 
         return apply_filters('wac_make_user_valid', $user, $orig_user);
+    }
+
+    /**
+     * Returns a array with user roles. If the current user is not an admin, it will remove the admin role from the results
+     * 
+     * @return array The roles. ['slug' => 'Name']
+     */
+    public function get_user_role_array()
+    {
+        $current_user = wp_get_current_user();
+        $user_is_admin = (array_search('administrator', $current_user->caps) !== false) ? true : false;
+        $wp_roles = new WP_Roles();
+        $roles = [];
+        foreach ($wp_roles->role_names as $key => $value) {
+            if (!$user_is_admin and $key === 'administrator') {
+                continue;
+            }
+            $roles[$key] = $value;
+        }
+        return apply_filters('wac_get_user_roles', $roles);
     }
 }
