@@ -49,10 +49,11 @@ If you like the plugin, please leave some stars or buy me a coffee. Thank you!
 3. Enjoy
 
 == Screenshots ==
-1. The billing part of a new order. With the checkbox selected, it will create a new user.
+1. The billing section of a new order. When the checkboxes are selected, it creates a new user who will receive a notification.
+2. Selection of the role when "Define user role individually" is activated
 2. The order after saving. A new customer was created and assigned to the order.
-3. The settings menu.
-4. The template preview menu and look of the Email received by the new customer.
+3. The main settings menu.
+4. The template preview menu and the design of the email that the new customer receives.
 
 == Upgrade Notice ==
 Upload the plugin files to the /wp-content/plugins/add-customer-for-woocommerce directory, or update the plugin through the WordPress plugins screen directly.
