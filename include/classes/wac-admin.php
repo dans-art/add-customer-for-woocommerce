@@ -458,6 +458,12 @@ class woo_add_customer_admin extends woo_add_customer_helper
         return;
     }
 
+    /**
+     * Shows when the user was created and if it is a user created by the plugin
+     *
+     * @param WP_User $user
+     * @return string Message about the user or void, if the user is not created by the plugin
+     */
     public function wac_show_user_info($user){
         $user_id = (isset($user -> ID))?$user -> ID:false;
         $is_wac_created = get_user_meta($user_id, 'wac_created_by_plugin', true);

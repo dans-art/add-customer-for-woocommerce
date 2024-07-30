@@ -704,4 +704,26 @@ class woo_add_customer_helper
         }
         return apply_filters('wac_get_user_roles', $roles);
     }
+
+    /**
+     * Checks if all the customers are created by the plugin.
+     * This function is used to detect, if any users are created before Version 1.9
+     *
+     * @return bool true if there is a miss match, false if all users are created by the plugin
+     */
+    public function is_customer_created_miss_match(){
+        $users_created_option = intval(get_option('wac_add_customer_count'));
+        $args = [
+            'meta_key'   => 'wac_created_by_plugin',
+            'meta_value' => true,
+        ];
+        
+        $user_query = new WP_User_Query($args);
+        $users_created_in_meta = count($user_query->get_results());
+        if($users_created_in_meta !== $users_created_option){
+            return true; //Not all users are created by the plugin
+        }else{
+            return false; //No miss match, all users created by the plugin
+        }
+    }
 }
