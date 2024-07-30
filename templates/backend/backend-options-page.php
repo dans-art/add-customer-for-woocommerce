@@ -23,9 +23,9 @@ $current_tab = (isset($_GET['tab'])) ? $_GET['tab'] : null;
 ?>
 
 <nav class="nav-tab-wrapper">
-    <a href="?page=wac-options" class="nav-tab <?php if ($current_tab === null) {echo 'nav-tab-active';} ?>"><?php echo __('General', 'wac'); ?></a>
-    <a href="?page=wac-options&tab=template" class="nav-tab <?php if ($current_tab === 'template') {echo 'nav-tab-active';} ?>"><?php echo __('Template', 'wac'); ?></a>
-    <a href="?page=wac-options&tab=support" class="nav-tab <?php if ($current_tab === 'support') {echo 'nav-tab-active';} ?>"><?php echo __('Support', 'wac'); ?></a>
+    <a href="?page=wac_general_options" class="nav-tab <?php if ($current_tab === null) {echo 'nav-tab-active';} ?>"><?php echo __('General', 'wac'); ?></a>
+    <a href="?page=wac_general_options&tab=template" class="nav-tab <?php if ($current_tab === 'template') {echo 'nav-tab-active';} ?>"><?php echo __('Template', 'wac'); ?></a>
+    <a href="?page=wac_general_options&tab=support" class="nav-tab <?php if ($current_tab === 'support') {echo 'nav-tab-active';} ?>"><?php echo __('Support', 'wac'); ?></a>
 </nav>
 
 <div class="wac-options-tab tab-content">

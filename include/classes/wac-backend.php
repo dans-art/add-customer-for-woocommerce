@@ -31,7 +31,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
     public function setup_options()
     {
         $title = __('Add customer settings', 'wac');
-        add_options_page($title, $title, 'manage_options', 'wac-options', [$this, 'render_options']);
+        add_submenu_page('woocommerce', $title, $title, 'manage_options', 'wac_general_options', [$this, 'render_options']);
     }
 
     /**
@@ -104,6 +104,20 @@ class woo_add_customer_backend extends woo_add_customer_helper
                 'type' => 'checkbox',
                 'class' => 'wac-checkbox wac_preselect',
                 'description' => __('Check this to send an "account created" email to the customer after account creation.', 'wac'),
+                'page' => 'wac_general_options'
+            )
+        );
+        add_settings_field(
+            'wac_suppress_all_notification',
+            __('Suppress all notifications to users created by the plugin', 'wac'),
+            [$this, 'get_settings_option'],
+            'wac_general_options',
+            'wac_main_settings',
+            array(
+                'label_for' => 'wac_suppress_all_notification',
+                'type' => 'checkbox',
+                'class' => 'wac-checkbox wac_preselect',
+                'description' => __('Check this if you like to not send any emails to users, created by the plugin.', 'wac'),
                 'page' => 'wac_general_options'
             )
         );

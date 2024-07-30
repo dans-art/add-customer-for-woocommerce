@@ -6,7 +6,7 @@ Donate link: <https://paypal.me/dansart13>
 Tags: woocommerce, customer, tools, helper
 Requires at least: 5.4.0
 Tested up to: 6.4.3
-Stable tag: 1.8.0
+Stable tag: 1.9.0
 License: GPLv3 or later
 License URI: <http://www.gnu.org/licenses/gpl-2.0.html>
 WC requires at least: 7.4.1
@@ -86,6 +86,9 @@ Are there any hooks I can use?
  wac_after_insert_updated_customer - To execute after an existing customer has been updated.
 
 == Changelog ==
+
+= [1.9.0] 2024-07-30 =
+* Moved settings to be a WooCommerce submenu
 
 = [1.8.0] 2024-03-09 =
 * Updated style of the options menu

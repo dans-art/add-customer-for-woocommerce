@@ -54,7 +54,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
 
         //Add Admin Menu
         $backend_class = new woo_add_customer_backend;
-        add_action('admin_menu', [$backend_class, 'setup_options']);
+        add_action('admin_menu', [$backend_class, 'setup_options'], 101);
         add_action('admin_init', [$backend_class, 'wac_register_settings']);
 
         //Show Admin notices
@@ -67,6 +67,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
             } else {
             }
         });
+        add_action( 'edit_user_profile', [$this , 'wac_show_user_info'], 99, 1 );
     }
 
     /**
@@ -303,7 +304,14 @@ class woo_add_customer_admin extends woo_add_customer_helper
             if (is_integer($user_id)) {
                 $user_data = array('ID' => $user_id, 'first_name' => $user_first, 'last_name' => $user_last);
                 wp_update_user($user_data);
+
+                //Adds the billing and shipping infos
                 $this->wac_add_customer_meta($user_id, $order_id);
+
+                //Adds the meta for the customer in order to identify customers created by the plugin
+                update_user_meta($user_id, 'wac_created_by_plugin', true);
+                update_user_meta($user_id, 'wac_created_by_plugin_time', time());
+
                 $this->log_event("added_user", $order_id, $user, $email);
                 $this->increase_wac_counter('add');
                 //Check if User notification should be send or not. If so, send email with login information.
@@ -448,5 +456,17 @@ class woo_add_customer_admin extends woo_add_customer_helper
 
         echo $html;
         return;
+    }
+
+    public function wac_show_user_info($user){
+        $user_id = (isset($user -> ID))?$user -> ID:false;
+        $is_wac_created = get_user_meta($user_id, 'wac_created_by_plugin', true);
+        if(!$is_wac_created){
+            return;
+        }
+        //Show the infos about the user creation
+        $created_time = get_user_meta($user_id, 'wac_created_by_plugin_time', true);
+        $time = date('d. F Y - H:i:s', intval($created_time));
+        echo sprintf(__('User was created by the Add customer for WooCommerce Plugin on %s','wac'), $time);
     }
 }
