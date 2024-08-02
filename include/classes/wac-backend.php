@@ -57,7 +57,9 @@ class woo_add_customer_backend extends woo_add_customer_helper
 
         $blog_name = get_bloginfo('name');
         $default_email_from = $wac->get_mail_from();
-        $user_miss_match_message = ($wac->is_customer_created_miss_match()) ? __('Warning: There are some customers created before this function got introduced. If you activate that, some of the customers will still get the notifications.', 'wac') : "";
+        $user_miss_match_message = ($wac->is_customer_created_miss_match())
+            ? $wac -> wac_format_notice(__('Warning: There were some customers created before this feature got introduced. If you activate that, some of the customers will still get the notifications.', 'wac'))
+            : "";
 
         register_setting('wac_general_options', 'wac_general_options', [$this, 'wac_options_validate']);
 

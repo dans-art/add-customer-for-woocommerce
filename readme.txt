@@ -77,18 +77,25 @@ Is it possible to change the email format?
 - Yes. You can select the preferred format in the Settings menu of the plugin.
 
 Are there any hooks I can use?
-- Certainly! There are currently three filters:
+- Certainly! There are currently four filters:
  wac_add_customer_email - To modify the email saved by the plugin.
  wac_supported_fake_email_parts - To add custom fields support.
  wac_get_user_roles - An array with the user roles a user is allowed to set.
+ wac_deactivate_user_emails - Allows you to override the deactivation of user emails
 - And two actions:
  wac_after_insert_new_customer - To execute after a new customer has been created.
  wac_after_insert_updated_customer - To execute after an existing customer has been updated.
 
+ I created a users before the update 1.9.0 and would like use the feature to suppress the emails from being sent.
+ - You can use the new hook "wac_deactivate_user_emails" for that. It has two parameters: $is_deactivated and $user_id. You can use this filter and return "true" for the users you like to suppress the messages. 
+
 == Changelog ==
 
-= [1.9.0] 2024-07-30 =
+= [1.9.0] 2024-08-03 =
+* Added new option to suppress all the notification for customers added by the plugin
+* Added new filter "wac_deactivate_user_emails"
 * Moved settings to be a WooCommerce submenu
+* Increased tested up version
 
 = [1.8.0] 2024-03-09 =
 * Updated style of the options menu

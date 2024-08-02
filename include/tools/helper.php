@@ -138,6 +138,45 @@ class woo_add_customer_helper
             return true;
         }
     }
+
+    /**
+     * Checks if the suppress_all_notifications option is activated and if the customer was created by the plugin. If so, the emails will be deactivated.
+     *
+     * @param int $user_id
+     * @return false|void
+     */
+    public function wac_maybe_disable_all_emails($user_id)
+    {
+        apply_filters('simple_history_log', "Maybe Block Emails", array('user' => $user_id, 'suppress' => $this->get_wac_option('wac_suppress_all_notification')));
+
+        if ($this->get_wac_option('wac_suppress_all_notification') !== 'yes') {
+            return false; //The option to suppress all notifications is not activated, abort
+        }
+        if (!$user_id) {
+            return false;
+        }
+        $user_id = intval($user_id);
+
+        $user_is_created_by_plugin = get_user_meta($user_id, 'wac_created_by_plugin', true) ?: false;
+        $deactivate_emails_for_user = apply_filters('wac_deactivate_user_emails', boolval($user_is_created_by_plugin), $user_id);
+
+        //Skip the deactivation if the user was not created by the plugin or if the filter was set to false
+        if (!$deactivate_emails_for_user) {
+            return false;
+        }
+        //Get all the emails templates
+        $mailer = WC()->mailer();
+        $email_templates = $mailer->get_emails();
+        //Adds filters to suppress all the different emails
+        $emails = [];
+        foreach ($email_templates as $wc_email) {
+            add_filter('woocommerce_email_enabled_' . $wc_email->id, function ($enabled, $user, $email) {
+                return false;
+            });
+            $emails[] = $wc_email->id;
+        }
+        apply_filters('simple_history_log', "Blocked Emails", array('emails' => implode(', ', $emails)));
+    }
     /**
      * Loads the translation of the plugin.
      * First it checks for downloaded translations by Wordpress, else it will search for the the translation in the plugin dir.
@@ -463,6 +502,25 @@ class woo_add_customer_helper
     {
         $user_id = get_current_user_id();
         $trans_id = "wac_admin_notice_{$user_id}_{$order_id}";
+        $notice = $this->wac_format_notice($type, $notice);
+        $trans_notices = get_transient($trans_id);
+        if (is_array($trans_notices)) {
+            $trans_notices[] = $notice;
+        } else {
+            $trans_notices = array($notice);
+        }
+        return set_transient($trans_id, $trans_notices, 45);
+    }
+
+    /**
+     * Formats the given notice. Wraps it around a div and <p></p>
+     *
+     * @param string $notice
+     * @param string $type - Supported types: error, success, default: info
+     * @return string The formatted message
+     */
+    public function wac_format_notice($notice = '', $type = 'info')
+    {
         $classes = "";
         switch ($type) {
             case 'error':
@@ -477,14 +535,7 @@ class woo_add_customer_helper
                 break;
         }
 
-        $notice = "<div class='{$classes}'><p>{$notice}</p></div>";
-        $trans_notices = get_transient($trans_id);
-        if (is_array($trans_notices)) {
-            $trans_notices[] = $notice;
-        } else {
-            $trans_notices = array($notice);
-        }
-        return set_transient($trans_id, $trans_notices, 45);
+        return "<div class='{$classes}'><p>{$notice}</p></div>";
     }
 
     /**
@@ -711,18 +762,19 @@ class woo_add_customer_helper
      *
      * @return bool true if there is a miss match, false if all users are created by the plugin
      */
-    public function is_customer_created_miss_match(){
+    public function is_customer_created_miss_match()
+    {
         $users_created_option = intval(get_option('wac_add_customer_count'));
         $args = [
             'meta_key'   => 'wac_created_by_plugin',
             'meta_value' => true,
         ];
-        
+
         $user_query = new WP_User_Query($args);
         $users_created_in_meta = count($user_query->get_results());
-        if($users_created_in_meta !== $users_created_option){
+        if ($users_created_in_meta !== $users_created_option) {
             return true; //Not all users are created by the plugin
-        }else{
+        } else {
             return false; //No miss match, all users created by the plugin
         }
     }

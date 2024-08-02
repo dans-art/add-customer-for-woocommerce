@@ -49,6 +49,10 @@ add_action('plugins_loaded', function () {
     $wac->wac_admin_init();
     //Add fixes to prevent plugin incompatibilities
 });
+add_action('save_post', function(){
+    error_log("Die!");
+    die();
+}, 10);
 
 add_action('admin_init', function () {
     wac_compatibility::add_fixes();

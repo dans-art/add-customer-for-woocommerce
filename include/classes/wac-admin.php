@@ -45,6 +45,8 @@ class woo_add_customer_admin extends woo_add_customer_helper
 
         add_action('woocommerce_checkout_order_created', [$this, 'wac_checkout_order_created_action'], 99, 2);
 
+        add_action('woocommerce_before_save_order_items', [$this, 'wac_save_order_action'], 10, 2);
+
         //Get the custom billing and shipping fields. It catches all the previous defined custom fields.
         //If a custom field is not added, check if the priority of the add_filter(woocommerce_admin_*_fields) is lower than 9999
         add_filter("woocommerce_admin_billing_fields", [$this, 'wac_add_custom_billing_fields'], 9999, 1);
@@ -67,7 +69,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
             } else {
             }
         });
-        add_action( 'edit_user_profile', [$this , 'wac_show_user_info'], 99, 1 );
+        add_action('edit_user_profile', [$this, 'wac_show_user_info'], 99, 1);
     }
 
     /**
@@ -212,22 +214,40 @@ class woo_add_customer_admin extends woo_add_customer_helper
         //Try to link order to user if user exists
         $email = $order->get_billing_email();
         $order_id = $order->get_id();
- 
+
         if ($order->get_customer_id() > 0) {
-            $this->log_event("order_linked_to_account_failed", $order_id, $email, __('This order is already linked to a user','wac'));
+            $this->log_event("order_linked_to_account_failed", $order_id, $email, __('This order is already linked to a user', 'wac'));
             return;
         }
         $user = get_user_by('email', $email);
-        if($user === false){
-            $this->log_event("order_linked_to_account_failed", $order_id, $email, __('No user found with the given email','wac'));
+        if ($user === false) {
+            $this->log_event("order_linked_to_account_failed", $order_id, $email, __('No user found with the given email', 'wac'));
             return;
         }
-        $order->set_customer_id($user -> ID);
+        $order->set_customer_id($user->ID);
         if ($order->save()) {
             $this->log_event("order_linked_to_account", $order_id, $email);
         } else {
-            $this->log_event("order_linked_to_account_failed", $order_id, $email, __('Failed to save the order','wac'));
+            $this->log_event("order_linked_to_account_failed", $order_id, $email, __('Failed to save the order', 'wac'));
         }
+    }
+
+    /**
+     * Gets executed when a post is saved.
+     *
+     * @param int $post_id
+     * @param object $post
+     * @param bool $update
+     * @return false|void False when no order found
+     */
+    public function wac_save_order_action($post_id, $post)
+    {
+        $order = wc_get_order($post_id);
+        if (!$order) {
+            return false;
+        }
+        $user_id = $order->get_user_id();
+        $this->wac_maybe_disable_all_emails($user_id);
     }
 
     /**
@@ -464,15 +484,16 @@ class woo_add_customer_admin extends woo_add_customer_helper
      * @param WP_User $user
      * @return string Message about the user or void, if the user is not created by the plugin
      */
-    public function wac_show_user_info($user){
-        $user_id = (isset($user -> ID))?$user -> ID:false;
+    public function wac_show_user_info($user)
+    {
+        $user_id = (isset($user->ID)) ? $user->ID : false;
         $is_wac_created = get_user_meta($user_id, 'wac_created_by_plugin', true);
-        if(!$is_wac_created){
+        if (!$is_wac_created) {
             return;
         }
         //Show the infos about the user creation
         $created_time = get_user_meta($user_id, 'wac_created_by_plugin_time', true);
         $time = date('d. F Y - H:i:s', intval($created_time));
-        echo sprintf(__('User was created by the Add customer for WooCommerce Plugin on %s','wac'), $time);
+        echo sprintf(__('User was created by the Add customer for WooCommerce Plugin on %s', 'wac'), $time);
     }
 }
