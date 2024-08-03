@@ -5,12 +5,12 @@ Contributors URL: <http://dev.dans-art.ch>
 Donate link: <https://paypal.me/dansart13>
 Tags: woocommerce, customer, tools, helper
 Requires at least: 5.4.0
-Tested up to: 6.4.3
+Tested up to: 6.6.1
 Stable tag: 1.9.0
 License: GPLv3 or later
 License URI: <http://www.gnu.org/licenses/gpl-2.0.html>
 WC requires at least: 7.4.1
-WC tested up to: 8.4.0
+WC tested up to: 9.1.4
 Requires PHP: 7.4
 
 Adds a new checkbox to the orders page to add a new customer/user and links orders to existing accounts
