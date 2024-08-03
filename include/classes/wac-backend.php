@@ -120,7 +120,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
                 'label_for' => 'wac_suppress_all_notification',
                 'type' => 'checkbox',
                 'class' => 'wac-checkbox wac_preselect',
-                'description' => __('Check this if you like to not send any emails to users, created by the plugin.', 'wac') . $user_miss_match_message,
+                'description' => __('Check this if you like to not send any emails to users who were created by the plugin.', 'wac') . $user_miss_match_message,
                 'page' => 'wac_general_options'
             )
         );

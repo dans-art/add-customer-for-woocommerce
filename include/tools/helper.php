@@ -147,8 +147,6 @@ class woo_add_customer_helper
      */
     public function wac_maybe_disable_all_emails($user_id)
     {
-        apply_filters('simple_history_log', "Maybe Block Emails", array('user' => $user_id, 'suppress' => $this->get_wac_option('wac_suppress_all_notification')));
-
         if ($this->get_wac_option('wac_suppress_all_notification') !== 'yes') {
             return false; //The option to suppress all notifications is not activated, abort
         }
@@ -175,7 +173,7 @@ class woo_add_customer_helper
             });
             $emails[] = $wc_email->id;
         }
-        apply_filters('simple_history_log', "Blocked Emails", array('emails' => implode(', ', $emails)));
+        apply_filters('simple_history_log', "Emails blocked for user - by Add Customer", array('emails' => implode(', ', $emails), 'user_id' => $user_id));
     }
     /**
      * Loads the translation of the plugin.
