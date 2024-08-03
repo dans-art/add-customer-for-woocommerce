@@ -82,7 +82,8 @@ Style for the settings page
 @media (min-width: 782px) {
 
     .wac-text-input.text-input,
-    .wac-text-input.text-input input {
+    .wac-text-input.text-input input,
+    #wac_options_page .wac-notice {
         width: 100%;
         max-width: 666px;
     }

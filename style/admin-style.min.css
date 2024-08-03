@@ -1,1 +1,83 @@
-#wac_add_customer_con{clear:both;float:left;width:100%;margin:9px 0 0;color:#777}#wac_add_customer_con .wac_add_customer_field{margin:0}#wac_add_customer_con .wac-customer-role-container select{width:100%}#wac_add_customer_con .wac-checkbox-container{margin-bottom:.5rem}#wac_add_customer_con .wac_add_customer_notify_field{margin-top:.5em}#wac_options_page .form-table{margin-left:5%;width:90%}.wac-options-container.wac-checkbox{display:flex;flex-direction:column;gap:.5rem}.wac-text-input th{padding-bottom:.2em}.wac-select-input.select-input td,.wac-text-input.text-input td{width:95%;padding-bottom:0}.wac-field-errors td{padding:.1em 0}.wac-text-input-description td{padding-top:.4rem}.wac-options-tab .main_content .message{background-color:#fff}.wac-options-tab #load_location_container,.wac-options-tab .main_content,.wac-options-tab .subject_content{margin:1rem 0}@media(min-width: 782px){.wac-text-input.text-input,.wac-text-input.text-input input{width:100%;max-width:666px}}/*# sourceMappingURL=admin-style.min.css.map */
+/**
+ * Plugin Name: Add Customer for WooCommerce
+ * Style description: Basic style for backend style
+ * Author: Dan's Art
+ * Author URI: http://dev.dans-art.ch
+ */
+/*
+ Fixes the display of the checkbox
+ */
+#wac_add_customer_con {
+  clear: both;
+  float: left;
+  width: 100%;
+  margin: 9px 0 0;
+  color: #777;
+}
+
+#wac_add_customer_con .wac_add_customer_field {
+  margin: 0;
+}
+
+#wac_add_customer_con .wac-customer-role-container select {
+  width: 100%;
+}
+
+#wac_add_customer_con .wac-checkbox-container {
+  margin-bottom: 0.5rem;
+}
+
+#wac_add_customer_con .wac_add_customer_notify_field {
+  margin-top: 0.5em;
+}
+
+#wac_options_page .form-table {
+  margin-left: 5%;
+  width: 90%;
+}
+
+/*
+Style for the settings page
+*/
+.wac-options-container.wac-checkbox {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.wac-text-input th {
+  padding-bottom: 0.2em;
+}
+
+.wac-select-input.select-input td,
+.wac-text-input.text-input td {
+  width: 95%;
+  padding-bottom: 0;
+}
+
+.wac-field-errors td {
+  padding: 0.1em 0;
+}
+
+.wac-text-input-description td {
+  padding-top: 0.4rem;
+}
+
+.wac-options-tab .main_content .message {
+  background-color: white;
+}
+
+.wac-options-tab #load_location_container,
+.wac-options-tab .main_content,
+.wac-options-tab .subject_content {
+  margin: 1rem 0;
+}
+
+@media (min-width: 782px) {
+  .wac-text-input.text-input,
+  .wac-text-input.text-input input,
+  #wac_options_page .wac-notice {
+    width: 100%;
+    max-width: 666px;
+  }
+}/*# sourceMappingURL=admin-style.min.css.map */

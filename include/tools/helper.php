@@ -500,7 +500,7 @@ class woo_add_customer_helper
     {
         $user_id = get_current_user_id();
         $trans_id = "wac_admin_notice_{$user_id}_{$order_id}";
-        $notice = $this->wac_format_notice($type, $notice);
+        $notice = $this->wac_format_notice($notice, $type);
         $trans_notices = get_transient($trans_id);
         if (is_array($trans_notices)) {
             $trans_notices[] = $notice;
@@ -527,13 +527,16 @@ class woo_add_customer_helper
             case 'success':
                 $classes = 'notice notice-success';
                 break;
+            case 'warning':
+                $classes = 'notice notice-warning';
+                break;
 
             default:
                 $classes = 'notice notice-info';
                 break;
         }
 
-        return "<div class='{$classes}'><p>{$notice}</p></div>";
+        return "<div class='{$classes} wac-notice'><p>{$notice}</p></div>";
     }
 
     /**

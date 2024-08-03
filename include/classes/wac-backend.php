@@ -58,7 +58,10 @@ class woo_add_customer_backend extends woo_add_customer_helper
         $blog_name = get_bloginfo('name');
         $default_email_from = $wac->get_mail_from();
         $user_miss_match_message = ($wac->is_customer_created_miss_match())
-            ? $wac -> wac_format_notice(__('Warning: There were some customers created before this feature got introduced. If you activate that, some of the customers will still get the notifications.', 'wac'))
+            ? $wac->wac_format_notice(__('<b>Warning:</b> There were some customers created before this feature got introduced. If you activate that, some of the customers will still get the notifications.', 'wac'), 'warning')
+            : "";
+        $notification_confilct_message = ($this->get_wac_option('wac_suppress_all_notification') === 'yes' and $this->get_wac_option('wac_send_notification') === 'yes')
+            ? $wac->wac_format_notice(__('<b>Warning:</b> Emails to user regarding account creation will still be sent. Uncheck "Send notifications to new user" to deactivate those as well', 'wac'), 'warning')
             : "";
 
         register_setting('wac_general_options', 'wac_general_options', [$this, 'wac_options_validate']);
@@ -120,7 +123,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
                 'label_for' => 'wac_suppress_all_notification',
                 'type' => 'checkbox',
                 'class' => 'wac-checkbox wac_preselect',
-                'description' => __('Check this if you like to not send any emails to users who were created by the plugin.', 'wac') . $user_miss_match_message,
+                'description' => __('Check this if you like to not send any emails to users who were created by the plugin.', 'wac') . $user_miss_match_message . $notification_confilct_message,
                 'page' => 'wac_general_options'
             )
         );
