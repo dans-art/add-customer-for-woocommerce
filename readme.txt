@@ -92,7 +92,7 @@ Are there any hooks I can use?
 
 == Changelog ==
 
-= [1.9.0] 2024-08-03 =
+= [1.9.0] 2024-08-04 =
 * Added new option to suppress all the notification for customers added by the plugin
 * Added new filter "wac_deactivate_user_emails"
 * Moved settings to be a WooCommerce submenu
