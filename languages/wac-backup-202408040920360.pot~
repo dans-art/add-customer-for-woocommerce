@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Add Customer for WooCommerce\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-04 09:20+0000\n"
+"POT-Creation-Date: 2024-08-03 06:25+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -16,25 +16,8 @@ msgstr ""
 "X-Loco-Version: 2.5.4; wp-5.8.1\n"
 "X-Domain: wac"
 
-#: include/classes/wac-backend.php:64
-msgid ""
-"<b>Warning:</b> Emails to user regarding account creation will still be sent."
-" Uncheck \"Send notifications to new user\" to deactivate those as well"
-msgstr ""
-
-#: include/classes/wac-backend.php:61
-msgid ""
-"<b>Warning:</b> There were some customers created before this feature got "
-"introduced. If you activate that, some of the customers will still get the "
-"notifications."
-msgstr ""
-
 #: templates/backend/components/checkbox.php:32
 msgid "Activated"
-msgstr ""
-
-#: include/classes/wac-admin.php:525
-msgid "Add Customer"
 msgstr ""
 
 #. Name of the plugin
@@ -53,7 +36,7 @@ msgstr ""
 msgid "Add new customer"
 msgstr ""
 
-#: include/classes/wac-backend.php:74
+#: include/classes/wac-backend.php:71
 msgid "Add new customer by default"
 msgstr ""
 
@@ -62,7 +45,7 @@ msgstr ""
 msgid "Added customer: %s <%s>"
 msgstr ""
 
-#: include/classes/wac-backend.php:154
+#: include/classes/wac-backend.php:151
 msgid "Allow user role selection before creating a new customer"
 msgstr ""
 
@@ -71,23 +54,23 @@ msgid ""
 "Allows you to add a customer when creating a new order on the orders page"
 msgstr ""
 
-#: include/classes/wac-backend.php:176
+#: include/classes/wac-backend.php:173
 msgid "Auto-generated email format"
 msgstr ""
 
-#: include/classes/wac-backend.php:126
+#: include/classes/wac-backend.php:123
 msgid ""
 "Check this if you like to not send any emails to users who were created by "
 "the plugin."
 msgstr ""
 
-#: include/classes/wac-backend.php:140
+#: include/classes/wac-backend.php:137
 msgid ""
 "Check this to link orders created in the frontend. The email will be used as "
 "an identifier. Only works if the user creates an order as a guest."
 msgstr ""
 
-#: include/classes/wac-backend.php:112
+#: include/classes/wac-backend.php:109
 msgid ""
 "Check this to send an \"account created\" email to the customer after "
 "account creation."
@@ -97,17 +80,17 @@ msgstr ""
 msgid "Could not save customer. No name provided."
 msgstr ""
 
-#: include/classes/wac-admin.php:405
+#: include/classes/wac-admin.php:398
 #, php-format
 msgid "Could not save the \"%s\" billing field"
 msgstr ""
 
-#: include/classes/wac-admin.php:420
+#: include/classes/wac-admin.php:413
 #, php-format
 msgid "Could not save the \"%s\" shipping field"
 msgstr ""
 
-#: include/classes/wac-admin.php:391
+#: include/classes/wac-admin.php:384
 #, php-format
 msgid "Could not save the default field \"%s\""
 msgstr ""
@@ -124,11 +107,11 @@ msgstr ""
 msgid "Dan's Art"
 msgstr ""
 
-#: include/classes/wac-backend.php:168
+#: include/classes/wac-backend.php:165
 msgid "Define the user role for new customers"
 msgstr ""
 
-#: include/classes/wac-backend.php:146
+#: include/classes/wac-backend.php:143
 msgid "Define user role individually"
 msgstr ""
 
@@ -136,12 +119,12 @@ msgstr ""
 msgid "Development"
 msgstr ""
 
-#: include/tools/helper.php:677 include/tools/helper.php:686
-#: include/tools/helper.php:709
+#: include/tools/helper.php:668 include/tools/helper.php:677
+#: include/tools/helper.php:700
 msgid "Domain parts are invalid"
 msgstr ""
 
-#: include/tools/helper.php:670
+#: include/tools/helper.php:661
 msgid "Domain parts must contain at least one dot"
 msgstr ""
 
@@ -150,7 +133,7 @@ msgstr ""
 msgid "Email \"%s\" already exists. New customer not created."
 msgstr ""
 
-#: include/tools/helper.php:660
+#: include/tools/helper.php:651
 msgid "Email contains forbidden characters or is empty"
 msgstr ""
 
@@ -158,11 +141,11 @@ msgstr ""
 msgid "Email content:"
 msgstr ""
 
-#: include/tools/helper.php:641
+#: include/tools/helper.php:632
 msgid "Email is too short"
 msgstr ""
 
-#: include/tools/helper.php:647
+#: include/tools/helper.php:638
 msgid "Email must contain one @"
 msgstr ""
 
@@ -194,7 +177,7 @@ msgstr ""
 msgid "Failed to link the order to the customer"
 msgstr ""
 
-#: include/classes/wac-admin.php:238
+#: include/classes/wac-admin.php:231
 msgid "Failed to save the order"
 msgstr ""
 
@@ -223,7 +206,7 @@ msgstr ""
 msgid "https://dev.dans-art.ch/blog/wordpress/add-customer-for-woocommerce/"
 msgstr ""
 
-#: include/classes/wac-backend.php:97
+#: include/classes/wac-backend.php:94
 msgid ""
 "If this is checked, the existing customer data will be updated when the "
 "order is updated."
@@ -239,21 +222,21 @@ msgstr ""
 msgid "If you're having trouble, please let me know by writing to:"
 msgstr ""
 
-#: include/tools/helper.php:621
+#: include/tools/helper.php:612
 msgid ""
 "Intl PHP extension not installed. Please install it to validate the emails."
 msgstr ""
 
-#: include/tools/helper.php:739
+#: include/tools/helper.php:730
 msgid ""
 "Intl PHP extension not installed. Please install it to validate username."
 msgstr ""
 
-#: include/classes/wac-backend.php:276
+#: include/classes/wac-backend.php:273
 msgid "Invalid email address"
 msgstr ""
 
-#: include/classes/wac-backend.php:132
+#: include/classes/wac-backend.php:129
 msgid "Link orders to customer"
 msgstr ""
 
@@ -265,7 +248,7 @@ msgstr ""
 msgid "Made with ❤️ by Dan's Art"
 msgstr ""
 
-#: include/classes/wac-backend.php:69
+#: include/classes/wac-backend.php:66
 msgid "Main settings"
 msgstr ""
 
@@ -277,12 +260,12 @@ msgstr ""
 msgid "New account created"
 msgstr ""
 
-#: include/classes/wac-backend.php:206 include/tools/helper.php:467
+#: include/classes/wac-backend.php:203 include/tools/helper.php:467
 #, php-format
 msgid "New account created at %s"
 msgstr ""
 
-#: include/classes/wac-backend.php:196
+#: include/classes/wac-backend.php:193
 msgid "New account created email subject"
 msgstr ""
 
@@ -292,11 +275,11 @@ msgid ""
 "Plugin Author."
 msgstr ""
 
-#: include/classes/wac-admin.php:164 include/classes/wac-admin.php:280
+#: include/classes/wac-admin.php:157 include/classes/wac-admin.php:273
 msgid "No order found"
 msgstr ""
 
-#: include/classes/wac-admin.php:231
+#: include/classes/wac-admin.php:224
 msgid "No user found with the given email"
 msgstr ""
 
@@ -316,7 +299,7 @@ msgstr ""
 msgid "Save as new customer"
 msgstr ""
 
-#: include/classes/wac-backend.php:82
+#: include/classes/wac-backend.php:79
 msgid ""
 "Select this box if you'd like to have the \"Add Customer\" Checkbox "
 "activated by default."
@@ -326,20 +309,16 @@ msgstr ""
 msgid "Send email to new customer"
 msgstr ""
 
-#: include/classes/wac-backend.php:104
+#: include/classes/wac-backend.php:101
 msgid "Send notifications to new user"
 msgstr ""
 
-#: include/classes/wac-backend.php:211
+#: include/classes/wac-backend.php:208
 msgid "Sender email"
 msgstr ""
 
 #: templates/email/new-account.php:34
 msgid "Set the password for your account"
-msgstr ""
-
-#: include/tools/helper.php:552
-msgid "Settings saved"
 msgstr ""
 
 #: templates/backend/backend-options-page-support.php:15
@@ -351,11 +330,11 @@ msgstr ""
 msgid "Support me"
 msgstr ""
 
-#: include/classes/wac-backend.php:187
+#: include/classes/wac-backend.php:184
 msgid "Supported tags:"
 msgstr ""
 
-#: include/classes/wac-backend.php:118
+#: include/classes/wac-backend.php:115
 msgid "Suppress all notifications to users created by the plugin"
 msgstr ""
 
@@ -367,7 +346,7 @@ msgstr ""
 msgid "Template loaded from:"
 msgstr ""
 
-#: include/classes/wac-backend.php:70
+#: include/classes/wac-backend.php:67
 #: templates/backend/backend-options-page-template.php:33
 msgid "Template settings"
 msgstr ""
@@ -387,15 +366,15 @@ msgstr ""
 msgid "The email \"%s\" is not valid."
 msgstr ""
 
-#: include/classes/wac-backend.php:185
+#: include/classes/wac-backend.php:182
 msgid "The format you'd like to have for the automatically generated email."
 msgstr ""
 
-#: include/classes/wac-backend.php:219
+#: include/classes/wac-backend.php:216
 msgid "The sender email"
 msgstr ""
 
-#: include/classes/wac-backend.php:204
+#: include/classes/wac-backend.php:201
 msgid "The subject / header for the email sent to new customers"
 msgstr ""
 
@@ -408,7 +387,7 @@ msgid ""
 "There have been %d customers added and %d customers edited by the Plugin"
 msgstr ""
 
-#: include/classes/wac-admin.php:226
+#: include/classes/wac-admin.php:219
 msgid "This order is already linked to a user"
 msgstr ""
 
@@ -420,7 +399,7 @@ msgstr ""
 msgid "Update customer"
 msgstr ""
 
-#: include/classes/wac-backend.php:89
+#: include/classes/wac-backend.php:86
 msgid "Update new customer by default"
 msgstr ""
 
@@ -428,13 +407,20 @@ msgstr ""
 msgid "Updates the existing customer"
 msgstr ""
 
-#: include/classes/wac-backend.php:160
+#: include/classes/wac-backend.php:157
 msgid "User role for new customer"
 msgstr ""
 
-#: include/classes/wac-admin.php:504
+#: include/classes/wac-admin.php:497
 #, php-format
 msgid "User was created by the Add customer for WooCommerce Plugin on %s"
+msgstr ""
+
+#: include/classes/wac-backend.php:61
+msgid ""
+"Warning: There were some customers created before this feature got "
+"introduced. If you activate that, some of the customers will still get the "
+"notifications."
 msgstr ""
 
 #: templates/backend/backend-options-page-support.php:22
@@ -445,11 +431,11 @@ msgstr ""
 msgid "Write a review and give me 5 stars on Wordpress.com"
 msgstr ""
 
-#: include/classes/wac-backend.php:247
+#: include/classes/wac-backend.php:244
 msgid "You are not allowed to set this user role"
 msgstr ""
 
-#: include/classes/wac-backend.php:186
+#: include/classes/wac-backend.php:183
 msgid "You can use the supported tags below wrapping them in [ ]"
 msgstr ""
 
