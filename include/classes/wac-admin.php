@@ -515,6 +515,10 @@ class woo_add_customer_admin extends woo_add_customer_helper
         $url = add_query_arg( 'created_by', 'add_customer', 'users.php' );
         $user_count = count($this -> get_users_created_by_plugin());
 
+        //Do not display the filter if there are no users to show
+        if($user_count === 0){
+            return $views;
+        }
         $views['created_by_wac'] =sprintf(
             '<a href="%s">%s <span class="count">(%s)</span></a>',
             esc_url($url),
