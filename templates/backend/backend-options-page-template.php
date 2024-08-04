@@ -49,7 +49,7 @@ $message_esc = htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
 
 </div>
 <div id="reload_container">
-    <form id='wac_options_page' action="options-general.php?page=wac-options&tab=template" method="post" enctype="multipart/form-data">
+    <form id='wac_options_page' action="?page=wac_general_options&tab=template" method="post" enctype="multipart/form-data">
         <?php
         submit_button(__('Reload template', 'wac'));
         ?>

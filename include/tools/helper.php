@@ -156,7 +156,7 @@ class woo_add_customer_helper
         $user_id = intval($user_id);
 
         $user_is_created_by_plugin = get_user_meta($user_id, 'wac_created_by_plugin', true) ?: false;
-        $deactivate_emails_for_user = apply_filters('wac_deactivate_user_emails', boolval($user_is_created_by_plugin), $user_id);
+        $deactivate_emails_for_user = apply_filters('wac_deactivate_user_emails', boolval($user_is_created_by_plugin), intval($user_id));
 
         //Skip the deactivation if the user was not created by the plugin or if the filter was set to false
         if (!$deactivate_emails_for_user) {
@@ -547,6 +547,12 @@ class woo_add_customer_helper
      */
     public function wac_display_notices($id_to_get = null)
     {
+        //Show success message on options save screen
+        if (isset($_GET['settings-updated']) && $_GET['settings-updated'] && empty($id_to_get)) {
+            add_settings_error('wac_settings_saved_message', 'wac_settings_saved_message', __('Settings saved', 'wac'), 'success');
+            settings_errors('wac_settings_saved_message');
+        }
+
         $user_id = get_current_user_id();
         if (isset($_GET['id'])) {
             $order_id = $_GET['id'];
@@ -766,17 +772,27 @@ class woo_add_customer_helper
     public function is_customer_created_miss_match()
     {
         $users_created_option = intval(get_option('wac_add_customer_count'));
-        $args = [
-            'meta_key'   => 'wac_created_by_plugin',
-            'meta_value' => true,
-        ];
-
-        $user_query = new WP_User_Query($args);
-        $users_created_in_meta = count($user_query->get_results());
+        $users_created_in_meta = count($this -> get_users_created_by_plugin());
         if ($users_created_in_meta !== $users_created_option) {
             return true; //Not all users are created by the plugin
         } else {
             return false; //No miss match, all users created by the plugin
         }
+    }
+
+    /**
+     * Returns all the users created by the plugin
+     *
+     * @return array Empty array if no users are found, array with the user ids otherwise
+     */
+    public function get_users_created_by_plugin(){
+        $args = [
+            'meta_key'   => 'wac_created_by_plugin',
+            'meta_value' => true,
+            'fields' => 'ID'
+        ];
+
+        $user_query = new WP_User_Query($args);
+        return $user_query->get_results();
     }
 }

@@ -35,7 +35,7 @@ There are also additional options:
 - Change the sender's email address
 
 Settings Menu:
-Settings -> Add customer settings
+WooCommerce -> Add customer settings
 
 Required Plugins: WooCommerce 4.7.0 or higher
 Required PHP extension: Intl
@@ -85,6 +85,7 @@ Are there any hooks I can use?
 - And two actions:
  wac_after_insert_new_customer - To execute after a new customer has been created.
  wac_after_insert_updated_customer - To execute after an existing customer has been updated.
+ Consult the example file examples/hooks.php for more details how to use them.
 
  I created a users before the update 1.9.0 and would like use the feature to suppress the emails from being sent.
  - You can use the new hook "wac_deactivate_user_emails" for that. It has two parameters: $is_deactivated and $user_id. You can use this filter and return "true" for the users you like to suppress the messages. 
@@ -96,6 +97,7 @@ Are there any hooks I can use?
 * Added new filter "wac_deactivate_user_emails"
 * Moved settings to be a WooCommerce submenu
 * Increased tested up version
+* Added filter in users page to get all the users created by the plugin
 
 = [1.8.0] 2024-03-09 =
 * Updated style of the options menu

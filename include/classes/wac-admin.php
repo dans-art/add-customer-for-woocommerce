@@ -69,7 +69,14 @@ class woo_add_customer_admin extends woo_add_customer_helper
             } else {
             }
         });
+        //Adds a notice to the user profile
         add_action('edit_user_profile', [$this, 'wac_show_user_info'], 99, 1);
+
+        //Adds a filter to get all the users created by the plugin
+        add_filter('views_users', [$this, 'wac_add_user_views']);
+
+        //Modify the users query to filter for add customer users
+        add_filter('pre_get_users', [$this, 'wac_pre_get_users']);
     }
 
     /**
@@ -495,5 +502,49 @@ class woo_add_customer_admin extends woo_add_customer_helper
         $created_time = get_user_meta($user_id, 'wac_created_by_plugin_time', true);
         $time = date('d. F Y - H:i:s', intval($created_time));
         echo sprintf(__('User was created by the Add customer for WooCommerce Plugin on %s', 'wac'), $time);
+    }
+
+
+    /**
+     * Adds a filter item in the role filter on the Users screen.
+     *
+     * @param array $views
+     * @return array The views
+     */
+    public function wac_add_user_views($views){
+        $url = add_query_arg( 'created_by', 'add_customer', 'users.php' );
+        $user_count = count($this -> get_users_created_by_plugin());
+
+        $views['created_by_wac'] =sprintf(
+            '<a href="%s">%s <span class="count">(%s)</span></a>',
+            esc_url($url),
+            __('Add Customer','wac'),
+            $user_count
+        );
+        return $views;
+    }
+
+    /**
+     * Filters the query before getting the users. Allows to select only the users created by the plugin
+     *
+     * @param object $query
+     * @return object
+     */
+    public function wac_pre_get_users($query){
+        if(!is_admin() OR !isset($_GET['created_by']) OR !$_GET['created_by'] === 'add_customer'){
+            return $query;
+        }
+        if(empty($query -> meta_key)){
+            $meta_query = array(
+                array(
+                    'key' => 'wac_created_by_plugin',
+                    'value' => true,
+                    'compare' => 'LIKE'
+                )
+            );
+            $query -> set('meta_query',$meta_query);
+            return $query;
+        }
+        return $query; //This should not happen, but just in case
     }
 }

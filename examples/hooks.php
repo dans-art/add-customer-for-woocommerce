@@ -79,4 +79,19 @@ add_action('edit_user_profile_update', function ($user_id) {
 });
 
 
+/**
+ * Deactivates the WooCommerce for the user with the ID 13. You can also use this hook to reactivate the sending again
+ * @param bool $is_deactivated - If the emails are deactivated for the given user
+ * @param int $user_id - The user id
+ */
+add_filter( 'wac_deactivate_user_emails', function($is_deactivated, $user_id){
+
+    if($user_id === 13){
+        return true; //Deactivates all the emails to the user
+    }
+    return false; //Emails wil be sent to the user as normal
+
+}, 10, 2 );
+
+
 ?>
