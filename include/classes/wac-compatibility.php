@@ -15,6 +15,11 @@ if (!defined('ABSPATH')) {
 class wac_compatibility
 {
 
+    /**
+     * Removes actions from other plugins to fix issues
+     * This function is called with the init_admin action
+     *
+     */
     public static function add_fixes()
     {
         //Removes actions from other plugins to fix issues
@@ -32,6 +37,25 @@ class wac_compatibility
         //Removes the nonce check on wc-orders page
         if (is_admin() and isset($_REQUEST['wac_add_customer']) and $_REQUEST['wac_add_customer'] == 'true') {
             add_filter('dokan_register_nonce_check', function () {
+                return false;
+            });
+        }
+    }
+
+    
+    /**
+     * Fixes some issues on the fly
+     *
+     * @return void
+     */
+    public static function add_fixes_now()
+    {
+        //Workaround for reCAPTCHA for WooCommerce
+        //https://wordpress.org/plugins/recaptcha-woo/
+        //Tested with Version: 1.3.3
+        //Removes the check when a customer is created by the add customer for woocommerce plugin
+        if (is_admin() and isset($_REQUEST['wac_add_customer']) and $_REQUEST['wac_add_customer'] == 'true') {
+            add_filter('option_rcfwc_woo_register', function ($e) {
                 return false;
             });
         }

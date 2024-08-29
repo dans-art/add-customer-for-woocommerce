@@ -53,6 +53,10 @@ class woo_add_customer_backend extends woo_add_customer_helper
      */
     public function wac_register_settings()
     {
+        global $pagenow;
+        if ( $pagenow !== 'admin.php' || !isset( $_GET['page'] ) || $_GET['page'] !== 'wac_general_options' ) {
+            return true;
+        }
         $wac = new woo_add_customer();
 
         $blog_name = get_bloginfo('name');

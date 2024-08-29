@@ -92,6 +92,10 @@ Are there any hooks I can use?
 
 == Changelog ==
 
+= [1.9.1] 2024-08-29 =
+* Fixes: Added compatibility with reCAPTCHA for WooCommerce
+* Improved: Code for the menu gets loaded on demand
+
 = [1.9.0] 2024-08-04 =
 * Added new option to suppress all the notification for customers added by the plugin
 * Added new filter "wac_deactivate_user_emails"
