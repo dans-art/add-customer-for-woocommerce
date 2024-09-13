@@ -14,8 +14,8 @@ if (!defined('ABSPATH')) {
 ?>
 
 <form id='wac_options_page' action="options.php" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="page" value="wac_general_options"/>
     <?php
-
     settings_fields('wac_general_options');
     do_settings_sections('wac_general_options');
 

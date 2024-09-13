@@ -5,8 +5,8 @@ Contributors URL: <http://dev.dans-art.ch>
 Donate link: <https://paypal.me/dansart13>
 Tags: woocommerce, customer, tools, helper
 Requires at least: 5.4.0
-Tested up to: 6.6.1
-Stable tag: 1.9.0
+Tested up to: 6.6.2
+Stable tag: 1.9.2
 License: GPLv3 or later
 License URI: <http://www.gnu.org/licenses/gpl-2.0.html>
 WC requires at least: 7.4.1
@@ -91,6 +91,9 @@ Are there any hooks I can use?
  - You can use the new hook "wac_deactivate_user_emails" for that. It has two parameters: $is_deactivated and $user_id. You can use this filter and return "true" for the users you like to suppress the messages. 
 
 == Changelog ==
+
+= [1.9.2] 2024-09-13 =
+* Fixed: Options could not be saved (Error: The wac_general_options options page is not in the allowed options list.)
 
 = [1.9.1] 2024-08-29 =
 * Fixes: Added compatibility with reCAPTCHA for WooCommerce
