@@ -168,7 +168,7 @@ class woo_add_customer_helper
         //Adds filters to suppress all the different emails
         $emails = [];
         foreach ($email_templates as $wc_email) {
-            add_filter('woocommerce_email_enabled_' . $wc_email->id, function ($enabled, $user, $email) {
+            add_filter('woocommerce_email_enabled_' . $wc_email->id, function ($enabled) {
                 return false;
             });
             $emails[] = $wc_email->id;
