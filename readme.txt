@@ -19,6 +19,9 @@ Adds a new checkbox to the orders page to add a new customer/user and links orde
 This plugin is designed to simplify the process of creating new users/customers. It's particularly useful if you receive client orders via phone or email and want to integrate these orders into WooCommerce for stock and order management.
 The plugin adds a checkbox at the end of the billing address form. When this box is checked, it creates a new user with the role "customer." If an email is not provided, the plugin generates a unique one using your site’s domain as the email domain and the customer's name as the local part (e.g., firstname.lastname@your-site.com). You have the option to customize this auto-generated email format.
 
+Try it out for free with TasteWP:
+<a href="https://tastewp.com/new?pre-installed-plugin-slug=woocommerce%2Cadd-customer-for-woocommerce&redirect=admin.php%3Fpage%3Dwac_general_options&ni=true" target="_blank">https://tastewp.com/new?pre-installed-plugin-slug=woocommerce%2Cadd-customer-for-woocommerce</a>
+
 By default, the newly created user does not receive any emails during account creation, though they will probably on order updates.
 
 In the settings menu, there are options to:
@@ -91,6 +94,11 @@ Are there any hooks I can use?
  - You can use the new hook "wac_deactivate_user_emails" for that. It has two parameters: $is_deactivated and $user_id. You can use this filter and return "true" for the users you like to suppress the messages. 
 
 == Changelog ==
+
+= [1.9.3] 2024-12-01 =
+* Fixed: Fatal error when suppressing all emails
+* Added TasteWP link
+* Updated Support page
 
 = [1.9.2] 2024-09-13 =
 * Fixed: Options could not be saved (Error: The wac_general_options options page is not in the allowed options list.)
