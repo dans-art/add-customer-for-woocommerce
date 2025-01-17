@@ -40,6 +40,14 @@ class wac_compatibility
                 return false;
             });
         }
+
+        //Workaround for Enhanced Cloudflare Turnstile
+        //https://woocommerce.com/products/enhanced-cloudflare-turnstile/
+        //Tested with Version: 1.0.2
+        //Removed the register hook if new customer gets added
+        if (is_admin() and isset($_REQUEST['wac_add_customer']) and $_REQUEST['wac_add_customer'] == 'true') {
+            remove_action( 'woocommerce_register_post', 'ecft_validate_woo_register_form', 10 );
+        }
     }
 
     
