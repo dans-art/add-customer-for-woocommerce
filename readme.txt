@@ -5,20 +5,22 @@ Contributors URL: <http://dev.dans-art.ch>
 Donate link: <https://paypal.me/dansart13>
 Tags: woocommerce, customer, tools, helper
 Requires at least: 5.4.0
-Tested up to: 6.4.2
-Stable tag: 1.8.0
+Tested up to: 6.7.1
+Stable tag: 1.9.4
 License: GPLv3 or later
 License URI: <http://www.gnu.org/licenses/gpl-2.0.html>
 WC requires at least: 7.4.1
-WC tested up to: 8.4.0
+WC tested up to: 9.5.2
 Requires PHP: 7.4
 
-Adds a new checkbox to the orders page to add a new customer/user.
-It creates a new user, based on the billing data. If no email is provided, it will create a fake email (firstname.lastname@your-site.com).
+Adds a new checkbox to the orders page to add a new customer/user and links orders to existing accounts
 
 == Description ==
 This plugin is designed to simplify the process of creating new users/customers. It's particularly useful if you receive client orders via phone or email and want to integrate these orders into WooCommerce for stock and order management.
 The plugin adds a checkbox at the end of the billing address form. When this box is checked, it creates a new user with the role "customer." If an email is not provided, the plugin generates a unique one using your site’s domain as the email domain and the customer's name as the local part (e.g., firstname.lastname@your-site.com). You have the option to customize this auto-generated email format.
+
+Try it out for free with TasteWP:
+<a href="https://tastewp.com/new?pre-installed-plugin-slug=woocommerce%2Cadd-customer-for-woocommerce&redirect=admin.php%3Fpage%3Dwac_general_options&ni=true" target="_blank">https://tastewp.com/new?pre-installed-plugin-slug=woocommerce%2Cadd-customer-for-woocommerce</a>
 
 By default, the newly created user does not receive any emails during account creation, though they will probably on order updates.
 
@@ -36,7 +38,7 @@ There are also additional options:
 - Change the sender's email address
 
 Settings Menu:
-Settings -> Add customer settings
+WooCommerce -> Add customer settings
 
 Required Plugins: WooCommerce 4.7.0 or higher
 Required PHP extension: Intl
@@ -78,15 +80,43 @@ Is it possible to change the email format?
 - Yes. You can select the preferred format in the Settings menu of the plugin.
 
 Are there any hooks I can use?
-- Certainly! There are currently three filters:
+- Certainly! There are currently four filters:
  wac_add_customer_email - To modify the email saved by the plugin.
  wac_supported_fake_email_parts - To add custom fields support.
  wac_get_user_roles - An array with the user roles a user is allowed to set.
+ wac_deactivate_user_emails - Allows you to override the deactivation of user emails
 - And two actions:
  wac_after_insert_new_customer - To execute after a new customer has been created.
  wac_after_insert_updated_customer - To execute after an existing customer has been updated.
+ Consult the example file examples/hooks.php for more details how to use them.
+
+ I created a users before the update 1.9.0 and would like use the feature to suppress the emails from being sent.
+ - You can use the new hook "wac_deactivate_user_emails" for that. It has two parameters: $is_deactivated and $user_id. You can use this filter and return "true" for the users you like to suppress the messages. 
 
 == Changelog ==
+
+= [1.9.4] 2025-01-17 =
+* Added compatibility for Enhanced Cloudflare Turnstile
+* Updated WC Tested up to version
+
+= [1.9.3] 2024-12-01 =
+* Fixed: Fatal error when suppressing all emails
+* Added TasteWP link
+* Updated Support page
+
+= [1.9.2] 2024-09-13 =
+* Fixed: Options could not be saved (Error: The wac_general_options options page is not in the allowed options list.)
+
+= [1.9.1] 2024-08-29 =
+* Fixes: Added compatibility with reCAPTCHA for WooCommerce
+* Improved: Code for the menu gets loaded on demand
+
+= [1.9.0] 2024-08-04 =
+* Added new option to suppress all the notification for customers added by the plugin
+* Added new filter "wac_deactivate_user_emails"
+* Moved settings to be a WooCommerce submenu
+* Increased tested up version
+* Added filter in users page to get all the users created by the plugin
 
 = [1.8.0] 2024-03-09 =
 * Updated style of the options menu

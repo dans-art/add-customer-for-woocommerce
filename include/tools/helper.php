@@ -138,6 +138,43 @@ class woo_add_customer_helper
             return true;
         }
     }
+
+    /**
+     * Checks if the suppress_all_notifications option is activated and if the customer was created by the plugin. If so, the emails will be deactivated.
+     *
+     * @param int $user_id
+     * @return false|void
+     */
+    public function wac_maybe_disable_all_emails($user_id)
+    {
+        if ($this->get_wac_option('wac_suppress_all_notification') !== 'yes') {
+            return false; //The option to suppress all notifications is not activated, abort
+        }
+        if (!$user_id) {
+            return false;
+        }
+        $user_id = intval($user_id);
+
+        $user_is_created_by_plugin = get_user_meta($user_id, 'wac_created_by_plugin', true) ?: false;
+        $deactivate_emails_for_user = apply_filters('wac_deactivate_user_emails', boolval($user_is_created_by_plugin), intval($user_id));
+
+        //Skip the deactivation if the user was not created by the plugin or if the filter was set to false
+        if (!$deactivate_emails_for_user) {
+            return false;
+        }
+        //Get all the emails templates
+        $mailer = WC()->mailer();
+        $email_templates = $mailer->get_emails();
+        //Adds filters to suppress all the different emails
+        $emails = [];
+        foreach ($email_templates as $wc_email) {
+            add_filter('woocommerce_email_enabled_' . $wc_email->id, function ($enabled) {
+                return false;
+            });
+            $emails[] = $wc_email->id;
+        }
+        apply_filters('simple_history_log', "Emails blocked for user - by Add Customer", array('emails' => implode(', ', $emails), 'user_id' => $user_id));
+    }
     /**
      * Loads the translation of the plugin.
      * First it checks for downloaded translations by Wordpress, else it will search for the the translation in the plugin dir.
@@ -463,21 +500,7 @@ class woo_add_customer_helper
     {
         $user_id = get_current_user_id();
         $trans_id = "wac_admin_notice_{$user_id}_{$order_id}";
-        $classes = "";
-        switch ($type) {
-            case 'error':
-                $classes = 'notice notice-error';
-                break;
-            case 'success':
-                $classes = 'notice notice-success';
-                break;
-
-            default:
-                $classes = 'notice notice-info';
-                break;
-        }
-
-        $notice = "<div class='{$classes}'><p>{$notice}</p></div>";
+        $notice = $this->wac_format_notice($notice, $type);
         $trans_notices = get_transient($trans_id);
         if (is_array($trans_notices)) {
             $trans_notices[] = $notice;
@@ -488,6 +511,35 @@ class woo_add_customer_helper
     }
 
     /**
+     * Formats the given notice. Wraps it around a div and <p></p>
+     *
+     * @param string $notice
+     * @param string $type - Supported types: error, success, default: info
+     * @return string The formatted message
+     */
+    public function wac_format_notice($notice = '', $type = 'info')
+    {
+        $classes = "";
+        switch ($type) {
+            case 'error':
+                $classes = 'notice notice-error';
+                break;
+            case 'success':
+                $classes = 'notice notice-success';
+                break;
+            case 'warning':
+                $classes = 'notice notice-warning';
+                break;
+
+            default:
+                $classes = 'notice notice-info';
+                break;
+        }
+
+        return "<div class='{$classes} wac-notice'><p>{$notice}</p></div>";
+    }
+
+    /**
      * Displays the stored messages as admin_notices
      *
      * @param int|string $id_to_get The Id to get
@@ -495,6 +547,12 @@ class woo_add_customer_helper
      */
     public function wac_display_notices($id_to_get = null)
     {
+        //Show success message on options save screen
+        if (isset($_GET['settings-updated']) && $_GET['settings-updated'] && empty($id_to_get)) {
+            add_settings_error('wac_settings_saved_message', 'wac_settings_saved_message', __('Settings saved', 'wac'), 'success');
+            settings_errors('wac_settings_saved_message');
+        }
+
         $user_id = get_current_user_id();
         if (isset($_GET['id'])) {
             $order_id = $_GET['id'];
@@ -703,5 +761,38 @@ class woo_add_customer_helper
             $roles[$key] = $value;
         }
         return apply_filters('wac_get_user_roles', $roles);
+    }
+
+    /**
+     * Checks if all the customers are created by the plugin.
+     * This function is used to detect, if any users are created before Version 1.9
+     *
+     * @return bool true if there is a miss match, false if all users are created by the plugin
+     */
+    public function is_customer_created_miss_match()
+    {
+        $users_created_option = intval(get_option('wac_add_customer_count'));
+        $users_created_in_meta = count($this -> get_users_created_by_plugin());
+        if ($users_created_in_meta !== $users_created_option) {
+            return true; //Not all users are created by the plugin
+        } else {
+            return false; //No miss match, all users created by the plugin
+        }
+    }
+
+    /**
+     * Returns all the users created by the plugin
+     *
+     * @return array Empty array if no users are found, array with the user ids otherwise
+     */
+    public function get_users_created_by_plugin(){
+        $args = [
+            'meta_key'   => 'wac_created_by_plugin',
+            'meta_value' => true,
+            'fields' => 'ID'
+        ];
+
+        $user_query = new WP_User_Query($args);
+        return $user_query->get_results();
     }
 }

@@ -7,14 +7,14 @@
  * Contributors: dansart
  * Contributors URL: http://dev.dans-art.ch
  * Tags: woocommerce, customer, tools, helper
- * Version: 1.8.0
- * Stable tag: 1.8.0
+ * Version: 1.9.4
+ * Stable tag: 1.9.4
  * 
  * Requires at least: 5.4.0
- * Tested up to: 6.3.1
+ * Tested up to: 6.7.1
  * 
  * WC requires at least: 7.4.1
- * WC tested up to: 8.1.1
+ * WC tested up to: 9.5.2
  * 
  * Requires PHP: 7.4
  * 
@@ -53,3 +53,5 @@ add_action('plugins_loaded', function () {
 add_action('admin_init', function () {
     wac_compatibility::add_fixes();
 });
+//Add fixes to prevent plugin incompatibilities. This will be executed right now
+wac_compatibility::add_fixes_now();
