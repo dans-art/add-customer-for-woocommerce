@@ -4,6 +4,10 @@
  * Author: Dan's Art
  * Author URI: http://dev.dans-art.ch
  */
+body.woocommerce_page_wac_general_options #wpbody-content {
+  margin-bottom: 2rem;
+}
+
 /*
  Fixes the display of the checkbox
  */

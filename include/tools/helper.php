@@ -45,6 +45,13 @@ class woo_add_customer_helper
         $domain_name = $this->get_domain_name();
         $number = '';
         $name = $this->create_fake_email_name($username);
+        $email_total_characters = 100; //Maximum length of the email according to the user_email field in wp_users
+
+        //Make sure that the email is not too long
+        if(strlen($name) >  ($email_total_characters - strlen($domain_name) - 1)){
+            $name = substr($name, 0, ($email_total_characters - strlen($domain_name) - 1));
+        }
+
         //Add a number if email already exists
         while ((get_user_by('email', $name . $number . '@' . $domain_name) !== false) and $number < 100) {
             if (empty($number)) {
@@ -58,6 +65,7 @@ class woo_add_customer_helper
         $email = $name . $number . '@' . $domain_name;
         $email = str_replace(' ', '_', $email); //Replace the spaces with underlines
         $email = trim($email); //Removes all the other whitespaces, tabs, new-lines, etc.
+
         return $email;
     }
 
@@ -119,8 +127,9 @@ class woo_add_customer_helper
 
             $name = str_replace(['[', ']'], '', $custom_format_name); //Remove tags if any left
         }
+
         //Make sure that the generated name is not empty
-        return (empty($name)) ? wp_generate_password(5, false) : $name;
+        return (empty($name)) ? wp_generate_password(50, false) : $name;
     }
 
     /**
@@ -740,6 +749,10 @@ class woo_add_customer_helper
         }
         $user = sanitize_user($user, true); //Remove all un-allowed characters
 
+        //Make sure that the username is not longer than 60 characters
+        if(strlen($user) > 60){
+            $user = substr($user, 0, 60);
+        }
         return apply_filters('wac_make_user_valid', $user, $orig_user);
     }
 
