@@ -6,11 +6,11 @@ Donate link: <https://paypal.me/dansart13>
 Tags: woocommerce, customer, tools, helper
 Requires at least: 5.4.0
 Tested up to: 6.7.1
-Stable tag: 1.9.4
+Stable tag: 1.9.5
 License: GPLv3 or later
 License URI: <http://www.gnu.org/licenses/gpl-2.0.html>
 WC requires at least: 7.4.1
-WC tested up to: 9.5.2
+WC tested up to: 9.6.0
 Requires PHP: 7.4
 
 Adds a new checkbox to the orders page to add a new customer/user and links orders to existing accounts
@@ -94,6 +94,10 @@ Are there any hooks I can use?
  - You can use the new hook "wac_deactivate_user_emails" for that. It has two parameters: $is_deactivated and $user_id. You can use this filter and return "true" for the users you like to suppress the messages. 
 
 == Changelog ==
+
+= [1.9.5] 2025-02-02 =
+* Fixed: Failed to save customers with very long names
+* Fixed: Text overlap on options pages
 
 = [1.9.4] 2025-01-17 =
 * Added compatibility for Enhanced Cloudflare Turnstile

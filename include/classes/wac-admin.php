@@ -328,6 +328,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
 
         if ($user !== false) {
             $user_id = wc_create_new_customer($email, $user, $password);
+
             if (is_integer($user_id)) {
                 $user_data = array('ID' => $user_id, 'first_name' => $user_first, 'last_name' => $user_last);
                 wp_update_user($user_data);
@@ -376,9 +377,26 @@ class woo_add_customer_admin extends woo_add_customer_helper
         $changes_count = 0;
         $fields = array();
         $fields = array(
-            'billing_first_name', 'billing_last_name', 'billing_company', 'billing_address_1', 'billing_address_2', 'billing_city', 'billing_postcode', 'billing_country', 'billing_state',
-            'billing_email', 'billing_phone', 'shipping_first_name', 'shipping_last_name', 'shipping_company', 'shipping_address_1', 'shipping_address_2', 'shipping_city',
-            'shipping_postcode', 'shipping_country', 'shipping_state'
+            'billing_first_name',
+            'billing_last_name',
+            'billing_company',
+            'billing_address_1',
+            'billing_address_2',
+            'billing_city',
+            'billing_postcode',
+            'billing_country',
+            'billing_state',
+            'billing_email',
+            'billing_phone',
+            'shipping_first_name',
+            'shipping_last_name',
+            'shipping_company',
+            'shipping_address_1',
+            'shipping_address_2',
+            'shipping_city',
+            'shipping_postcode',
+            'shipping_country',
+            'shipping_state'
         );
         //Save all the default fields
         foreach ($fields as $f_name) {
@@ -448,6 +466,11 @@ class woo_add_customer_admin extends woo_add_customer_helper
         $user = rtrim($user, '.'); //Remove dots from the right
         $user = trim($user); //Removes all the other whitespaces, tabs, new-lines, etc.
 
+        //Make sure that the email name is not longer than 55 characters (Max allowed are 60)
+        if (strlen($user) > 55) {
+            $user = substr($user, 0, 55);
+        }
+
         $user = strtolower($user);
         $existing_user = get_user_by('login', $user);
         if ($existing_user === false) {
@@ -511,18 +534,19 @@ class woo_add_customer_admin extends woo_add_customer_helper
      * @param array $views
      * @return array The views
      */
-    public function wac_add_user_views($views){
-        $url = add_query_arg( 'created_by', 'add_customer', 'users.php' );
-        $user_count = count($this -> get_users_created_by_plugin());
+    public function wac_add_user_views($views)
+    {
+        $url = add_query_arg('created_by', 'add_customer', 'users.php');
+        $user_count = count($this->get_users_created_by_plugin());
 
         //Do not display the filter if there are no users to show
-        if($user_count === 0){
+        if ($user_count === 0) {
             return $views;
         }
-        $views['created_by_wac'] =sprintf(
+        $views['created_by_wac'] = sprintf(
             '<a href="%s">%s <span class="count">(%s)</span></a>',
             esc_url($url),
-            __('Add Customer','wac'),
+            __('Add Customer', 'wac'),
             $user_count
         );
         return $views;
@@ -534,11 +558,12 @@ class woo_add_customer_admin extends woo_add_customer_helper
      * @param object $query
      * @return object
      */
-    public function wac_pre_get_users($query){
-        if(!is_admin() OR !isset($_GET['created_by']) OR !$_GET['created_by'] === 'add_customer'){
+    public function wac_pre_get_users($query)
+    {
+        if (!is_admin() or !isset($_GET['created_by']) or !$_GET['created_by'] === 'add_customer') {
             return $query;
         }
-        if(empty($query -> meta_key)){
+        if (empty($query->meta_key)) {
             $meta_query = array(
                 array(
                     'key' => 'wac_created_by_plugin',
@@ -546,7 +571,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
                     'compare' => 'LIKE'
                 )
             );
-            $query -> set('meta_query',$meta_query);
+            $query->set('meta_query', $meta_query);
             return $query;
         }
         return $query; //This should not happen, but just in case
