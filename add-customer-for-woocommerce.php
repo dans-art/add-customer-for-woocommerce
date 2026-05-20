@@ -7,14 +7,14 @@
  * Contributors: dansart
  * Contributors URL: http://dev.dans-art.ch
  * Tags: woocommerce, customer, tools, helper
- * Version: 1.9.5
- * Stable tag: 1.9.5
+ * Version: 1.9.6
+ * Stable tag: 1.9.6
  * 
  * Requires at least: 5.4.0
- * Tested up to: 6.9
+ * Tested up to: 7.0
  * 
  * WC requires at least: 7.4.1
- * WC tested up to: 10.4.3
+ * WC tested up to: 10.7.0
  * 
  * Requires PHP: 7.4
  * 

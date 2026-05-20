@@ -339,6 +339,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
                 //Adds the meta for the customer in order to identify customers created by the plugin
                 update_user_meta($user_id, 'wac_created_by_plugin', true);
                 update_user_meta($user_id, 'wac_created_by_plugin_time', time());
+                update_user_meta($user_id, 'wac_created_by_author_id', get_current_user_id());
 
                 $this->log_event("added_user", $order_id, $user, $email);
                 $this->increase_wac_counter('add');
@@ -517,14 +518,32 @@ class woo_add_customer_admin extends woo_add_customer_helper
     public function wac_show_user_info($user)
     {
         $user_id = (isset($user->ID)) ? $user->ID : false;
+        if (!$user_id) {
+            return false;
+        }
         $is_wac_created = get_user_meta($user_id, 'wac_created_by_plugin', true);
         if (!$is_wac_created) {
-            return;
+            return false;
         }
         //Show the infos about the user creation
         $created_time = get_user_meta($user_id, 'wac_created_by_plugin_time', true);
-        $time = date('d. F Y - H:i:s', intval($created_time));
-        echo sprintf(__('User was created by the Add customer for WooCommerce Plugin on %s', 'wac'), $time);
+        $created_by = get_user_meta($user_id, 'wac_created_by_author_id', true);
+        $user_name = $created_by ? get_user_by('ID', $created_by) : false;
+        $time = $created_time
+            ? wp_date('d. F Y - H:i:s', intval($created_time))
+            : __('unknown date', 'wac');
+        if ($user_name instanceof WP_User) {
+            echo sprintf(
+                __('User was created by %s with the Add customer for WooCommerce Plugin on %s', 'wac'),
+                esc_html($user_name->display_name),
+                esc_html($time)
+            );
+        } else {
+            echo sprintf(
+                __('User was created by the Add customer for WooCommerce Plugin on %s', 'wac'),
+                esc_html($time)
+            );
+        }
     }
 
 
