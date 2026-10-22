@@ -29,7 +29,7 @@ $description = (isset($args['description'])) ? $args['description'] : '';
 <fieldset class="<?php echo $class; ?>">
     <label for="<?php echo $label_for; ?>">
         <input name="<?php echo $page.'['.$label_for.']'; ?>" type="checkbox" id="<?php echo $label_for; ?>" value="yes" <?php echo $checked; ?>>
-        <?php echo __('Activated', 'wac'); ?></label>
+        <?php echo __('Activated', 'add-customer-for-woocommerce'); ?></label>
     <p class="description">
         <?php echo $description; ?>
     </p>

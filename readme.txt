@@ -100,7 +100,9 @@ Are there any hooks I can use?
 * Added: The verified email is remembered on the payment page, so logged out customers don't have to enter it again after a failed payment
 * Added: Simple History log entry and order note when an order is paid by a logged out customer or by a shop manager on behalf of the customer
 * Changed: The "Add new customer" and "Update customer" checkboxes switch depending on the selected customer
+* Changed: The text domain is now the plugin slug "add-customer-for-woocommerce" instead of "wac". Custom translation files named "wac-{locale}.mo" have to be renamed to "add-customer-for-woocommerce-{locale}.mo"
 * Fixed: "Settings saved" message was shown on the settings pages of other plugins
+* Fixed: Some texts and the JavaScript messages were not translated
 
 = [1.9.6] 2026-05-20 =
 * Added: Creator name and timestamp shown on the edit user screen for plugin-created customers

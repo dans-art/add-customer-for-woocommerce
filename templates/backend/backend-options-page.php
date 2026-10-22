@@ -16,16 +16,16 @@ $this->wac_enqueue_admin_scripts();
 $this->wac_enqueue_admin_style();
 ?>
 
-<h2><?php echo __('Add Customer for WooCommerce settings', 'wac'); ?></h2>
+<h2><?php echo __('Add Customer for WooCommerce settings', 'add-customer-for-woocommerce'); ?></h2>
 
 <?php
 $current_tab = (isset($_GET['tab'])) ? $_GET['tab'] : null;
 ?>
 
 <nav class="nav-tab-wrapper">
-    <a href="?page=wac_general_options" class="nav-tab <?php if ($current_tab === null) {echo 'nav-tab-active';} ?>"><?php echo __('General', 'wac'); ?></a>
-    <a href="?page=wac_general_options&tab=template" class="nav-tab <?php if ($current_tab === 'template') {echo 'nav-tab-active';} ?>"><?php echo __('Template', 'wac'); ?></a>
-    <a href="?page=wac_general_options&tab=support" class="nav-tab <?php if ($current_tab === 'support') {echo 'nav-tab-active';} ?>"><?php echo __('Support', 'wac'); ?></a>
+    <a href="?page=wac_general_options" class="nav-tab <?php if ($current_tab === null) {echo 'nav-tab-active';} ?>"><?php echo __('General', 'add-customer-for-woocommerce'); ?></a>
+    <a href="?page=wac_general_options&tab=template" class="nav-tab <?php if ($current_tab === 'template') {echo 'nav-tab-active';} ?>"><?php echo __('Template', 'add-customer-for-woocommerce'); ?></a>
+    <a href="?page=wac_general_options&tab=support" class="nav-tab <?php if ($current_tab === 'support') {echo 'nav-tab-active';} ?>"><?php echo __('Support', 'add-customer-for-woocommerce'); ?></a>
 </nav>
 
 <div class="wac-options-tab tab-content">
@@ -47,12 +47,12 @@ $current_tab = (isset($_GET['tab'])) ? $_GET['tab'] : null;
     <?php
     echo sprintf(
         /* translators: 1: Number of customers added, 2: Number of customers edited */
-        __('There have been %d customers added and %d customers edited by the Plugin', 'wac'),
+        __('There have been %d customers added and %d customers edited by the Plugin', 'add-customer-for-woocommerce'),
         intval(get_option('wac_add_customer_count')),
         intval(get_option('wac_edit_customer_count'))
     );
     ?>
 </div>
 <div class="wac-footer">
-    <span><?php echo __('Made with ❤️ by Dan\'s Art', 'wac'); ?></span>
+    <span><?php echo __('Made with ❤️ by Dan\'s Art', 'add-customer-for-woocommerce'); ?></span>
 </div>

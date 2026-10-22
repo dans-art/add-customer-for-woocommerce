@@ -38,7 +38,8 @@ class woo_add_customer_admin extends woo_add_customer_helper
         if (class_exists('WC_Admin_Notices')) {
             $this->adminnotice = new WC_Admin_Notices();
         }
-        add_action('init', [$this, 'wac_load_textdomain']); //load language 
+        add_action('init', [$this, 'wac_load_textdomain']); //load language
+        add_filter('load_script_textdomain_relative_path', [$this, 'wac_script_translation_path'], 10, 2);
         add_action('woocommerce_admin_order_data_after_billing_address', [$this, 'wac_add_checkbox'], 10, 1);
         add_action('woocommerce_created_customer', [$this, 'wac_disable_new_customer_mail'], 1, 1);
         add_action('woocommerce_process_shop_order_meta', [$this, 'wac_save_order'], 99, 2);
@@ -113,11 +114,11 @@ class woo_add_customer_admin extends woo_add_customer_helper
         if ($is_logged_out && $this->is_payable_without_login($order)) {
             $this->log_event('paid_without_login', $order_id, $order->get_order_number(), $order->get_billing_email(), $payment_method, $order->get_customer_id());
             /* translators: %s: Payment method title */
-            $order->add_order_note(sprintf(__('Order paid without login by an anonymous user via the customer payment page. Payment method: %s', 'wac'), $payment_method));
+            $order->add_order_note(sprintf(__('Order paid without login by an anonymous user via the customer payment page. Payment method: %s', 'add-customer-for-woocommerce'), $payment_method));
         } elseif ($user_can_manage_shop && $is_other_customer) {
             $this->log_event('paid_by_shop_manager', $order_id, $order->get_order_number(), $order->get_billing_email(), $current_user->display_name, $payment_method, $order->get_customer_id(), $current_user->ID);
             /* translators: 1: Display name of the shop manager, 2: Payment method title */
-            $order->add_order_note(sprintf(__('Order paid by %1$s on behalf of the customer via the customer payment page. Payment method: %2$s', 'wac'), $current_user->display_name, $payment_method));
+            $order->add_order_note(sprintf(__('Order paid by %1$s on behalf of the customer via the customer payment page. Payment method: %2$s', 'add-customer-for-woocommerce'), $current_user->display_name, $payment_method));
         }
         return $result;
     }
@@ -416,7 +417,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
         //Load the order
         $order = wc_get_order($order_id);
         if (!$order) {
-            $this->log_event_message(__('No order found', 'wac'), $order_id, 'error');
+            $this->log_event_message(__('No order found', 'add-customer-for-woocommerce'), $order_id, 'error');
             return;
         }
         if (isset($_REQUEST['wac_add_customer']) and $_REQUEST['wac_add_customer'] == 'true') {
@@ -478,19 +479,19 @@ class woo_add_customer_admin extends woo_add_customer_helper
         $order_id = $order->get_id();
 
         if ($order->get_customer_id() > 0) {
-            $this->log_event("order_linked_to_account_failed", $order_id, $email, __('This order is already linked to a user', 'wac'));
+            $this->log_event("order_linked_to_account_failed", $order_id, $email, __('This order is already linked to a user', 'add-customer-for-woocommerce'));
             return;
         }
         $user = get_user_by('email', $email);
         if ($user === false) {
-            $this->log_event("order_linked_to_account_failed", $order_id, $email, __('No user found with the given email', 'wac'));
+            $this->log_event("order_linked_to_account_failed", $order_id, $email, __('No user found with the given email', 'add-customer-for-woocommerce'));
             return;
         }
         $order->set_customer_id($user->ID);
         if ($order->save()) {
             $this->log_event("order_linked_to_account", $order_id, $email);
         } else {
-            $this->log_event("order_linked_to_account_failed", $order_id, $email, __('Failed to save the order', 'wac'));
+            $this->log_event("order_linked_to_account_failed", $order_id, $email, __('Failed to save the order', 'add-customer-for-woocommerce'));
         }
     }
 
@@ -532,7 +533,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
 
         $order = wc_get_order($order_id);
         if (!$order) {
-            $this->log_event_message(__('No order found', 'wac'), $order_id, 'error');
+            $this->log_event_message(__('No order found', 'add-customer-for-woocommerce'), $order_id, 'error');
             return;
         }
 
@@ -663,7 +664,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
             if (($f_value !== $old_value) and $f_value !== false) {
                 if (!update_user_meta($user_id, $f_name, $f_value)) {
                     /* translators: %s: Name of the field */
-                    $this->wac_set_notice(sprintf(__('Could not save the default field "%s"', 'wac'), $f_name), 'error', $order_id);
+                    $this->wac_set_notice(sprintf(__('Could not save the default field "%s"', 'add-customer-for-woocommerce'), $f_name), 'error', $order_id);
                 } else {
                     $changes_count++;
                 }
@@ -678,7 +679,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
                 if (($cf_value !== $old_value)) {
                     if (!update_user_meta($user_id, "billing_{$field_id}", $cf_value)) {
                         /* translators: %s: ID of the billing field */
-                        $this->wac_set_notice(sprintf(__('Could not save the "%s" billing field', 'wac'), $field_id), 'error', $order_id);
+                        $this->wac_set_notice(sprintf(__('Could not save the "%s" billing field', 'add-customer-for-woocommerce'), $field_id), 'error', $order_id);
                     } else {
                         $changes_count++;
                     }
@@ -694,7 +695,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
                 if (($sf_value !== $old_value)) {
                     if (!update_user_meta($user_id, "shipping_{$field_id}", $sf_value)) {
                         /* translators: %s: ID of the shipping field */
-                        $this->wac_set_notice(sprintf(__('Could not save the "%s" shipping field', 'wac'), $field_id), 'error', $order_id);
+                        $this->wac_set_notice(sprintf(__('Could not save the "%s" shipping field', 'add-customer-for-woocommerce'), $field_id), 'error', $order_id);
                     } else {
                         $changes_count++;
                     }
@@ -786,18 +787,18 @@ class woo_add_customer_admin extends woo_add_customer_helper
         $user_name = $created_by ? get_user_by('ID', $created_by) : false;
         $time = $created_time
             ? wp_date('d. F Y - H:i:s', intval($created_time))
-            : __('unknown date', 'wac');
+            : __('unknown date', 'add-customer-for-woocommerce');
         if ($user_name instanceof WP_User) {
             echo sprintf(
                 /* translators: 1: Display name of the user who created the customer, 2: Date and time of creation */
-                __('User was created by %s with the Add customer for WooCommerce Plugin on %s', 'wac'),
+                __('User was created by %s with the Add customer for WooCommerce Plugin on %s', 'add-customer-for-woocommerce'),
                 esc_html($user_name->display_name),
                 esc_html($time)
             );
         } else {
             echo sprintf(
                 /* translators: %s: Date and time of creation */
-                __('User was created by the Add customer for WooCommerce Plugin on %s', 'wac'),
+                __('User was created by the Add customer for WooCommerce Plugin on %s', 'add-customer-for-woocommerce'),
                 esc_html($time)
             );
         }
@@ -822,7 +823,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
         $views['created_by_wac'] = sprintf(
             '<a href="%s">%s <span class="count">(%s)</span></a>',
             esc_url($url),
-            __('Add Customer', 'wac'),
+            __('Add Customer', 'add-customer-for-woocommerce'),
             $user_count
         );
         return $views;

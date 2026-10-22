@@ -28,10 +28,10 @@ $user_role_to_set = $wac -> get_default_user_role();
 
 <div id='wac_add_customer_con' class="edit_address">
     <div class="_add_customer_fields">
-        <label><?php echo __('Add new customer', 'wac'); ?></label>
+        <label><?php echo __('Add new customer', 'add-customer-for-woocommerce'); ?></label>
         <div class="wac-checkbox-container">
             <input type="checkbox" name="wac_add_customer" id="wac_add_customer" value="true" placeholder="" autocomplete="off">
-            <label for="wac_add_customer"><?php echo ($set_role === 'yes') ? __('Save as new customer with role: ', 'string') : __('Save as new customer', 'wac'); ?></label>
+            <label for="wac_add_customer"><?php echo ($set_role === 'yes') ? __('Save as new customer with role: ', 'add-customer-for-woocommerce') : __('Save as new customer', 'add-customer-for-woocommerce'); ?></label>
         </div>
         <div class="wac-customer-role-container">
             <?php
@@ -47,7 +47,7 @@ $user_role_to_set = $wac -> get_default_user_role();
         </div>
         <p class="wac_add_customer_notify_field" style="display: none;">
             <input type="checkbox" name="wac_add_customer_notify" id="wac_add_customer_notify" value="true" placeholder="" autocomplete="off" <?php echo $checked_notify; ?>>
-            <label for="wac_add_customer_notify"><?php echo __('Send email to new customer', 'wac'); ?></label>
+            <label for="wac_add_customer_notify"><?php echo __('Send email to new customer', 'add-customer-for-woocommerce'); ?></label>
         </p>
     </div>
 </div>

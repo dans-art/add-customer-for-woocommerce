@@ -19,7 +19,7 @@
  * Requires PHP: 7.4
  * 
  * Domain Path: /languages
- * Text Domain: wac
+ * Text Domain: add-customer-for-woocommerce
  * 
  * Author: Dan's Art
  * Author URI: https://dev.dans-art.ch

@@ -25,7 +25,7 @@ $class = (isset($args['class'])) ? $args['class'] : '';
 $options = (isset($args['values_array'])) ? $args['values_array'] : '';
 
 if (!is_array($options)) {
-    echo __('Options must be formatted as an array', 'wac');
+    echo __('Options must be formatted as an array', 'add-customer-for-woocommerce');
     return;
 }
 ?>

@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 }
 
 if (!class_exists('WC_Email')) {
-    echo __('Error: WooCommerce Email Class not found. Make sure you have the newest version of WooCommerce installed.', 'wac');
+    echo __('Error: WooCommerce Email Class not found. Make sure you have the newest version of WooCommerce installed.', 'add-customer-for-woocommerce');
     return;
 }
 
@@ -30,14 +30,14 @@ $subject = $wac->get_mail_subject('wac_template_subject_add_account');
 
 $message_esc = htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
 ?>
-<h2><?php echo __('Template settings', 'wac'); ?></h2>
+<h2><?php echo __('Template settings', 'add-customer-for-woocommerce'); ?></h2>
 <div id="template_preview_container">
     <div class="subject_content">
-        <div><?php echo __('Email subject:', 'wac'); ?></div>
+        <div><?php echo __('Email subject:', 'add-customer-for-woocommerce'); ?></div>
         <div class="subject"><strong><?php echo $subject; ?></strong></div>
     </div>
     <div class="main_content">
-        <div><?php echo __('Email content:', 'wac'); ?></div>
+        <div><?php echo __('Email content:', 'add-customer-for-woocommerce'); ?></div>
         <div id="message-con" class="message">
 
 
@@ -45,13 +45,13 @@ $message_esc = htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
     </div>
 </div>
 <div id="load_location_container">
-    <?php echo __('Template loaded from:', 'wac') . ' ' . $wac->get_template_location('new-account', 'email/');  ?>
+    <?php echo __('Template loaded from:', 'add-customer-for-woocommerce') . ' ' . $wac->get_template_location('new-account', 'email/');  ?>
 
 </div>
 <div id="reload_container">
     <form id='wac_options_page' action="?page=wac_general_options&tab=template" method="post" enctype="multipart/form-data">
         <?php
-        submit_button(__('Reload template', 'wac'));
+        submit_button(__('Reload template', 'add-customer-for-woocommerce'));
         ?>
     </form>
 </div>

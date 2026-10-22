@@ -193,10 +193,8 @@ class woo_add_customer_helper
      */
     public function wac_load_textdomain()
     {
-        //Search also in the wp-content/language folder
-        load_textdomain('wac', $this->wac_get_home_path() . 'wp-content/languages/plugins/add-customer-for-woocommerce-' . determine_locale() . '.mo');
-        //Try to load the file from the plugin-dir
-        load_textdomain('wac', $this->wac_get_home_path() . 'wp-content/plugins/add-customer-for-woocommerce/languages/wac-' . determine_locale() . '.mo');
+        //WordPress loads the translations from wp-content/languages/plugins first, then from the plugin dir
+        load_plugin_textdomain('add-customer-for-woocommerce', false, 'add-customer-for-woocommerce/languages');
     }
 
     /**
@@ -257,6 +255,24 @@ class woo_add_customer_helper
         } else {
             wp_enqueue_script('wac-admin-script', get_option('siteurl') . '/wp-content/plugins/add-customer-for-woocommerce/include/js/wac-main-script.min.js', array('jquery', 'wp-i18n'), $this->version);
         }
+        wp_set_script_translations('wac-admin-script', 'add-customer-for-woocommerce', $this->plugin_path . 'languages');
+    }
+
+    /**
+     * Uses the translation file of the unminified script for the minified script.
+     * The JSON translation files are named after the md5 hash of the unminified script path.
+     *
+     * @param string|false $relative_path - The relative path of the script
+     * @param string $src - The full source URL of the script
+     * @return string|false The relative path to use for the translation file
+     */
+    public function wac_script_translation_path($relative_path, $src)
+    {
+        $is_wac_script = is_string($relative_path) && strpos($relative_path, 'include/js/wac-main-script.min.js') !== false;
+        if ($is_wac_script) {
+            return str_replace('.min.js', '.js', $relative_path);
+        }
+        return $relative_path;
     }
 
     /**
@@ -277,80 +293,80 @@ class woo_add_customer_helper
         switch ($log_type) {
             case 'existing_account':
                 /* translators: %s: Email address */
-                $message = htmlspecialchars(__('Email "%s" already exists. New customer not created.', 'wac'));
+                $message = htmlspecialchars(__('Email "%s" already exists. New customer not created.', 'add-customer-for-woocommerce'));
                 break;
             case 'no_user_id':
-                $message = __('Could not update the customer, because the customer was not found.', 'wac');
+                $message = __('Could not update the customer, because the customer was not found.', 'add-customer-for-woocommerce');
                 $type = 'error';
                 break;
             case 'added_user':
                 /* translators: 1: Username of the customer, 2: Email address */
-                $message = htmlspecialchars(__('Added customer: %s <%s>', 'wac'));
+                $message = htmlspecialchars(__('Added customer: %s <%s>', 'add-customer-for-woocommerce'));
                 $type = 'success';
                 break;
             case 'email_send':
                 /* translators: %s: Email address */
-                $message = __('Email sent to new customer: %s', 'wac');
+                $message = __('Email sent to new customer: %s', 'add-customer-for-woocommerce');
                 $type = 'success';
                 break;
             case 'customer_updated':
-                $message = __('Customer successfully updated.', 'wac');
+                $message = __('Customer successfully updated.', 'add-customer-for-woocommerce');
                 $type = 'success';
                 $additional_log = array('changed_fields' => $args[0], 'changed_user_id' => $args[1]);
                 break;
             case 'no_name':
-                $message = __('Could not save customer. No name provided.', 'wac');
+                $message = __('Could not save customer. No name provided.', 'add-customer-for-woocommerce');
                 $type = 'null';
                 break;
             case 'failed_to_send_user_mail':
-                $message = __('Failed to send email notification to customer.', 'wac');
+                $message = __('Failed to send email notification to customer.', 'add-customer-for-woocommerce');
                 $type = 'error';
                 break;
             case 'failed_to_send_user_mail_fakemail':
-                $message = __('Email was not sent to user because no email was provided.', 'wac');
+                $message = __('Email was not sent to user because no email was provided.', 'add-customer-for-woocommerce');
                 $type = 'null';
                 break;
             case 'invalid_email':
                 /* translators: %s: Email address */
-                $message = sprintf(__('The email "%s" is not valid.', 'wac'), $args[0]);
+                $message = sprintf(__('The email "%s" is not valid.', 'add-customer-for-woocommerce'), $args[0]);
                 $type = 'error';
                 break;
             case 'failed_to_add_user':
-                $message = __('New customer could not be added by Add Customer Plugin. Please contact the Plugin Author.', 'wac');
+                $message = __('New customer could not be added by Add Customer Plugin. Please contact the Plugin Author.', 'add-customer-for-woocommerce');
                 $message .= (isset($args[0])) ? '<br/>' . json_encode($args[0]) : '';
                 $type = 'error';
                 $additional_log = array('wc_create_new_customer' => $args[0], 'user' => $args[1], 'email' => $args[2]);
                 error_log($message . " - " . htmlspecialchars(json_encode($args))); //Prints the args with the error message from wc_create_new_customer to the error log
                 break;
             case 'user_role_not_allowed':
-                $message = __('The user role you provided is not allowed. Please select another one.', 'wac');
+                $message = __('The user role you provided is not allowed. Please select another one.', 'add-customer-for-woocommerce');
                 $type = 'error';
                 break;
             case 'order_linked_to_account':
-                $message = __('Order got linked to the user', 'wac');
+                $message = __('Order got linked to the user', 'add-customer-for-woocommerce');
                 $additional_log = array('order_id' => $order_id, 'email' => $args[0]);
                 break;
             case 'order_linked_to_account_failed':
-                $message = __('Failed to link the order to the customer', 'wac');
+                $message = __('Failed to link the order to the customer', 'add-customer-for-woocommerce');
                 $additional_log = array('order_id' => $order_id, 'email' => $args[0], 'message' => $args[1]);
                 $type = 'error';
                 break;
             case 'paid_without_login':
                 /* translators: 1: Order number, 2: Email address of the customer, 3: Payment method title */
-                $message = __('Order #%1$s paid without login by customer %2$s with payment method: %3$s', 'wac');
+                $message = __('Order #%1$s paid without login by customer %2$s with payment method: %3$s', 'add-customer-for-woocommerce');
                 $type = 'success';
                 $additional_log = array('order_id' => $order_id, 'email' => $args[1], 'payment_method' => $args[2], 'customer_id' => $args[3]);
                 $args = array_slice($args, 0, 3);
                 break;
             case 'paid_by_shop_manager':
                 /* translators: 1: Order number, 2: Email address of the customer, 3: Display name of the shop manager, 4: Payment method title */
-                $message = __('Order #%1$s of customer %2$s paid by %3$s with payment method: %4$s', 'wac');
+                $message = __('Order #%1$s of customer %2$s paid by %3$s with payment method: %4$s', 'add-customer-for-woocommerce');
                 $type = 'success';
                 $additional_log = array('order_id' => $order_id, 'email' => $args[1], 'paid_by' => $args[2], 'payment_method' => $args[3], 'customer_id' => $args[4], 'paid_by_user_id' => $args[5]);
                 $args = array_slice($args, 0, 4);
                 break;
             default:
-                $message = __('Log type not found!', 'wac');
+                $message = __('Log type not found!', 'add-customer-for-woocommerce');
                 break;
         }
         if (!empty($args)) {
@@ -400,7 +416,7 @@ class woo_add_customer_helper
             return $output_string;
         }
         /* translators: 1: Name of the template, 2: Path of the template */
-        return sprintf(__('Template "%s" not found! (%s)', 'plek'), $template_name, $path);
+        return sprintf(__('Template "%s" not found! (%s)', 'add-customer-for-woocommerce'), $template_name, $path);
     }
 
     /**
@@ -493,7 +509,7 @@ class woo_add_customer_helper
         }
         //The default subject text
         /* translators: %s: Name of the website */
-        return sprintf(__("New account created at %s", 'wac'), $blog_name);
+        return sprintf(__("New account created at %s", 'add-customer-for-woocommerce'), $blog_name);
     }
 
     /**
@@ -581,7 +597,7 @@ class woo_add_customer_helper
         $is_wac_options_page = isset($_GET['page']) && 'wac_general_options' === $_GET['page'];
         $is_general_notice = empty($id_to_get);
         if ($is_settings_updated && $is_wac_options_page && $is_general_notice) {
-            add_settings_error('wac_settings_saved_message', 'wac_settings_saved_message', __('Settings saved', 'wac'), 'success');
+            add_settings_error('wac_settings_saved_message', 'wac_settings_saved_message', __('Settings saved', 'add-customer-for-woocommerce'), 'success');
             settings_errors('wac_settings_saved_message');
         }
 
@@ -650,7 +666,7 @@ class woo_add_customer_helper
             $email = transliterator_transliterate('Any-Latin; Latin-ASCII; [\u0100-\u7fff] remove', $email);
         } elseif (!is_email($email)) {
             //Display notice if email is not valid and php intl extension is not installed
-            $this->wac_set_notice(__('Intl PHP extension not installed. Please install it to validate the emails.', 'wac'), 'error', get_the_ID());
+            $this->wac_set_notice(__('Intl PHP extension not installed. Please install it to validate the emails.', 'add-customer-for-woocommerce'), 'error', get_the_ID());
         }
 
 
@@ -670,13 +686,13 @@ class woo_add_customer_helper
     {
         // Test for the minimum length the email can be.
         if (strlen($email) < 6) {
-            $this->wac_set_notice(esc_html__('Email is too short', 'wac'), "error", $fieldname);
+            $this->wac_set_notice(esc_html__('Email is too short', 'add-customer-for-woocommerce'), "error", $fieldname);
             return htmlspecialchars($email);
         }
 
         // Test for an @ character after the first position.
         if (strpos($email, '@', 1) === false) {
-            $this->wac_set_notice(esc_html__('Email must contain one @', 'wac'), "error", $fieldname);
+            $this->wac_set_notice(esc_html__('Email must contain one @', 'add-customer-for-woocommerce'), "error", $fieldname);
             return htmlspecialchars($email);
         }
 
@@ -689,7 +705,7 @@ class woo_add_customer_helper
              */
         $local = preg_replace('/[^a-zA-Z0-9!#$%&\[\]\'*+\/=?^_`{|}~\.-]/', '', $local);
         if ('' === $local) {
-            $this->wac_set_notice(esc_html__('Email contains forbidden characters or is empty', 'wac'), "error", $fieldname);
+            $this->wac_set_notice(esc_html__('Email contains forbidden characters or is empty', 'add-customer-for-woocommerce'), "error", $fieldname);
             return htmlspecialchars($email);
         }
 
@@ -699,14 +715,14 @@ class woo_add_customer_helper
              */
         $domain = preg_replace('/\.{2,}/', '', $domain);
         if ('' === $domain) {
-            $this->wac_set_notice(esc_html__('Domain parts must contain at least one dot', 'wac'), "error", $fieldname);
+            $this->wac_set_notice(esc_html__('Domain parts must contain at least one dot', 'add-customer-for-woocommerce'), "error", $fieldname);
             return htmlspecialchars($email);
         }
 
         // Test for leading and trailing periods and whitespace.
         $domain = trim($domain, " \t\n\r\0\x0B.");
         if ('' === $domain) {
-            $this->wac_set_notice(esc_html__('Domain parts are invalid', 'wac'), "error", $fieldname);
+            $this->wac_set_notice(esc_html__('Domain parts are invalid', 'add-customer-for-woocommerce'), "error", $fieldname);
             return htmlspecialchars($email);
         }
 
@@ -715,7 +731,7 @@ class woo_add_customer_helper
 
         // Assume the domain will have at least two subs.
         if (2 > count($subs)) {
-            $this->wac_set_notice(esc_html__('Domain parts are invalid', 'wac'), "error", $fieldname);
+            $this->wac_set_notice(esc_html__('Domain parts are invalid', 'add-customer-for-woocommerce'), "error", $fieldname);
             return htmlspecialchars($email);
         }
 
@@ -738,7 +754,7 @@ class woo_add_customer_helper
 
         // If there aren't 2 or more valid subs.
         if (2 > count($new_subs)) {
-            $this->wac_set_notice(esc_html__('Domain parts are invalid', 'wac'), "error", $fieldname);
+            $this->wac_set_notice(esc_html__('Domain parts are invalid', 'add-customer-for-woocommerce'), "error", $fieldname);
             return htmlspecialchars($email);
         }
 
@@ -768,7 +784,7 @@ class woo_add_customer_helper
             $user = transliterator_transliterate('Any-Latin; Latin-ASCII; [\u0100-\u7fff] remove', $user);
         } elseif ($user !== sanitize_user($user, true)) {
             //Display notice if user is not valid and php intl extension is not installed
-            $this->wac_set_notice(__('Intl PHP extension not installed. Please install it to validate username.', 'wac'), 'error', get_the_ID());
+            $this->wac_set_notice(__('Intl PHP extension not installed. Please install it to validate username.', 'add-customer-for-woocommerce'), 'error', get_the_ID());
         }
         $user = sanitize_user($user, true); //Remove all un-allowed characters
 
