@@ -95,6 +95,10 @@ Are there any hooks I can use?
 
 == Changelog ==
 
+= [1.9.7] =
+* Added: Option to allow customers created by the plugin to pay for their orders without login
+* Fixed: "Settings saved" message was shown on the settings pages of other plugins
+
 = [1.9.6] 2026-05-20 =
 * Added: Creator name and timestamp shown on the edit user screen for plugin-created customers
 * Tested up to 7.0

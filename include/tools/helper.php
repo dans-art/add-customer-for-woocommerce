@@ -556,8 +556,11 @@ class woo_add_customer_helper
      */
     public function wac_display_notices($id_to_get = null)
     {
-        //Show success message on options save screen
-        if (isset($_GET['settings-updated']) && $_GET['settings-updated'] && empty($id_to_get)) {
+        //Show success message on options save screen, but not after saving the settings of other plugins
+        $is_settings_updated = !empty($_GET['settings-updated']);
+        $is_wac_options_page = isset($_GET['page']) && 'wac_general_options' === $_GET['page'];
+        $is_general_notice = empty($id_to_get);
+        if ($is_settings_updated && $is_wac_options_page && $is_general_notice) {
             add_settings_error('wac_settings_saved_message', 'wac_settings_saved_message', __('Settings saved', 'wac'), 'success');
             settings_errors('wac_settings_saved_message');
         }

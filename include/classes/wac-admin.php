@@ -77,6 +77,55 @@ class woo_add_customer_admin extends woo_add_customer_helper
 
         //Modify the users query to filter for add customer users
         add_filter('pre_get_users', [$this, 'wac_pre_get_users']);
+
+        //Allow paying for orders without login.
+        add_filter('user_has_cap', [$this, 'wac_allow_pay_for_order'], 20, 3);
+    }
+
+    /**
+     * Grants the "pay_for_order" capability, so the payment page of an order can be opened by:
+     * - Logged out users with a valid order key, and only if the customer of the order was created by the plugin
+     * - Shop managers and administrators, for any order
+     * Only active if the option "wac_allow_pay_for_order" is set.
+     *
+     * @param array $allcaps - All the capabilities of the user
+     * @param array $caps - The required capabilities
+     * @param array $args - [0] => Requested capability, [1] => User ID, [2] => Order ID
+     * @return array The capabilities of the user
+     */
+    public function wac_allow_pay_for_order($allcaps, $caps, $args)
+    {
+        $is_pay_for_order_check = isset($args[0]) && $args[0] === 'pay_for_order';
+        $is_option_active = $this->get_wac_option('wac_allow_pay_for_order') === 'yes';
+        $has_order_id = !empty($args[2]);
+        if (!$is_pay_for_order_check || !$is_option_active || !$has_order_id) {
+            return $allcaps;
+        }
+
+        //do not use current_user_can() here, it would call this filter again
+        //This allows admins and shop manages to pay
+        $user_can_manage_shop = !empty($allcaps['manage_woocommerce']);
+        if ($user_can_manage_shop) {
+            $allcaps['pay_for_order'] = true;
+            return $allcaps;
+        }
+
+        $order = wc_get_order($args[2]);
+        if (!$order) {
+            return $allcaps;
+        }
+
+        //For logged out users
+        $is_logged_out = empty($args[1]);
+        $customer_id = $order->get_user_id();
+        $is_customer_created_by_plugin = $customer_id && get_user_meta($customer_id, 'wac_created_by_plugin', true);
+        $order_key = (isset($_GET['key']) && is_string($_GET['key'])) ? wc_clean(wp_unslash($_GET['key'])) : '';
+        $is_valid_order_key = !empty($order_key) && hash_equals($order->get_order_key(), $order_key);
+
+        if ($is_logged_out && $is_customer_created_by_plugin && $is_valid_order_key) {
+            $allcaps['pay_for_order'] = true;
+        }
+        return $allcaps;
     }
 
     /**

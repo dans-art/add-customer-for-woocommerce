@@ -150,6 +150,20 @@ class woo_add_customer_backend extends woo_add_customer_helper
             )
         );
         add_settings_field(
+            'wac_allow_pay_for_order',
+            __('Allow payment without login', 'wac'),
+            [$this, 'get_settings_option'],
+            'wac_general_options',
+            'wac_main_settings',
+            array(
+                'label_for' => 'wac_allow_pay_for_order',
+                'type' => 'checkbox',
+                'class' => 'wac-checkbox',
+                'description' => __('Check this to let allow the order to be paid by logged out users or admins via the "Customer payment page" link . This only works if the customer, assigned to the order, was created by this plugin. Administrators and shop managers can also open the payment page of any customer order.', 'wac'),
+                'page' => 'wac_general_options'
+            )
+        );
+        add_settings_field(
             'wac_define_user_role',
             __('Define user role individually', 'wac'),
             [$this, 'get_settings_option'],
