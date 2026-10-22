@@ -32,6 +32,8 @@ let wac_scripts = {
                 //Customer selected, remove the tick on the checkbox
                 jQuery('#wac_add_customer').prop("checked", false);
             }
+            //Show the add or update customer checkbox, depending on the selected customer
+            this.wac_customer_checkbox_visibility();
             //Update the notify checkbox
             this.wac_checkbox_checker();
         });
@@ -51,10 +53,13 @@ let wac_scripts = {
         jQuery('#order_data a.edit_address').on('click', () => {
             this.maybe_check_update_customer();
             this.maybe_check_add_customer();
+            //WooCommerce shows all the div.edit_address on click, so the visibility has to be set again
+            this.wac_customer_checkbox_visibility();
             this.wac_checkbox_checker();
         })
 
         //Run after document loaded to show the second checkbox.
+        wac_scripts.wac_customer_checkbox_visibility();
         wac_scripts.wac_checkbox_checker();
         /*jQuery(document).ready(function () {
         });*/
@@ -73,6 +78,30 @@ let wac_scripts = {
     },
 
     /**
+     * Shows the update customer checkbox if a customer is selected, the add customer checkbox otherwise.
+     * The hidden checkbox gets unchecked.
+     */
+    wac_customer_checkbox_visibility() {
+        const customer_selected = this.is_customer_selected();
+        if (customer_selected) {
+            jQuery('#wac_add_customer').prop("checked", false);
+        } else {
+            jQuery('#wac_update_customer').prop("checked", false);
+        }
+        jQuery('#wac_add_customer_con').toggle(!customer_selected);
+        jQuery('#wac_update_customer_con').toggle(customer_selected);
+    },
+
+    /**
+     * Checks if a customer is selected in the customer list.
+     * @returns {boolean}
+     */
+    is_customer_selected() {
+        const customer_id = jQuery('#customer_user').val();
+        return !this.empty(customer_id);
+    },
+
+    /**
      * Checks if the edit customer checkbox should be checked and checks it.
      */
     maybe_check_update_customer() {
@@ -85,8 +114,9 @@ let wac_scripts = {
      * Checks if the add customer checkbox should be checked and checks it.
      */
     maybe_check_add_customer() {
-        //If the checkbox should be preselected, select it now.
-        if (window.sep_variables.default_options.add_customer === 'checked') {
+        //If the checkbox should be preselected, select it now. Not if a customer is already selected.
+        const is_preselected = window.sep_variables.default_options.add_customer === 'checked';
+        if (is_preselected && !this.is_customer_selected()) {
             jQuery('#wac_add_customer').prop("checked", true);
         }
     },

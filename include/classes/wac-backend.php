@@ -225,6 +225,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
                 'class' => 'wac-text-input',
                 'description' => __('The subject / header for the email sent to new customers', 'wac'),
                 'page' => 'wac_general_options',
+                /* translators: %s: Name of the website */
                 'default_value' => sprintf(__("New account created at %s", 'wac'), $blog_name)
             )
         );

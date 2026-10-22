@@ -46,6 +46,7 @@ $current_tab = (isset($_GET['tab'])) ? $_GET['tab'] : null;
 <div class="wac-statistics">
     <?php
     echo sprintf(
+        /* translators: 1: Number of customers added, 2: Number of customers edited */
         __('There have been %d customers added and %d customers edited by the Plugin', 'wac'),
         intval(get_option('wac_add_customer_count')),
         intval(get_option('wac_edit_customer_count'))

@@ -3,7 +3,7 @@
 /**
  * The update customer data checkbox
  * 
- * @version     1.6.5
+ * @version     1.10.0
  * @package     WAC\BackendTemplate
  */
 
@@ -17,7 +17,7 @@ $checked = ($wac->get_wac_option('wac_preselect_update') === 'yes') ? 'checked' 
 
 ?>
 
-<div id='wac_add_customer_con' class="edit_address">
+<div id='wac_update_customer_con' class="edit_address">
 <div class="_add_customer_fields">
     <label><?php echo __('Update customer', 'wac'); ?></label>
     <p class="wac_update_customer_field">
@@ -26,11 +26,8 @@ $checked = ($wac->get_wac_option('wac_preselect_update') === 'yes') ? 'checked' 
     </p>
 </div>
 </div>
-<!-- Variables for the JS to use -->
+<!-- Variables for the JS to use. Extends the variables of the add-checkbox template -->
 <script type="text/javascript">
-    window.sep_variables = {
-        'default_options': {
-            'update_customer': '<?php echo $checked; ?>',
-        }
-    }
+    window.sep_variables = window.sep_variables || {'default_options': {}};
+    window.sep_variables.default_options.update_customer = '<?php echo $checked; ?>';
 </script>

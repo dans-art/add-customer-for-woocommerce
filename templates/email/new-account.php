@@ -25,9 +25,9 @@ $site = (isset($template_args[3])) ? $template_args[3] : ''; //The Site name
 //To change the header,copy the email-header.php from plugins\woocommerce\templates\emails to the theme folder
 do_action('woocommerce_email_header', esc_html__('New account created', 'wac'), 'header_email'); ?>
 
-<h1><?php echo sprintf(esc_html__('Hi, %s', 'wac'), $name); ?></h1>
-<p><?php echo sprintf(esc_html__('Your account on %s has been created.', 'wac'), $site); ?></p>
-<p><?php echo sprintf(esc_html__('Email: %s', 'wac'), $email); ?><br /></p>
+<h1><?php /* translators: %s: Name of the customer */ echo sprintf(esc_html__('Hi, %s', 'wac'), $name); ?></h1>
+<p><?php /* translators: %s: Name of the website */ echo sprintf(esc_html__('Your account on %s has been created.', 'wac'), $site); ?></p>
+<p><?php /* translators: %s: Email address of the customer */ echo sprintf(esc_html__('Email: %s', 'wac'), $email); ?><br /></p>
 
 <p>
     <?php echo esc_html__('To log in, you have to create a password for your account.', 'wac'); ?><br/>

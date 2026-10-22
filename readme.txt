@@ -95,8 +95,11 @@ Are there any hooks I can use?
 
 == Changelog ==
 
-= [1.9.7] =
+= [1.10.0] =
 * Added: Option to allow customers created by the plugin to pay for their orders without login
+* Added: The verified email is remembered on the payment page, so logged out customers don't have to enter it again after a failed payment
+* Added: Simple History log entry and order note when an order is paid by a logged out customer or by a shop manager on behalf of the customer
+* Changed: The "Add new customer" and "Update customer" checkboxes switch depending on the selected customer
 * Fixed: "Settings saved" message was shown on the settings pages of other plugins
 
 = [1.9.6] 2026-05-20 =

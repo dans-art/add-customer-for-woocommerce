@@ -263,7 +263,7 @@ class woo_add_customer_helper
      * Logs Events to the Simple History Plugin and to the PHP Error Log on error.
      * Some Errors get displayed to the user
      * 
-     * @param string $log_type - The log type. Allowed types: added_user, failed_to_add_user
+     * @param string $log_type - The log type. Allowed types: added_user, failed_to_add_user, paid_without_login, ...
      * @param string $order_id - The order id
      * @param mixed $args - Args for the vspringf() Function. String or Int 
      * 
@@ -276,6 +276,7 @@ class woo_add_customer_helper
 
         switch ($log_type) {
             case 'existing_account':
+                /* translators: %s: Email address */
                 $message = htmlspecialchars(__('Email "%s" already exists. New customer not created.', 'wac'));
                 break;
             case 'no_user_id':
@@ -283,10 +284,12 @@ class woo_add_customer_helper
                 $type = 'error';
                 break;
             case 'added_user':
+                /* translators: 1: Username of the customer, 2: Email address */
                 $message = htmlspecialchars(__('Added customer: %s <%s>', 'wac'));
                 $type = 'success';
                 break;
             case 'email_send':
+                /* translators: %s: Email address */
                 $message = __('Email sent to new customer: %s', 'wac');
                 $type = 'success';
                 break;
@@ -308,6 +311,7 @@ class woo_add_customer_helper
                 $type = 'null';
                 break;
             case 'invalid_email':
+                /* translators: %s: Email address */
                 $message = sprintf(__('The email "%s" is not valid.', 'wac'), $args[0]);
                 $type = 'error';
                 break;
@@ -330,6 +334,20 @@ class woo_add_customer_helper
                 $message = __('Failed to link the order to the customer', 'wac');
                 $additional_log = array('order_id' => $order_id, 'email' => $args[0], 'message' => $args[1]);
                 $type = 'error';
+                break;
+            case 'paid_without_login':
+                /* translators: 1: Order number, 2: Email address of the customer, 3: Payment method title */
+                $message = __('Order #%1$s paid without login by customer %2$s with payment method: %3$s', 'wac');
+                $type = 'success';
+                $additional_log = array('order_id' => $order_id, 'email' => $args[1], 'payment_method' => $args[2], 'customer_id' => $args[3]);
+                $args = array_slice($args, 0, 3);
+                break;
+            case 'paid_by_shop_manager':
+                /* translators: 1: Order number, 2: Email address of the customer, 3: Display name of the shop manager, 4: Payment method title */
+                $message = __('Order #%1$s of customer %2$s paid by %3$s with payment method: %4$s', 'wac');
+                $type = 'success';
+                $additional_log = array('order_id' => $order_id, 'email' => $args[1], 'paid_by' => $args[2], 'payment_method' => $args[3], 'customer_id' => $args[4], 'paid_by_user_id' => $args[5]);
+                $args = array_slice($args, 0, 4);
                 break;
             default:
                 $message = __('Log type not found!', 'wac');
@@ -381,6 +399,7 @@ class woo_add_customer_helper
             wp_reset_postdata();
             return $output_string;
         }
+        /* translators: 1: Name of the template, 2: Path of the template */
         return sprintf(__('Template "%s" not found! (%s)', 'plek'), $template_name, $path);
     }
 
@@ -473,6 +492,7 @@ class woo_add_customer_helper
             return $subject;
         }
         //The default subject text
+        /* translators: %s: Name of the website */
         return sprintf(__("New account created at %s", 'wac'), $blog_name);
     }
 
