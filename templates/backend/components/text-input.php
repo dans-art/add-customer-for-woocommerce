@@ -11,6 +11,7 @@
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Included within woo_add_customer_helper::load_template_to_var(), the variables are not global.
 global $backend_class;
 $backend_class = (!is_object($backend_class)) ? new woo_add_customer_backend() : $backend_class;
 
@@ -24,14 +25,14 @@ $description = (isset($args['description'])) ? $args['description'] : '';
 $class = (isset($args['class'])) ? $args['class'] : '';
 ?>
 
-<div class='<?php echo $class; ?> text-input'>
-    <input name="wac_general_options[<?php echo $label_for; ?>]" id="<?php echo $label_for; ?>" type="text" value="<?php echo $options_val; ?>" placeholder="<?php echo $default_value; ?>" />
+<div class='<?php echo esc_attr($class); ?> text-input'>
+    <input name="wac_general_options[<?php echo esc_attr($label_for); ?>]" id="<?php echo esc_attr($label_for); ?>" type="text" value="<?php echo esc_attr($options_val); ?>" placeholder="<?php echo esc_attr($default_value); ?>" />
 </div>
-<div class='<?php echo $class; ?>-field-errors wac-field-errors'>
+<div class='<?php echo esc_attr($class); ?>-field-errors wac-field-errors'>
     <?php
     //get the error messages
-    echo $this->wac_display_notices($label_for); ?>
+    $this->wac_display_notices($label_for); ?>
 </div>
-<p class='<?php echo $class; ?>-description description'>
-    <?php echo $description; ?>
+<p class='<?php echo esc_attr($class); ?>-description description'>
+    <?php echo wp_kses_post($description); ?>
 </p>

@@ -1,17 +1,14 @@
 === Add Customer for WooCommerce ===
 
 Contributors: dansart
-Contributors URL: <http://dev.dans-art.ch>
-Donate link: <https://paypal.me/dansart13>
+Donate link: https://paypal.me/dansart13
 Tags: woocommerce, customer, tools, helper
 Requires at least: 5.4.0
-Tested up to: 6.7.1
-Stable tag: 1.9.5
-License: GPLv3 or later
-License URI: <http://www.gnu.org/licenses/gpl-2.0.html>
-WC requires at least: 7.4.1
-WC tested up to: 9.6.0
+Tested up to: 7.1
 Requires PHP: 7.4
+Stable tag: 1.10.0
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Adds a new checkbox to the orders page to add a new customer/user and links orders to existing accounts
 
@@ -94,6 +91,21 @@ Are there any hooks I can use?
  - You can use the new hook "wac_deactivate_user_emails" for that. It has two parameters: $is_deactivated and $user_id. You can use this filter and return "true" for the users you like to suppress the messages. 
 
 == Changelog ==
+
+= [1.10.0] =
+* Added: Option to allow customers created by the plugin to pay for their orders without login
+* Added: The verified email is remembered on the payment page, so logged out customers don't have to enter it again after a failed payment
+* Added: Simple History log entry and order note when an order is paid by a logged out customer or by a shop manager on behalf of the customer
+* Changed: The "Add new customer" and "Update customer" checkboxes switch depending on the selected customer
+* Changed: The text domain is now the plugin slug "add-customer-for-woocommerce" instead of "wac". The translations are loaded from translate.wordpress.org. Custom translation files have to be placed in wp-content/languages/plugins/ as "add-customer-for-woocommerce-{locale}.mo"
+* Fixed: "Settings saved" message was shown on the settings pages of other plugins
+* Fixed: Some texts and the JavaScript messages were not translated
+* Fixed: The "Created by Add Customer" filter on the users page was applied for any "created_by" value
+* Fixed: Escaping of all output and sanitizing of all input, as reported by the Plugin Check
+
+= [1.9.6] 2026-05-20 =
+* Added: Creator name and timestamp shown on the edit user screen for plugin-created customers
+* Tested up to 7.0
 
 = [1.9.5] 2025-02-02 =
 * Fixed: Failed to save customers with very long names

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Add Customer for WooCommerce\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-28 18:07+0000\n"
-"PO-Revision-Date: 2024-03-09 17:10+0000\n"
+"PO-Revision-Date: 2024-03-09 17:12+0000\n"
 "Last-Translator: Patrice de Saint Steban\n"
 "Language-Team: French (France)\n"
 "Language: fr_FR\n"
@@ -44,12 +44,14 @@ msgstr "Ajouter un nouveau client : action par défaut"
 
 #: include/tools/helper.php:240
 #, php-format
-msgid "Added customer: %s <%s>"
-msgstr "Client ajouté : %s <%s>"
+msgid "Added customer: %1$s <%2$s>"
+msgstr "Client ajouté : %1$s <%2$s>"
 
 #: include/classes/wac-backend.php:134
 msgid "Allow user role selection before creating a new customer"
 msgstr ""
+"Permettre la sélection du rôle de l'utilisateur avant la création d'un "
+"nouveau client"
 
 #. Description of the plugin
 msgid ""
@@ -436,13 +438,15 @@ msgstr "Le sujet/en-tête de l'e-mail envoyé aux nouveaux clients"
 #: include/tools/helper.php:276
 msgid "The user role you provided is not allowed. Please select another one."
 msgstr ""
+"Le rôle d'utilisateur que vous avez fourni n'est pas autorisé. Veuillez en "
+"sélectionner un autre."
 
 #: templates/backend/backend-options-page.php:49
 #| msgid ""
 #| "There have been %d customers added and %d customers edited by the plugin"
 msgid ""
-"There have been %d customers added and %d customers edited by the Plugin"
-msgstr "Il y a eu %d clients ajoutés et %d clients modifiés par le plugin"
+"There have been %1$d customers added and %2$d customers edited by the Plugin"
+msgstr "Il y a eu %1$d clients ajoutés et %2$d clients modifiés par le plugin"
 
 #: include/classes/wac-admin.php:216
 #| msgid "This order is already linked to an user"
@@ -452,6 +456,7 @@ msgstr "Cette commande est déjà liée à un utilisateur"
 #: templates/email/new-account.php:33
 msgid "To log in, you have to create a password for your account."
 msgstr ""
+"Pour vous connecter, vous devez créer un mot de passe pour votre compte."
 
 #: templates/order/update-checkbox.php:22
 #| msgid "Update Customer"

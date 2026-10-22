@@ -13,6 +13,7 @@
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Included within woo_add_customer_helper::load_template_to_var(), the variables are not global.
 
 extract(get_defined_vars());
 $email = (isset($template_args[0])) ? $template_args[0] : ''; //The Email of the new customer
@@ -23,18 +24,18 @@ $site = (isset($template_args[3])) ? $template_args[3] : ''; //The Site name
 
 //The WooCommerce email Header
 //To change the header,copy the email-header.php from plugins\woocommerce\templates\emails to the theme folder
-do_action('woocommerce_email_header', esc_html__('New account created', 'wac'), 'header_email'); ?>
+do_action('woocommerce_email_header', esc_html__('New account created', 'add-customer-for-woocommerce'), 'header_email'); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WooCommerce hook ?>
 
-<h1><?php echo sprintf(esc_html__('Hi, %s', 'wac'), $name); ?></h1>
-<p><?php echo sprintf(esc_html__('Your account on %s has been created.', 'wac'), $site); ?></p>
-<p><?php echo sprintf(esc_html__('Email: %s', 'wac'), $email); ?><br /></p>
+<h1><?php /* translators: %s: Name of the customer */ echo esc_html(sprintf(__('Hi, %s', 'add-customer-for-woocommerce'), $name)); ?></h1>
+<p><?php /* translators: %s: Name of the website */ echo esc_html(sprintf(__('Your account on %s has been created.', 'add-customer-for-woocommerce'), $site)); ?></p>
+<p><?php /* translators: %s: Email address of the customer */ echo esc_html(sprintf(__('Email: %s', 'add-customer-for-woocommerce'), $email)); ?><br /></p>
 
 <p>
-    <?php echo esc_html__('To log in, you have to create a password for your account.', 'wac'); ?><br/>
-    <a href="<?php echo $reset_user_pass_link; ?>"><?php echo esc_html__('Set the password for your account', 'wac'); ?></a>
+    <?php echo esc_html__('To log in, you have to create a password for your account.', 'add-customer-for-woocommerce'); ?><br/>
+    <a href="<?php echo esc_url($reset_user_pass_link); ?>"><?php echo esc_html__('Set the password for your account', 'add-customer-for-woocommerce'); ?></a>
 </p>
 
 <?php
 //The WooCommerce email footer
 //To change the header,copy the email-footer.php from plugins\woocommerce\templates\emails to the theme folder
-do_action('woocommerce_email_footer', 'footer_email');
+do_action('woocommerce_email_footer', 'footer_email'); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WooCommerce hook

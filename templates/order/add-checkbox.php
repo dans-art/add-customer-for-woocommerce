@@ -10,6 +10,7 @@
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Included within woo_add_customer_helper::load_template_to_var(), the variables are not global.
 global $wac;
 $wac = (!is_object($wac)) ? new woo_add_customer() : $wac;
 
@@ -28,10 +29,10 @@ $user_role_to_set = $wac -> get_default_user_role();
 
 <div id='wac_add_customer_con' class="edit_address">
     <div class="_add_customer_fields">
-        <label><?php echo __('Add new customer', 'wac'); ?></label>
+        <label><?php echo esc_html__('Add new customer', 'add-customer-for-woocommerce'); ?></label>
         <div class="wac-checkbox-container">
             <input type="checkbox" name="wac_add_customer" id="wac_add_customer" value="true" placeholder="" autocomplete="off">
-            <label for="wac_add_customer"><?php echo ($set_role === 'yes') ? __('Save as new customer with role: ', 'string') : __('Save as new customer', 'wac'); ?></label>
+            <label for="wac_add_customer"><?php echo ($set_role === 'yes') ? esc_html__('Save as new customer with role: ', 'add-customer-for-woocommerce') : esc_html__('Save as new customer', 'add-customer-for-woocommerce'); ?></label>
         </div>
         <div class="wac-customer-role-container">
             <?php
@@ -40,14 +41,14 @@ $user_role_to_set = $wac -> get_default_user_role();
                 <select name="wac_add_customer_role" id="wac_add_customer_role">
                     <?php foreach ($wac->get_user_role_array(false) as $role_slug => $name) : ?>
                         <?php $selected = ($role_slug === $user_role_to_set) ? 'selected' : ''; ?>
-                        <option value="<?php echo $role_slug ?>" <?php echo $selected; ?>><?php echo $name; ?></option>
+                        <option value="<?php echo esc_attr($role_slug); ?>" <?php echo esc_attr($selected); ?>><?php echo esc_html($name); ?></option>
                     <?php endforeach; ?>
                 </select>
             <?php endif; ?>
         </div>
         <p class="wac_add_customer_notify_field" style="display: none;">
-            <input type="checkbox" name="wac_add_customer_notify" id="wac_add_customer_notify" value="true" placeholder="" autocomplete="off" <?php echo $checked_notify; ?>>
-            <label for="wac_add_customer_notify"><?php echo __('Send email to new customer', 'wac'); ?></label>
+            <input type="checkbox" name="wac_add_customer_notify" id="wac_add_customer_notify" value="true" placeholder="" autocomplete="off" <?php echo esc_attr($checked_notify); ?>>
+            <label for="wac_add_customer_notify"><?php echo esc_html__('Send email to new customer', 'add-customer-for-woocommerce'); ?></label>
         </p>
     </div>
 </div>
@@ -55,8 +56,8 @@ $user_role_to_set = $wac -> get_default_user_role();
 <script type="text/javascript">
     window.sep_variables = {
         'default_options': {
-            'add_customer': '<?php echo $checked; ?>',
-            'notify_customer': '<?php echo $checked_notify; ?>'
+            'add_customer': '<?php echo esc_js($checked); ?>',
+            'notify_customer': '<?php echo esc_js($checked_notify); ?>'
         }
     }
 </script>

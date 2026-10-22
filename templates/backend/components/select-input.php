@@ -11,6 +11,7 @@
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Included within woo_add_customer_helper::load_template_to_var(), the variables are not global.
 global $backend_class;
 $backend_class = (!is_object($backend_class)) ? new woo_add_customer_backend() : $backend_class;
 
@@ -25,26 +26,26 @@ $class = (isset($args['class'])) ? $args['class'] : '';
 $options = (isset($args['values_array'])) ? $args['values_array'] : '';
 
 if (!is_array($options)) {
-    echo __('Options must be formatted as an array', 'wac');
+    echo esc_html__('Options must be formatted as an array', 'add-customer-for-woocommerce');
     return;
 }
 ?>
 
-<div class='<?php echo $class; ?> select-input'>
-        <select name="wac_general_options[<?php echo $label_for; ?>]" id="<?php echo $label_for; ?>">
+<div class='<?php echo esc_attr($class); ?> select-input'>
+        <select name="wac_general_options[<?php echo esc_attr($label_for); ?>]" id="<?php echo esc_attr($label_for); ?>">
             <?php foreach ($options as $id => $name) : ?>
                 <?php
                 $selected = (($default_value === $id AND empty($options_val))|| $options_val === $id) ? "selected" : "";
                 ?>
-                <option value="<?php echo $id; ?>" <?php echo $selected; ?>><?php echo $name; ?></option>
+                <option value="<?php echo esc_attr($id); ?>" <?php echo esc_attr($selected); ?>><?php echo esc_html($name); ?></option>
             <?php endforeach; ?>
         </select>
 </div>
-<div class='<?php echo $class; ?>-field-errors wac-field-errors'>
+<div class='<?php echo esc_attr($class); ?>-field-errors wac-field-errors'>
         <?php
         //get the error messages
-        echo $this->wac_display_notices($label_for); ?>
+        $this->wac_display_notices($label_for); ?>
 </div>
-<p class='<?php echo $class; ?>-description description'>
-    <?php echo $description; ?>
+<p class='<?php echo esc_attr($class); ?>-description description'>
+    <?php echo wp_kses_post($description); ?>
 </p>

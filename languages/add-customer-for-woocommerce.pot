@@ -1,0 +1,520 @@
+# Copyright (C) 2026 Dan's Art
+# This file is distributed under the GPLv3 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Add Customer for WooCommerce 1.9.6\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/add-customer-for-woocommerce\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-10-22T14:47:09+02:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: add-customer-for-woocommerce\n"
+
+#. Plugin Name of the plugin
+#: add-customer-for-woocommerce.php
+msgid "Add Customer for WooCommerce"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: add-customer-for-woocommerce.php
+msgid "https://dev.dans-art.ch/blog/wordpress/add-customer-for-woocommerce/"
+msgstr ""
+
+#. Description of the plugin
+#: add-customer-for-woocommerce.php
+msgid "Allows you to add a customer when creating a new order on the orders page"
+msgstr ""
+
+#. Author of the plugin
+#: add-customer-for-woocommerce.php
+msgid "Dan's Art"
+msgstr ""
+
+#. Author URI of the plugin
+#: add-customer-for-woocommerce.php
+msgid "https://dev.dans-art.ch"
+msgstr ""
+
+#. translators: %s: Payment method title
+#: include/classes/wac-admin.php:117
+#, php-format
+msgid "Order paid without login by an anonymous user via the customer payment page. Payment method: %s"
+msgstr ""
+
+#. translators: 1: Display name of the shop manager, 2: Payment method title
+#: include/classes/wac-admin.php:121
+#, php-format
+msgid "Order paid by %1$s on behalf of the customer via the customer payment page. Payment method: %2$s"
+msgstr ""
+
+#: include/classes/wac-admin.php:422
+#: include/classes/wac-admin.php:538
+msgid "No order found"
+msgstr ""
+
+#: include/classes/wac-admin.php:484
+msgid "This order is already linked to a user"
+msgstr ""
+
+#: include/classes/wac-admin.php:489
+msgid "No user found with the given email"
+msgstr ""
+
+#: include/classes/wac-admin.php:496
+msgid "Failed to save the order"
+msgstr ""
+
+#. translators: %s: Name of the field
+#: include/classes/wac-admin.php:669
+#, php-format
+msgid "Could not save the default field \"%s\""
+msgstr ""
+
+#. translators: %s: ID of the billing field
+#: include/classes/wac-admin.php:684
+#, php-format
+msgid "Could not save the \"%s\" billing field"
+msgstr ""
+
+#. translators: %s: ID of the shipping field
+#: include/classes/wac-admin.php:700
+#, php-format
+msgid "Could not save the \"%s\" shipping field"
+msgstr ""
+
+#: include/classes/wac-admin.php:794
+msgid "unknown date"
+msgstr ""
+
+#. translators: 1: Display name of the user who created the customer, 2: Date and time of creation
+#: include/classes/wac-admin.php:798
+#, php-format
+msgid "User was created by %1$s with the Add customer for WooCommerce Plugin on %2$s"
+msgstr ""
+
+#. translators: %s: Date and time of creation
+#: include/classes/wac-admin.php:805
+#, php-format
+msgid "User was created by the Add customer for WooCommerce Plugin on %s"
+msgstr ""
+
+#: include/classes/wac-admin.php:830
+msgid "Add Customer"
+msgstr ""
+
+#: include/classes/wac-backend.php:33
+msgid "Add customer settings"
+msgstr ""
+
+#: include/classes/wac-backend.php:71
+msgid "<b>Warning:</b> There were some customers created before this feature got introduced. If you activate that, some of the customers will still get the notifications."
+msgstr ""
+
+#: include/classes/wac-backend.php:74
+msgid "<b>Warning:</b> Emails to user regarding account creation will still be sent. Uncheck \"Send notifications to new user\" to deactivate those as well"
+msgstr ""
+
+#: include/classes/wac-backend.php:79
+msgid "Main settings"
+msgstr ""
+
+#: include/classes/wac-backend.php:80
+#: templates/backend/backend-options-page-template.php:34
+msgid "Template settings"
+msgstr ""
+
+#: include/classes/wac-backend.php:84
+msgid "Add new customer by default"
+msgstr ""
+
+#: include/classes/wac-backend.php:92
+msgid "Select this box if you'd like to have the \"Add Customer\" Checkbox activated by default."
+msgstr ""
+
+#: include/classes/wac-backend.php:99
+msgid "Update new customer by default"
+msgstr ""
+
+#: include/classes/wac-backend.php:107
+msgid "If this is checked, the existing customer data will be updated when the order is updated."
+msgstr ""
+
+#: include/classes/wac-backend.php:114
+msgid "Send notifications to new user"
+msgstr ""
+
+#: include/classes/wac-backend.php:122
+msgid "Check this to send an \"account created\" email to the customer after account creation."
+msgstr ""
+
+#: include/classes/wac-backend.php:128
+msgid "Suppress all notifications to users created by the plugin"
+msgstr ""
+
+#: include/classes/wac-backend.php:136
+msgid "Check this if you like to not send any emails to users who were created by the plugin."
+msgstr ""
+
+#: include/classes/wac-backend.php:142
+msgid "Link orders to customer"
+msgstr ""
+
+#: include/classes/wac-backend.php:150
+msgid "Check this to link orders created in the frontend. The email will be used as an identifier. Only works if the user creates an order as a guest."
+msgstr ""
+
+#: include/classes/wac-backend.php:156
+msgid "Allow payment without login"
+msgstr ""
+
+#: include/classes/wac-backend.php:164
+msgid "Check this to let allow the order to be paid by logged out users or admins via the \"Customer payment page\" link . This only works if the customer, assigned to the order, was created by this plugin. Administrators and shop managers can also open the payment page of any customer order."
+msgstr ""
+
+#: include/classes/wac-backend.php:170
+msgid "Define user role individually"
+msgstr ""
+
+#: include/classes/wac-backend.php:178
+msgid "Allow user role selection before creating a new customer"
+msgstr ""
+
+#: include/classes/wac-backend.php:184
+msgid "User role for new customer"
+msgstr ""
+
+#: include/classes/wac-backend.php:192
+msgid "Define the user role for new customers"
+msgstr ""
+
+#: include/classes/wac-backend.php:200
+msgid "Auto-generated email format"
+msgstr ""
+
+#: include/classes/wac-backend.php:209
+msgid "The format you'd like to have for the automatically generated email."
+msgstr ""
+
+#: include/classes/wac-backend.php:210
+msgid "You can use the supported tags below wrapping them in [ ]"
+msgstr ""
+
+#: include/classes/wac-backend.php:211
+msgid "Supported tags:"
+msgstr ""
+
+#: include/classes/wac-backend.php:220
+msgid "New account created email subject"
+msgstr ""
+
+#: include/classes/wac-backend.php:228
+msgid "The subject / header for the email sent to new customers"
+msgstr ""
+
+#. translators: %s: Name of the website
+#: include/classes/wac-backend.php:231
+#: include/tools/helper.php:485
+#, php-format
+msgid "New account created at %s"
+msgstr ""
+
+#: include/classes/wac-backend.php:236
+msgid "Sender email"
+msgstr ""
+
+#: include/classes/wac-backend.php:244
+msgid "The sender email"
+msgstr ""
+
+#: include/classes/wac-backend.php:272
+msgid "You are not allowed to set this user role"
+msgstr ""
+
+#: include/classes/wac-backend.php:301
+msgid "Invalid email address"
+msgstr ""
+
+#. translators: %s: Email address
+#: include/tools/helper.php:266
+#, php-format
+msgid "Email \"%s\" already exists. New customer not created."
+msgstr ""
+
+#: include/tools/helper.php:269
+msgid "Could not update the customer, because the customer was not found."
+msgstr ""
+
+#. translators: 1: Username of the customer, 2: Email address
+#: include/tools/helper.php:274
+#, php-format
+msgid "Added customer: %1$s <%2$s>"
+msgstr ""
+
+#. translators: %s: Email address
+#: include/tools/helper.php:279
+#, php-format
+msgid "Email sent to new customer: %s"
+msgstr ""
+
+#: include/tools/helper.php:283
+msgid "Customer successfully updated."
+msgstr ""
+
+#: include/tools/helper.php:288
+msgid "Could not save customer. No name provided."
+msgstr ""
+
+#: include/tools/helper.php:292
+msgid "Failed to send email notification to customer."
+msgstr ""
+
+#: include/tools/helper.php:296
+msgid "Email was not sent to user because no email was provided."
+msgstr ""
+
+#. translators: %s: Email address
+#: include/tools/helper.php:301
+#, php-format
+msgid "The email \"%s\" is not valid."
+msgstr ""
+
+#: include/tools/helper.php:305
+msgid "New customer could not be added by Add Customer Plugin. Please contact the Plugin Author."
+msgstr ""
+
+#: include/tools/helper.php:315
+msgid "The user role you provided is not allowed. Please select another one."
+msgstr ""
+
+#: include/tools/helper.php:319
+msgid "Order got linked to the user"
+msgstr ""
+
+#: include/tools/helper.php:323
+msgid "Failed to link the order to the customer"
+msgstr ""
+
+#. translators: 1: Order number, 2: Email address of the customer, 3: Payment method title
+#: include/tools/helper.php:329
+#, php-format
+msgid "Order #%1$s paid without login by customer %2$s with payment method: %3$s"
+msgstr ""
+
+#. translators: 1: Order number, 2: Email address of the customer, 3: Display name of the shop manager, 4: Payment method title
+#: include/tools/helper.php:336
+#, php-format
+msgid "Order #%1$s of customer %2$s paid by %3$s with payment method: %4$s"
+msgstr ""
+
+#: include/tools/helper.php:342
+msgid "Log type not found!"
+msgstr ""
+
+#. translators: 1: Name of the template, 2: Path of the template
+#: include/tools/helper.php:392
+#, php-format
+msgid "Template \"%1$s\" not found! (%2$s)"
+msgstr ""
+
+#: include/tools/helper.php:574
+msgid "Settings saved"
+msgstr ""
+
+#: include/tools/helper.php:644
+msgid "Intl PHP extension not installed. Please install it to validate the emails."
+msgstr ""
+
+#: include/tools/helper.php:664
+msgid "Email is too short"
+msgstr ""
+
+#: include/tools/helper.php:670
+msgid "Email must contain one @"
+msgstr ""
+
+#: include/tools/helper.php:683
+msgid "Email contains forbidden characters or is empty"
+msgstr ""
+
+#: include/tools/helper.php:693
+msgid "Domain parts must contain at least one dot"
+msgstr ""
+
+#: include/tools/helper.php:700
+#: include/tools/helper.php:709
+#: include/tools/helper.php:732
+msgid "Domain parts are invalid"
+msgstr ""
+
+#: include/tools/helper.php:762
+msgid "Intl PHP extension not installed. Please install it to validate username."
+msgstr ""
+
+#: templates/backend/backend-options-page-support.php:15
+#: templates/backend/backend-options-page.php:30
+msgid "Support"
+msgstr ""
+
+#: templates/backend/backend-options-page-support.php:17
+msgid "Thanks for using this Plugin. It was crafted with a lot of care and love, but errors and incompatibilities with other plugins can occur."
+msgstr ""
+
+#: templates/backend/backend-options-page-support.php:18
+msgid "If you're having trouble, please let me know by writing to:"
+msgstr ""
+
+#: templates/backend/backend-options-page-support.php:20
+msgid "Development"
+msgstr ""
+
+#: templates/backend/backend-options-page-support.php:22
+msgid "Wordpress.org"
+msgstr ""
+
+#: templates/backend/backend-options-page-support.php:23
+msgid "Github.com"
+msgstr ""
+
+#: templates/backend/backend-options-page-support.php:25
+msgid "Support me"
+msgstr ""
+
+#: templates/backend/backend-options-page-support.php:27
+msgid "If you like this plugin and want to give me something back, here are some ways to do so:"
+msgstr ""
+
+#: templates/backend/backend-options-page-support.php:28
+msgid "Write a review and give me 5 stars on Wordpress.com"
+msgstr ""
+
+#: templates/backend/backend-options-page-support.php:29
+msgid "Make a donation on PayPal"
+msgstr ""
+
+#: templates/backend/backend-options-page-support.php:30
+msgid "Thanks!"
+msgstr ""
+
+#: templates/backend/backend-options-page-support.php:33
+msgid "Try the plugin on TasteWP:"
+msgstr ""
+
+#: templates/backend/backend-options-page-support.php:34
+msgid "Try it for free on tastewp.com"
+msgstr ""
+
+#: templates/backend/backend-options-page-support.php:35
+msgid "Get your non-expiring site [Affiliate link]"
+msgstr ""
+
+#: templates/backend/backend-options-page-template.php:18
+msgid "Error: WooCommerce Email Class not found. Make sure you have the newest version of WooCommerce installed."
+msgstr ""
+
+#: templates/backend/backend-options-page-template.php:37
+msgid "Email subject:"
+msgstr ""
+
+#: templates/backend/backend-options-page-template.php:41
+msgid "Email content:"
+msgstr ""
+
+#: templates/backend/backend-options-page-template.php:49
+msgid "Template loaded from:"
+msgstr ""
+
+#: templates/backend/backend-options-page-template.php:55
+msgid "Reload template"
+msgstr ""
+
+#: templates/backend/backend-options-page.php:20
+msgid "Add Customer for WooCommerce settings"
+msgstr ""
+
+#: templates/backend/backend-options-page.php:28
+msgid "General"
+msgstr ""
+
+#: templates/backend/backend-options-page.php:29
+msgid "Template"
+msgstr ""
+
+#. translators: 1: Number of customers added, 2: Number of customers edited
+#: templates/backend/backend-options-page.php:52
+#, php-format
+msgid "There have been %1$d customers added and %2$d customers edited by the Plugin"
+msgstr ""
+
+#: templates/backend/backend-options-page.php:59
+msgid "Made with ❤️ by Dan's Art"
+msgstr ""
+
+#: templates/backend/components/checkbox.php:33
+msgid "Activated"
+msgstr ""
+
+#: templates/backend/components/select-input.php:29
+msgid "Options must be formatted as an array"
+msgstr ""
+
+#: templates/email/new-account.php:27
+msgid "New account created"
+msgstr ""
+
+#. translators: %s: Name of the customer
+#: templates/email/new-account.php:29
+#, php-format
+msgid "Hi, %s"
+msgstr ""
+
+#. translators: %s: Name of the website
+#: templates/email/new-account.php:30
+#, php-format
+msgid "Your account on %s has been created."
+msgstr ""
+
+#. translators: %s: Email address of the customer
+#: templates/email/new-account.php:31
+#, php-format
+msgid "Email: %s"
+msgstr ""
+
+#: templates/email/new-account.php:34
+msgid "To log in, you have to create a password for your account."
+msgstr ""
+
+#: templates/email/new-account.php:35
+msgid "Set the password for your account"
+msgstr ""
+
+#: templates/order/add-checkbox.php:32
+msgid "Add new customer"
+msgstr ""
+
+#: templates/order/add-checkbox.php:35
+msgid "Save as new customer with role: "
+msgstr ""
+
+#: templates/order/add-checkbox.php:35
+msgid "Save as new customer"
+msgstr ""
+
+#: templates/order/add-checkbox.php:51
+msgid "Send email to new customer"
+msgstr ""
+
+#: templates/order/update-checkbox.php:23
+msgid "Update customer"
+msgstr ""
+
+#: templates/order/update-checkbox.php:26
+msgid "Updates the existing customer"
+msgstr ""
+
+#: include/js/wac-main-script.js:128
+msgid "You chose \"Administrator\" as the default role for a new customer. This is not recommended and can lead to an increased attack surface. \"Customer\" is the recommended role."
+msgstr ""

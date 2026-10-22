@@ -30,7 +30,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
      */
     public function setup_options()
     {
-        $title = __('Add customer settings', 'wac');
+        $title = __('Add customer settings', 'add-customer-for-woocommerce');
         add_submenu_page('woocommerce', $title, $title, 'manage_options', 'wac_general_options', [$this, 'render_options']);
     }
 
@@ -42,7 +42,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
     public function render_options()
     {
         $wac = new woo_add_customer();
-        echo $wac->load_template_to_var('backend-options-page', 'backend/');
+        echo $wac->load_template_to_var('backend-options-page', 'backend/'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The template escapes its output
         return;
     }
 
@@ -58,7 +58,9 @@ class woo_add_customer_backend extends woo_add_customer_helper
         if($pagenow !== 'admin.php' && $pagenow !== 'options.php' ) {
             return false;
         }
-        if (!isset( $_REQUEST['page'] ) || $_REQUEST['page'] !== 'wac_general_options' ) {
+        //Only used to check if the settings page is loaded
+        $page = isset($_REQUEST['page']) ? sanitize_key(wp_unslash($_REQUEST['page'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        if ($page !== 'wac_general_options') {
             return false;
         }
         $wac = new woo_add_customer();
@@ -66,20 +68,20 @@ class woo_add_customer_backend extends woo_add_customer_helper
         $blog_name = get_bloginfo('name');
         $default_email_from = $wac->get_mail_from();
         $user_miss_match_message = ($wac->is_customer_created_miss_match())
-            ? $wac->wac_format_notice(__('<b>Warning:</b> There were some customers created before this feature got introduced. If you activate that, some of the customers will still get the notifications.', 'wac'), 'warning')
+            ? $wac->wac_format_notice(__('<b>Warning:</b> There were some customers created before this feature got introduced. If you activate that, some of the customers will still get the notifications.', 'add-customer-for-woocommerce'), 'warning')
             : "";
         $notification_confilct_message = ($this->get_wac_option('wac_suppress_all_notification') === 'yes' and $this->get_wac_option('wac_send_notification') === 'yes')
-            ? $wac->wac_format_notice(__('<b>Warning:</b> Emails to user regarding account creation will still be sent. Uncheck "Send notifications to new user" to deactivate those as well', 'wac'), 'warning')
+            ? $wac->wac_format_notice(__('<b>Warning:</b> Emails to user regarding account creation will still be sent. Uncheck "Send notifications to new user" to deactivate those as well', 'add-customer-for-woocommerce'), 'warning')
             : "";
 
         register_setting('wac_general_options', 'wac_general_options', [$this, 'wac_options_validate']);
 
-        add_settings_section('wac_main_settings', __('Main settings', 'wac'), null, 'wac_general_options');
-        add_settings_section('wac_template_settings', __('Template settings', 'wac'), null, 'wac_general_options');
+        add_settings_section('wac_main_settings', __('Main settings', 'add-customer-for-woocommerce'), null, 'wac_general_options');
+        add_settings_section('wac_template_settings', __('Template settings', 'add-customer-for-woocommerce'), null, 'wac_general_options');
 
         add_settings_field(
             'wac_preselect',
-            __('Add new customer by default', 'wac'),
+            __('Add new customer by default', 'add-customer-for-woocommerce'),
             [$this, 'get_settings_option'],
             'wac_general_options',
             'wac_main_settings',
@@ -87,14 +89,14 @@ class woo_add_customer_backend extends woo_add_customer_helper
                 'label_for' => 'wac_preselect',
                 'type' => 'checkbox',
                 'class' => 'wac-checkbox wac_preselect',
-                'description' => __('Select this box if you\'d like to have the "Add Customer" Checkbox activated by default.', 'wac'),
+                'description' => __('Select this box if you\'d like to have the "Add Customer" Checkbox activated by default.', 'add-customer-for-woocommerce'),
                 'page' => 'wac_general_options'
 
             )
         );
         add_settings_field(
             'wac_preselect_update',
-            __('Update new customer by default', 'wac'),
+            __('Update new customer by default', 'add-customer-for-woocommerce'),
             [$this, 'get_settings_option'],
             'wac_general_options',
             'wac_main_settings',
@@ -102,14 +104,14 @@ class woo_add_customer_backend extends woo_add_customer_helper
                 'label_for' => 'wac_preselect_update',
                 'type' => 'checkbox',
                 'class' => 'wac-checkbox wac_preselect_update',
-                'description' => __('If this is checked, the existing customer data will be updated when the order is updated.', 'wac'),
+                'description' => __('If this is checked, the existing customer data will be updated when the order is updated.', 'add-customer-for-woocommerce'),
                 'page' => 'wac_general_options'
 
             )
         );
         add_settings_field(
             'wac_send_notification',
-            __('Send notifications to new user', 'wac'),
+            __('Send notifications to new user', 'add-customer-for-woocommerce'),
             [$this, 'get_settings_option'],
             'wac_general_options',
             'wac_main_settings',
@@ -117,13 +119,13 @@ class woo_add_customer_backend extends woo_add_customer_helper
                 'label_for' => 'wac_send_notification',
                 'type' => 'checkbox',
                 'class' => 'wac-checkbox wac_preselect',
-                'description' => __('Check this to send an "account created" email to the customer after account creation.', 'wac'),
+                'description' => __('Check this to send an "account created" email to the customer after account creation.', 'add-customer-for-woocommerce'),
                 'page' => 'wac_general_options'
             )
         );
         add_settings_field(
             'wac_suppress_all_notification',
-            __('Suppress all notifications to users created by the plugin', 'wac'),
+            __('Suppress all notifications to users created by the plugin', 'add-customer-for-woocommerce'),
             [$this, 'get_settings_option'],
             'wac_general_options',
             'wac_main_settings',
@@ -131,13 +133,13 @@ class woo_add_customer_backend extends woo_add_customer_helper
                 'label_for' => 'wac_suppress_all_notification',
                 'type' => 'checkbox',
                 'class' => 'wac-checkbox wac_preselect',
-                'description' => __('Check this if you like to not send any emails to users who were created by the plugin.', 'wac') . $user_miss_match_message . $notification_confilct_message,
+                'description' => __('Check this if you like to not send any emails to users who were created by the plugin.', 'add-customer-for-woocommerce') . $user_miss_match_message . $notification_confilct_message,
                 'page' => 'wac_general_options'
             )
         );
         add_settings_field(
             'wac_add_customer_order_to_user',
-            __('Link orders to customer', 'wac'),
+            __('Link orders to customer', 'add-customer-for-woocommerce'),
             [$this, 'get_settings_option'],
             'wac_general_options',
             'wac_main_settings',
@@ -145,13 +147,27 @@ class woo_add_customer_backend extends woo_add_customer_helper
                 'label_for' => 'wac_add_customer_order_to_user',
                 'type' => 'checkbox',
                 'class' => 'wac-checkbox',
-                'description' => __('Check this to link orders created in the frontend. The email will be used as an identifier. Only works if the user creates an order as a guest.', 'wac'),
+                'description' => __('Check this to link orders created in the frontend. The email will be used as an identifier. Only works if the user creates an order as a guest.', 'add-customer-for-woocommerce'),
+                'page' => 'wac_general_options'
+            )
+        );
+        add_settings_field(
+            'wac_allow_pay_for_order',
+            __('Allow payment without login', 'add-customer-for-woocommerce'),
+            [$this, 'get_settings_option'],
+            'wac_general_options',
+            'wac_main_settings',
+            array(
+                'label_for' => 'wac_allow_pay_for_order',
+                'type' => 'checkbox',
+                'class' => 'wac-checkbox',
+                'description' => __('Check this to let allow the order to be paid by logged out users or admins via the "Customer payment page" link . This only works if the customer, assigned to the order, was created by this plugin. Administrators and shop managers can also open the payment page of any customer order.', 'add-customer-for-woocommerce'),
                 'page' => 'wac_general_options'
             )
         );
         add_settings_field(
             'wac_define_user_role',
-            __('Define user role individually', 'wac'),
+            __('Define user role individually', 'add-customer-for-woocommerce'),
             [$this, 'get_settings_option'],
             'wac_general_options',
             'wac_main_settings',
@@ -159,13 +175,13 @@ class woo_add_customer_backend extends woo_add_customer_helper
                 'label_for' => 'wac_define_user_role',
                 'type' => 'checkbox',
                 'class' => 'wac-checkbox wac_preselect',
-                'description' => __('Allow user role selection before creating a new customer', 'wac'),
+                'description' => __('Allow user role selection before creating a new customer', 'add-customer-for-woocommerce'),
                 'page' => 'wac_general_options'
             )
         );
         add_settings_field(
             'wac_default_user_role',
-            __('User role for new customer', 'wac'),
+            __('User role for new customer', 'add-customer-for-woocommerce'),
             [$this, 'get_settings_option'],
             'wac_general_options',
             'wac_main_settings',
@@ -173,7 +189,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
                 'label_for' => 'wac_default_user_role',
                 'type' => 'select',
                 'class' => 'wac-select-input',
-                'description' => __('Define the user role for new customers', 'wac'),
+                'description' => __('Define the user role for new customers', 'add-customer-for-woocommerce'),
                 'page' => 'wac_general_options',
                 'values_array' => array_merge($wac->get_user_role_array()),
                 'default_value' => 'customer'
@@ -181,7 +197,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
         );
         add_settings_field(
             'wac_fakemail_format',
-            __('Auto-generated email format', 'wac'),
+            __('Auto-generated email format', 'add-customer-for-woocommerce'),
             [$this, 'get_settings_option'],
             'wac_general_options',
             'wac_main_settings',
@@ -190,9 +206,9 @@ class woo_add_customer_backend extends woo_add_customer_helper
                 'type' => 'text',
                 'class' => 'wac-text-input',
                 'description' =>
-                __('The format you\'d like to have for the automatically generated email.', 'wac') . ' ' .
-                    __('You can use the supported tags below wrapping them in [ ]', 'wac') . '<br/>' .
-                    __('Supported tags:', 'wac') . ' <strong>' . implode(', ', apply_filters('wac_supported_fake_email_parts', $wac->supported_fake_email_parts)) . '</strong>',
+                __('The format you\'d like to have for the automatically generated email.', 'add-customer-for-woocommerce') . ' ' .
+                    __('You can use the supported tags below wrapping them in [ ]', 'add-customer-for-woocommerce') . '<br/>' .
+                    __('Supported tags:', 'add-customer-for-woocommerce') . ' <strong>' . implode(', ', apply_filters('wac_supported_fake_email_parts', $wac->supported_fake_email_parts)) . '</strong>', // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Public hook, renaming would break existing customizations
                 'page' => 'wac_general_options',
                 'default_value' => '[first_name].[last_name].[company]@' . $wac->get_domain_name()
             )
@@ -201,7 +217,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
         //Template settings fields
         add_settings_field(
             'wac_template_subject_add_account',
-            __('New account created email subject', 'wac'),
+            __('New account created email subject', 'add-customer-for-woocommerce'),
             [$this, 'get_settings_option'],
             'wac_general_options',
             'wac_template_settings',
@@ -209,14 +225,15 @@ class woo_add_customer_backend extends woo_add_customer_helper
                 'label_for' => 'wac_template_subject_add_account',
                 'type' => 'text',
                 'class' => 'wac-text-input',
-                'description' => __('The subject / header for the email sent to new customers', 'wac'),
+                'description' => __('The subject / header for the email sent to new customers', 'add-customer-for-woocommerce'),
                 'page' => 'wac_general_options',
-                'default_value' => sprintf(__("New account created at %s", 'wac'), $blog_name)
+                /* translators: %s: Name of the website */
+                'default_value' => sprintf(__("New account created at %s", 'add-customer-for-woocommerce'), $blog_name)
             )
         );
         add_settings_field(
             'wac_email_from',
-            __('Sender email', 'wac'),
+            __('Sender email', 'add-customer-for-woocommerce'),
             [$this, 'get_settings_option'],
             'wac_general_options',
             'wac_template_settings',
@@ -224,7 +241,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
                 'label_for' => 'wac_email_from',
                 'type' => 'text',
                 'class' => 'wac-text-input',
-                'description' => __('The sender email', 'wac'),
+                'description' => __('The sender email', 'add-customer-for-woocommerce'),
                 'page' => 'wac_general_options',
                 'default_value' => $default_email_from
             )
@@ -252,7 +269,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
                     $wac = new woo_add_customer();
                     $allowed_roles = $wac->get_user_role_array();
                     if (!$allowed_roles[$value]) {
-                        $this->wac_set_notice(esc_html__('You are not allowed to set this user role', 'wac'), "error", $key);
+                        $this->wac_set_notice(esc_html__('You are not allowed to set this user role', 'add-customer-for-woocommerce'), "error", $key);
                     } else {
                         $input[$key] = htmlspecialchars($value);
                     }
@@ -281,7 +298,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
             case 'wac_fakemail_format':
                 //Check if multiple @ exists
                 if (!empty($value) and substr_count($value, '@') !== 1) {
-                    return "<div class='notice notice-error'><p>" . __('Invalid email address', 'wac') . "</p></div>";
+                    return "<div class='notice notice-error'><p>" . __('Invalid email address', 'add-customer-for-woocommerce') . "</p></div>";
                 }
                 break;
 
@@ -307,13 +324,13 @@ class woo_add_customer_backend extends woo_add_customer_helper
 
         switch ($type) {
             case 'checkbox':
-                echo $this->load_template_to_var('checkbox', 'backend/components', $label_for, $options_val, $default_value, $args);
+                echo $this->load_template_to_var('checkbox', 'backend/components', $label_for, $options_val, $default_value, $args); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The template escapes its output
                 break;
             case 'text':
-                echo $this->load_template_to_var('text-input', 'backend/components', $label_for, $options_val, $default_value, $args);
+                echo $this->load_template_to_var('text-input', 'backend/components', $label_for, $options_val, $default_value, $args); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The template escapes its output
                 break;
             case 'select':
-                echo $this->load_template_to_var('select-input', 'backend/components', $label_for, $options_val, $default_value, $args);
+                echo $this->load_template_to_var('select-input', 'backend/components', $label_for, $options_val, $default_value, $args); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The template escapes its output
                 break;
 
             default:

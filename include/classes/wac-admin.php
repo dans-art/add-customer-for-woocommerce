@@ -38,7 +38,8 @@ class woo_add_customer_admin extends woo_add_customer_helper
         if (class_exists('WC_Admin_Notices')) {
             $this->adminnotice = new WC_Admin_Notices();
         }
-        add_action('init', [$this, 'wac_load_textdomain']); //load language 
+        //The translations are loaded by WordPress from translate.wordpress.org
+        add_filter('load_script_textdomain_relative_path', [$this, 'wac_script_translation_path'], 10, 2);
         add_action('woocommerce_admin_order_data_after_billing_address', [$this, 'wac_add_checkbox'], 10, 1);
         add_action('woocommerce_created_customer', [$this, 'wac_disable_new_customer_mail'], 1, 1);
         add_action('woocommerce_process_shop_order_meta', [$this, 'wac_save_order'], 99, 2);
@@ -77,6 +78,262 @@ class woo_add_customer_admin extends woo_add_customer_helper
 
         //Modify the users query to filter for add customer users
         add_filter('pre_get_users', [$this, 'wac_pre_get_users']);
+
+        //Allow paying for orders without login.
+        add_filter('user_has_cap', [$this, 'wac_allow_pay_for_order'], 20, 3);
+        add_action('template_redirect', [$this, 'wac_remember_email_verification']);
+        add_filter('woocommerce_order_email_verification_required', [$this, 'wac_skip_verified_email'], 10, 2);
+        add_filter('woocommerce_order_received_verify_known_shoppers', [$this, 'wac_order_received_verify_known_shoppers']);
+        add_filter('woocommerce_payment_successful_result', [$this, 'wac_log_payment_by_other_user'], 10, 2);
+    }
+
+    /**
+     * Logs to Simple History and adds an order note, if the order was paid on the payment page by:
+     * - A logged out user
+     * - A shop manager or administrator, on behalf of the customer
+     * For redirect based gateways (e.g. PayPal), this is logged when the user gets redirected to the payment provider.
+     *
+     * @param array $result - The result of the payment gateway
+     * @param int $order_id - The order id
+     * @return array The unchanged result
+     */
+    public function wac_log_payment_by_other_user($result, $order_id)
+    {
+        $order = wc_get_order($order_id);
+        //Only on the payment page, the order key is not in the URL on the regular checkout
+        if (!$order || !$this->is_pay_without_login_active() || !$this->is_valid_order_key_in_request($order)) {
+            return $result;
+        }
+
+        $current_user = wp_get_current_user();
+        $is_logged_out = !$current_user->exists();
+        $user_can_manage_shop = current_user_can('manage_woocommerce');
+        $is_other_customer = $order->get_customer_id() !== $current_user->ID;
+        $payment_method = $order->get_payment_method_title();
+
+        if ($is_logged_out && $this->is_payable_without_login($order)) {
+            $this->log_event('paid_without_login', $order_id, $order->get_order_number(), $order->get_billing_email(), $payment_method, $order->get_customer_id());
+            /* translators: %s: Payment method title */
+            $order->add_order_note(sprintf(__('Order paid without login by an anonymous user via the customer payment page. Payment method: %s', 'add-customer-for-woocommerce'), $payment_method));
+        } elseif ($user_can_manage_shop && $is_other_customer) {
+            $this->log_event('paid_by_shop_manager', $order_id, $order->get_order_number(), $order->get_billing_email(), $current_user->display_name, $payment_method, $order->get_customer_id(), $current_user->ID);
+            /* translators: 1: Display name of the shop manager, 2: Payment method title */
+            $order->add_order_note(sprintf(__('Order paid by %1$s on behalf of the customer via the customer payment page. Payment method: %2$s', 'add-customer-for-woocommerce'), $current_user->display_name, $payment_method));
+        }
+        return $result;
+    }
+
+    /**
+     * Grants the "pay_for_order" capability, so the payment page of an order can be opened by:
+     * - Logged out users with a valid order key, and only if the customer of the order was created by the plugin
+     * - Shop managers and administrators, for any order
+     * Only active if the option "wac_allow_pay_for_order" is set.
+     *
+     * @param array $allcaps - All the capabilities of the user
+     * @param array $caps - The required capabilities
+     * @param array $args - [0] => Requested capability, [1] => User ID, [2] => Order ID
+     * @return array The capabilities of the user
+     */
+    public function wac_allow_pay_for_order($allcaps, $caps, $args)
+    {
+        $is_pay_for_order_check = isset($args[0]) && $args[0] === 'pay_for_order';
+        $has_order_id = !empty($args[2]);
+        if (!$is_pay_for_order_check || !$this->is_pay_without_login_active() || !$has_order_id) {
+            return $allcaps;
+        }
+
+        //do not use current_user_can() here, it would call this filter again
+        //This allows admins and shop manages to pay
+        $user_can_manage_shop = !empty($allcaps['manage_woocommerce']);
+        if ($user_can_manage_shop) {
+            $allcaps['pay_for_order'] = true;
+            return $allcaps;
+        }
+
+        //For logged out users
+        $is_logged_out = empty($args[1]);
+        $order = wc_get_order($args[2]);
+        if ($is_logged_out && $order && $this->is_payable_without_login($order)) {
+            $allcaps['pay_for_order'] = true;
+        }
+        return $allcaps;
+    }
+
+    /**
+     * Remembers a successful email verification of a logged out user in the WooCommerce session.
+     * Without this, WooCommerce asks for the email again on every request, e.g. after a failed payment submission.
+     * Runs on template_redirect, so the session cookie can still be set.
+     *
+     * @return void
+     */
+    public function wac_remember_email_verification()
+    {
+        $is_logged_out = !is_user_logged_in();
+        $is_valid_nonce = (bool) wp_verify_nonce(filter_input(INPUT_POST, 'check_submission'), 'wc_verify_email');
+        $session = $this->get_wc_session();
+        if (!$is_logged_out || !$is_valid_nonce || !$session) {
+            return;
+        }
+
+        $order = $this->get_order_from_endpoint();
+        if (!$order || !$this->is_payable_without_login($order)) {
+            return;
+        }
+
+        $supplied_email = sanitize_email(wp_unslash(filter_input(INPUT_POST, 'email')));
+        $is_matching_email = !empty($supplied_email) && 0 === strcasecmp($supplied_email, $order->get_billing_email());
+        if (!$is_matching_email) {
+            return;
+        }
+
+        $verified_orders = (array) $session->get('wac_verified_orders', []);
+        if (!in_array($order->get_id(), $verified_orders, true)) {
+            $verified_orders[] = $order->get_id();
+        }
+        if (!$session->has_session()) {
+            $session->set_customer_session_cookie(true);
+        }
+        $session->set('wac_verified_orders', $verified_orders);
+    }
+
+    /**
+     * Skips the email verification, if the logged out user already verified the email for this order.
+     *
+     * @param bool $verification_required - If WooCommerce requires the email verification
+     * @param WC_Order $order - The order to verify
+     * @return bool If the email verification is required
+     */
+    public function wac_skip_verified_email($verification_required, $order)
+    {
+        $is_logged_out = !is_user_logged_in();
+        if (!$verification_required || !$is_logged_out) {
+            return $verification_required;
+        }
+
+        if ($this->is_email_verified_in_session($order) && $this->is_payable_without_login($order)) {
+            return false;
+        }
+        return $verification_required;
+    }
+
+    /**
+     * Allows logged out users to see the "order received" page of orders, which they were allowed to pay for without login.
+     * WooCommerce would ask them to log in. Only if the email was verified on the payment page in the same session,
+     * because the order confirmation block shows the order details without any further verification.
+     *
+     * @param bool $verify_known_shoppers - If the user has to log in to see the order
+     * @return bool
+     */
+    public function wac_order_received_verify_known_shoppers($verify_known_shoppers)
+    {
+        $is_logged_out = !is_user_logged_in();
+        $order = $this->get_order_from_endpoint();
+        if (!$is_logged_out || !$order) {
+            return $verify_known_shoppers;
+        }
+
+        if ($this->is_email_verified_in_session($order) && $this->is_payable_without_login($order)) {
+            return false;
+        }
+        return $verify_known_shoppers;
+    }
+
+    /**
+     * Checks if the option "wac_allow_pay_for_order" is set
+     *
+     * @return bool
+     */
+    public function is_pay_without_login_active()
+    {
+        return $this->get_wac_option('wac_allow_pay_for_order') === 'yes';
+    }
+
+    /**
+     * Checks if the order can be paid without login:
+     * The option is active, the customer was created by the plugin and the order key in the URL is valid.
+     *
+     * @param WC_Order $order
+     * @return bool
+     */
+    public function is_payable_without_login($order)
+    {
+        $is_option_active = $this->is_pay_without_login_active();
+        $is_customer_created_by_plugin = $this->is_order_customer_created_by_plugin($order);
+        $is_valid_order_key = $this->is_valid_order_key_in_request($order);
+
+        return $is_option_active && $is_customer_created_by_plugin && $is_valid_order_key;
+    }
+
+    /**
+     * Checks if the order key in the URL matches the order
+     *
+     * @param WC_Order $order
+     * @return bool
+     */
+    public function is_valid_order_key_in_request($order)
+    {
+        //The order key is the access token of the payment link, it gets compared with hash_equals()
+        $order_key = (isset($_GET['key']) && is_string($_GET['key'])) ? sanitize_text_field(wp_unslash($_GET['key'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        return !empty($order_key) && hash_equals($order->get_order_key(), $order_key);
+    }
+
+    /**
+     * Checks if the email of the order was verified before in the WooCommerce session
+     *
+     * @param WC_Order $order
+     * @return bool
+     */
+    public function is_email_verified_in_session($order)
+    {
+        $session = $this->get_wc_session();
+        if (!$session) {
+            return false;
+        }
+        $verified_orders = (array) $session->get('wac_verified_orders', []);
+        return in_array($order->get_id(), $verified_orders, true);
+    }
+
+    /**
+     * Gets the WooCommerce session
+     *
+     * @return WC_Session|null Null if no session is available
+     */
+    public function get_wc_session()
+    {
+        $session = WC()->session;
+        return is_a($session, 'WC_Session') ? $session : null;
+    }
+
+    /**
+     * Gets the order of the current "order-pay" or "order-received" page
+     *
+     * @return WC_Order|false False if not on one of those pages or if the order is not found
+     */
+    public function get_order_from_endpoint()
+    {
+        global $wp;
+        $order_id = 0;
+        if (!empty($wp->query_vars['order-pay'])) {
+            $order_id = absint($wp->query_vars['order-pay']);
+        } elseif (!empty($wp->query_vars['order-received'])) {
+            $order_id = absint($wp->query_vars['order-received']);
+        }
+        return ($order_id) ? wc_get_order($order_id) : false;
+    }
+
+    /**
+     * Checks if the customer of the order was created by the plugin
+     *
+     * @param WC_Order $order
+     * @return bool
+     */
+    public function is_order_customer_created_by_plugin($order)
+    {
+        $customer_id = $order->get_user_id();
+        if (empty($customer_id)) {
+            return false;
+        }
+        return (bool) get_user_meta($customer_id, 'wac_created_by_plugin', true);
     }
 
     /**
@@ -148,6 +405,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
         return $fields;
     }
 
+    // phpcs:disable WordPress.Security.NonceVerification -- Runs on the WooCommerce order save and checkout hooks, WooCommerce verifies the nonce before.
     /**
      * Hooks in after all fields are saved.
      * If "wac_add_customer" is checked, it will create a new user or link a existing one, if email exists in user db.
@@ -161,12 +419,12 @@ class woo_add_customer_admin extends woo_add_customer_helper
         //Load the order
         $order = wc_get_order($order_id);
         if (!$order) {
-            $this->log_event_message(__('No order found', 'wac'), $order_id, 'error');
+            $this->log_event_message(__('No order found', 'add-customer-for-woocommerce'), $order_id, 'error');
             return;
         }
         if (isset($_REQUEST['wac_add_customer']) and $_REQUEST['wac_add_customer'] == 'true') {
             //Add new customer
-            $email = isset($_REQUEST['_billing_email']) ? sanitize_email($_REQUEST['_billing_email']) : false;
+            $email = isset($_REQUEST['_billing_email']) ? sanitize_email(wp_unslash($_REQUEST['_billing_email'])) : false;
             $existing_user = get_user_by('email', $email);
             $user_id = null;
             if ($existing_user === false) {
@@ -184,7 +442,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
                 $user_id =  $existing_user->ID;
                 $order->set_customer_id($user_id);
             }
-            do_action('wac_after_insert_new_customer', $user_id, $order_id);
+            do_action('wac_after_insert_new_customer', $user_id, $order_id); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Public hook, renaming would break existing customizations
             $order->save();
             return true;
         }
@@ -201,7 +459,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
                 $this->increase_wac_counter('edit');
             }
 
-            do_action('wac_after_insert_updated_customer', $user_id, $order_id);
+            do_action('wac_after_insert_updated_customer', $user_id, $order_id); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Public hook, renaming would break existing customizations
         }
         return;
     }
@@ -223,19 +481,19 @@ class woo_add_customer_admin extends woo_add_customer_helper
         $order_id = $order->get_id();
 
         if ($order->get_customer_id() > 0) {
-            $this->log_event("order_linked_to_account_failed", $order_id, $email, __('This order is already linked to a user', 'wac'));
+            $this->log_event("order_linked_to_account_failed", $order_id, $email, __('This order is already linked to a user', 'add-customer-for-woocommerce'));
             return;
         }
         $user = get_user_by('email', $email);
         if ($user === false) {
-            $this->log_event("order_linked_to_account_failed", $order_id, $email, __('No user found with the given email', 'wac'));
+            $this->log_event("order_linked_to_account_failed", $order_id, $email, __('No user found with the given email', 'add-customer-for-woocommerce'));
             return;
         }
         $order->set_customer_id($user->ID);
         if ($order->save()) {
             $this->log_event("order_linked_to_account", $order_id, $email);
         } else {
-            $this->log_event("order_linked_to_account_failed", $order_id, $email, __('Failed to save the order', 'wac'));
+            $this->log_event("order_linked_to_account_failed", $order_id, $email, __('Failed to save the order', 'add-customer-for-woocommerce'));
         }
     }
 
@@ -267,17 +525,17 @@ class woo_add_customer_admin extends woo_add_customer_helper
     public function wac_add_customer($email, $order_id)
     {
 
-        $user_first = (isset($_REQUEST['_billing_first_name']) and !empty($_REQUEST['_billing_first_name'])) ? sanitize_text_field($_REQUEST['_billing_first_name']) : '';
-        $user_last = (isset($_REQUEST['_billing_last_name']) and !empty($_REQUEST['_billing_last_name'])) ? sanitize_text_field($_REQUEST['_billing_last_name']) : '';
-        $user_company = (isset($_REQUEST['_billing_company']) and !empty($_REQUEST['_billing_company'])) ? sanitize_text_field($_REQUEST['_billing_company']) : '';
+        $user_first = (isset($_REQUEST['_billing_first_name']) and !empty($_REQUEST['_billing_first_name'])) ? sanitize_text_field(wp_unslash($_REQUEST['_billing_first_name'])) : '';
+        $user_last = (isset($_REQUEST['_billing_last_name']) and !empty($_REQUEST['_billing_last_name'])) ? sanitize_text_field(wp_unslash($_REQUEST['_billing_last_name'])) : '';
+        $user_company = (isset($_REQUEST['_billing_company']) and !empty($_REQUEST['_billing_company'])) ? sanitize_text_field(wp_unslash($_REQUEST['_billing_company'])) : '';
         $user = $this->wac_get_unique_user($user_first . '.' . $user_last . '.' . $user_company);
         $password = wp_generate_password();
         $email_is_fake = false;
-        $user_role = (isset($_REQUEST['wac_add_customer_role'])) ? sanitize_key($_REQUEST['wac_add_customer_role']) : $this->get_default_user_role();
+        $user_role = (isset($_REQUEST['wac_add_customer_role'])) ? sanitize_key(wp_unslash($_REQUEST['wac_add_customer_role'])) : $this->get_default_user_role();
 
         $order = wc_get_order($order_id);
         if (!$order) {
-            $this->log_event_message(__('No order found', 'wac'), $order_id, 'error');
+            $this->log_event_message(__('No order found', 'add-customer-for-woocommerce'), $order_id, 'error');
             return;
         }
 
@@ -289,7 +547,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
 
         //Add hook to allow to modify the email
         $email = $this->make_email_valid($email);
-        $email = apply_filters('wac_add_customer_email', $email, $user);
+        $email = apply_filters('wac_add_customer_email', $email, $user); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Public hook, renaming would break existing customizations
 
         //Validate the email
         if (is_email($email) === false) {
@@ -307,7 +565,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
         } else {
             //Add the role
             add_filter('woocommerce_new_customer_data', function ($data) {
-                $user_role = (isset($_REQUEST['wac_add_customer_role'])) ? sanitize_key($_REQUEST['wac_add_customer_role']) : $this->get_default_user_role();
+                $user_role = (isset($_REQUEST['wac_add_customer_role'])) ? sanitize_key(wp_unslash($_REQUEST['wac_add_customer_role'])) : $this->get_default_user_role();
                 $data['role'] = $user_role;
                 return $data;
             });
@@ -339,6 +597,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
                 //Adds the meta for the customer in order to identify customers created by the plugin
                 update_user_meta($user_id, 'wac_created_by_plugin', true);
                 update_user_meta($user_id, 'wac_created_by_plugin_time', time());
+                update_user_meta($user_id, 'wac_created_by_author_id', get_current_user_id());
 
                 $this->log_event("added_user", $order_id, $user, $email);
                 $this->increase_wac_counter('add');
@@ -400,13 +659,14 @@ class woo_add_customer_admin extends woo_add_customer_helper
         );
         //Save all the default fields
         foreach ($fields as $f_name) {
-            $f_value = (isset($_REQUEST['_' . $f_name]) and !empty($_REQUEST['_' . $f_name])) ? sanitize_text_field($_REQUEST['_' . $f_name]) : false;
+            $f_value = (isset($_REQUEST['_' . $f_name]) and !empty($_REQUEST['_' . $f_name])) ? sanitize_text_field(wp_unslash($_REQUEST['_' . $f_name])) : false;
             $old_value = get_user_meta($user_id, $f_name, true);
 
             //Only save if the value got updated
             if (($f_value !== $old_value) and $f_value !== false) {
                 if (!update_user_meta($user_id, $f_name, $f_value)) {
-                    $this->wac_set_notice(sprintf(__('Could not save the default field "%s"', 'wac'), $f_name), 'error', $order_id);
+                    /* translators: %s: Name of the field */
+                    $this->wac_set_notice(sprintf(__('Could not save the default field "%s"', 'add-customer-for-woocommerce'), $f_name), 'error', $order_id);
                 } else {
                     $changes_count++;
                 }
@@ -415,12 +675,13 @@ class woo_add_customer_admin extends woo_add_customer_helper
         //saves the custom billing fields
         if (!empty($this->custom_billing_fields) and is_array($this->custom_billing_fields)) {
             foreach ($this->custom_billing_fields as $field_id => $value) {
-                $cf_value = (isset($_REQUEST['_billing_' . $field_id]) and !empty($_REQUEST['_billing_' . $field_id])) ? sanitize_text_field($_REQUEST['_billing_' . $field_id]) : false;
+                $cf_value = (isset($_REQUEST['_billing_' . $field_id]) and !empty($_REQUEST['_billing_' . $field_id])) ? sanitize_text_field(wp_unslash($_REQUEST['_billing_' . $field_id])) : false;
                 $old_value = get_user_meta($user_id, "billing_{$field_id}", true);
                 //Only update if value got changed
                 if (($cf_value !== $old_value)) {
                     if (!update_user_meta($user_id, "billing_{$field_id}", $cf_value)) {
-                        $this->wac_set_notice(sprintf(__('Could not save the "%s" billing field', 'wac'), $field_id), 'error', $order_id);
+                        /* translators: %s: ID of the billing field */
+                        $this->wac_set_notice(sprintf(__('Could not save the "%s" billing field', 'add-customer-for-woocommerce'), $field_id), 'error', $order_id);
                     } else {
                         $changes_count++;
                     }
@@ -430,12 +691,13 @@ class woo_add_customer_admin extends woo_add_customer_helper
         //saves the custom shipping fields
         if (!empty($this->custom_shipping_fields) and is_array($this->custom_shipping_fields)) {
             foreach ($this->custom_shipping_fields as $field_id => $value) {
-                $sf_value = (isset($_REQUEST['_shipping_' . $field_id]) and !empty($_REQUEST['_shipping_' . $field_id])) ? sanitize_text_field($_REQUEST['_shipping_' . $field_id]) : false;
+                $sf_value = (isset($_REQUEST['_shipping_' . $field_id]) and !empty($_REQUEST['_shipping_' . $field_id])) ? sanitize_text_field(wp_unslash($_REQUEST['_shipping_' . $field_id])) : false;
                 $old_value = get_user_meta($user_id, "billing_{$field_id}", true);
                 //Only update if value got changed
                 if (($sf_value !== $old_value)) {
                     if (!update_user_meta($user_id, "shipping_{$field_id}", $sf_value)) {
-                        $this->wac_set_notice(sprintf(__('Could not save the "%s" shipping field', 'wac'), $field_id), 'error', $order_id);
+                        /* translators: %s: ID of the shipping field */
+                        $this->wac_set_notice(sprintf(__('Could not save the "%s" shipping field', 'add-customer-for-woocommerce'), $field_id), 'error', $order_id);
                     } else {
                         $changes_count++;
                     }
@@ -444,6 +706,8 @@ class woo_add_customer_admin extends woo_add_customer_helper
         }
         return $changes_count;
     }
+
+    // phpcs:enable WordPress.Security.NonceVerification
 
     /**
      * Creates a unique username
@@ -494,17 +758,14 @@ class woo_add_customer_admin extends woo_add_customer_helper
      */
     public function wac_add_checkbox($order)
     {
-        if ($order->get_customer_id() !== 0) {
-            //Show the update customer checkbox
-            $html = $this->load_template_to_var('update-checkbox', 'order');
-        } else {
-            $html = $this->load_template_to_var('add-checkbox', 'order', $order);
-        }
+        //Load both checkboxes, the JS shows the one matching the selected customer
+        $html = $this->load_template_to_var('add-checkbox', 'order', $order);
+        $html .= $this->load_template_to_var('update-checkbox', 'order');
 
         $this->wac_enqueue_admin_style();
         $this->wac_enqueue_admin_scripts();
 
-        echo $html;
+        echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The templates escape their output
         return;
     }
 
@@ -517,14 +778,34 @@ class woo_add_customer_admin extends woo_add_customer_helper
     public function wac_show_user_info($user)
     {
         $user_id = (isset($user->ID)) ? $user->ID : false;
+        if (!$user_id) {
+            return false;
+        }
         $is_wac_created = get_user_meta($user_id, 'wac_created_by_plugin', true);
         if (!$is_wac_created) {
-            return;
+            return false;
         }
         //Show the infos about the user creation
         $created_time = get_user_meta($user_id, 'wac_created_by_plugin_time', true);
-        $time = date('d. F Y - H:i:s', intval($created_time));
-        echo sprintf(__('User was created by the Add customer for WooCommerce Plugin on %s', 'wac'), $time);
+        $created_by = get_user_meta($user_id, 'wac_created_by_author_id', true);
+        $user_name = $created_by ? get_user_by('ID', $created_by) : false;
+        $time = $created_time
+            ? wp_date('d. F Y - H:i:s', intval($created_time))
+            : __('unknown date', 'add-customer-for-woocommerce');
+        if ($user_name instanceof WP_User) {
+            echo esc_html(sprintf(
+                /* translators: 1: Display name of the user who created the customer, 2: Date and time of creation */
+                __('User was created by %1$s with the Add customer for WooCommerce Plugin on %2$s', 'add-customer-for-woocommerce'),
+                $user_name->display_name,
+                $time
+            ));
+        } else {
+            echo esc_html(sprintf(
+                /* translators: %s: Date and time of creation */
+                __('User was created by the Add customer for WooCommerce Plugin on %s', 'add-customer-for-woocommerce'),
+                $time
+            ));
+        }
     }
 
 
@@ -546,7 +827,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
         $views['created_by_wac'] = sprintf(
             '<a href="%s">%s <span class="count">(%s)</span></a>',
             esc_url($url),
-            __('Add Customer', 'wac'),
+            __('Add Customer', 'add-customer-for-woocommerce'),
             $user_count
         );
         return $views;
@@ -560,7 +841,10 @@ class woo_add_customer_admin extends woo_add_customer_helper
      */
     public function wac_pre_get_users($query)
     {
-        if (!is_admin() or !isset($_GET['created_by']) or !$_GET['created_by'] === 'add_customer') {
+        //Only filters the user list, no data is changed
+        $created_by = isset($_GET['created_by']) ? sanitize_key(wp_unslash($_GET['created_by'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $is_add_customer_filter = $created_by === 'add_customer';
+        if (!is_admin() || !$is_add_customer_filter) {
             return $query;
         }
         if (empty($query->meta_key)) {
