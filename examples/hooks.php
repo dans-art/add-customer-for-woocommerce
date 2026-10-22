@@ -5,6 +5,10 @@
  * 
  */
 
+if (!defined('ABSPATH')) {
+    exit; // Exit if accessed directly
+}
+
 /**
  * Adds a custom billing field to the WooCommerce order page
  * This will be saved in the usermeta as well. So if you load a customer in a new order, this data will be loaded as well.
@@ -62,7 +66,7 @@ add_action('edit_user_profile', function ($user) {
     $custom_field_value = get_user_meta($user->ID, 'billing_custom_field_1', true);
     echo '<p class="form-field">';
     echo '<label for="billing_custom_field_1">My Fancy Field</label>';
-    echo '<input type="text" class="short" style="" name="billing_custom_field_1" id="billing_custom_field_1" value="' . $custom_field_value . '" placeholder=""> </p>';
+    echo '<input type="text" class="short" style="" name="billing_custom_field_1" id="billing_custom_field_1" value="' . esc_attr($custom_field_value) . '" placeholder=""> </p>';
 });
 
 /**
@@ -70,10 +74,9 @@ add_action('edit_user_profile', function ($user) {
  * @param string $user_id - The user id
  */
 add_action('edit_user_profile_update', function ($user_id) {
-    $field_value = isset($_REQUEST['billing_custom_field_1']) ? $_REQUEST['billing_custom_field_1'] : false;
+    //WordPress verifies the nonce of the user profile form before this hook
+    $field_value = isset($_REQUEST['billing_custom_field_1']) ? sanitize_text_field(wp_unslash($_REQUEST['billing_custom_field_1'])) : false; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
     if ($field_value) {
-        //So some validation here! Check for allowed characters etc.
-        $field_value = htmlspecialchars($field_value);
         update_user_meta($user_id, 'billing_custom_field_1', $field_value);
     }
 });

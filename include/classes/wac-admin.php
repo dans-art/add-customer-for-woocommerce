@@ -38,7 +38,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
         if (class_exists('WC_Admin_Notices')) {
             $this->adminnotice = new WC_Admin_Notices();
         }
-        add_action('init', [$this, 'wac_load_textdomain']); //load language
+        //The translations are loaded by WordPress from translate.wordpress.org
         add_filter('load_script_textdomain_relative_path', [$this, 'wac_script_translation_path'], 10, 2);
         add_action('woocommerce_admin_order_data_after_billing_address', [$this, 'wac_add_checkbox'], 10, 1);
         add_action('woocommerce_created_customer', [$this, 'wac_disable_new_customer_mail'], 1, 1);
@@ -272,7 +272,8 @@ class woo_add_customer_admin extends woo_add_customer_helper
      */
     public function is_valid_order_key_in_request($order)
     {
-        $order_key = (isset($_GET['key']) && is_string($_GET['key'])) ? wc_clean(wp_unslash($_GET['key'])) : '';
+        //The order key is the access token of the payment link, it gets compared with hash_equals()
+        $order_key = (isset($_GET['key']) && is_string($_GET['key'])) ? sanitize_text_field(wp_unslash($_GET['key'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         return !empty($order_key) && hash_equals($order->get_order_key(), $order_key);
     }
 
@@ -404,6 +405,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
         return $fields;
     }
 
+    // phpcs:disable WordPress.Security.NonceVerification -- Runs on the WooCommerce order save and checkout hooks, WooCommerce verifies the nonce before.
     /**
      * Hooks in after all fields are saved.
      * If "wac_add_customer" is checked, it will create a new user or link a existing one, if email exists in user db.
@@ -422,7 +424,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
         }
         if (isset($_REQUEST['wac_add_customer']) and $_REQUEST['wac_add_customer'] == 'true') {
             //Add new customer
-            $email = isset($_REQUEST['_billing_email']) ? sanitize_email($_REQUEST['_billing_email']) : false;
+            $email = isset($_REQUEST['_billing_email']) ? sanitize_email(wp_unslash($_REQUEST['_billing_email'])) : false;
             $existing_user = get_user_by('email', $email);
             $user_id = null;
             if ($existing_user === false) {
@@ -440,7 +442,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
                 $user_id =  $existing_user->ID;
                 $order->set_customer_id($user_id);
             }
-            do_action('wac_after_insert_new_customer', $user_id, $order_id);
+            do_action('wac_after_insert_new_customer', $user_id, $order_id); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Public hook, renaming would break existing customizations
             $order->save();
             return true;
         }
@@ -457,7 +459,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
                 $this->increase_wac_counter('edit');
             }
 
-            do_action('wac_after_insert_updated_customer', $user_id, $order_id);
+            do_action('wac_after_insert_updated_customer', $user_id, $order_id); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Public hook, renaming would break existing customizations
         }
         return;
     }
@@ -523,13 +525,13 @@ class woo_add_customer_admin extends woo_add_customer_helper
     public function wac_add_customer($email, $order_id)
     {
 
-        $user_first = (isset($_REQUEST['_billing_first_name']) and !empty($_REQUEST['_billing_first_name'])) ? sanitize_text_field($_REQUEST['_billing_first_name']) : '';
-        $user_last = (isset($_REQUEST['_billing_last_name']) and !empty($_REQUEST['_billing_last_name'])) ? sanitize_text_field($_REQUEST['_billing_last_name']) : '';
-        $user_company = (isset($_REQUEST['_billing_company']) and !empty($_REQUEST['_billing_company'])) ? sanitize_text_field($_REQUEST['_billing_company']) : '';
+        $user_first = (isset($_REQUEST['_billing_first_name']) and !empty($_REQUEST['_billing_first_name'])) ? sanitize_text_field(wp_unslash($_REQUEST['_billing_first_name'])) : '';
+        $user_last = (isset($_REQUEST['_billing_last_name']) and !empty($_REQUEST['_billing_last_name'])) ? sanitize_text_field(wp_unslash($_REQUEST['_billing_last_name'])) : '';
+        $user_company = (isset($_REQUEST['_billing_company']) and !empty($_REQUEST['_billing_company'])) ? sanitize_text_field(wp_unslash($_REQUEST['_billing_company'])) : '';
         $user = $this->wac_get_unique_user($user_first . '.' . $user_last . '.' . $user_company);
         $password = wp_generate_password();
         $email_is_fake = false;
-        $user_role = (isset($_REQUEST['wac_add_customer_role'])) ? sanitize_key($_REQUEST['wac_add_customer_role']) : $this->get_default_user_role();
+        $user_role = (isset($_REQUEST['wac_add_customer_role'])) ? sanitize_key(wp_unslash($_REQUEST['wac_add_customer_role'])) : $this->get_default_user_role();
 
         $order = wc_get_order($order_id);
         if (!$order) {
@@ -545,7 +547,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
 
         //Add hook to allow to modify the email
         $email = $this->make_email_valid($email);
-        $email = apply_filters('wac_add_customer_email', $email, $user);
+        $email = apply_filters('wac_add_customer_email', $email, $user); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Public hook, renaming would break existing customizations
 
         //Validate the email
         if (is_email($email) === false) {
@@ -563,7 +565,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
         } else {
             //Add the role
             add_filter('woocommerce_new_customer_data', function ($data) {
-                $user_role = (isset($_REQUEST['wac_add_customer_role'])) ? sanitize_key($_REQUEST['wac_add_customer_role']) : $this->get_default_user_role();
+                $user_role = (isset($_REQUEST['wac_add_customer_role'])) ? sanitize_key(wp_unslash($_REQUEST['wac_add_customer_role'])) : $this->get_default_user_role();
                 $data['role'] = $user_role;
                 return $data;
             });
@@ -657,7 +659,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
         );
         //Save all the default fields
         foreach ($fields as $f_name) {
-            $f_value = (isset($_REQUEST['_' . $f_name]) and !empty($_REQUEST['_' . $f_name])) ? sanitize_text_field($_REQUEST['_' . $f_name]) : false;
+            $f_value = (isset($_REQUEST['_' . $f_name]) and !empty($_REQUEST['_' . $f_name])) ? sanitize_text_field(wp_unslash($_REQUEST['_' . $f_name])) : false;
             $old_value = get_user_meta($user_id, $f_name, true);
 
             //Only save if the value got updated
@@ -673,7 +675,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
         //saves the custom billing fields
         if (!empty($this->custom_billing_fields) and is_array($this->custom_billing_fields)) {
             foreach ($this->custom_billing_fields as $field_id => $value) {
-                $cf_value = (isset($_REQUEST['_billing_' . $field_id]) and !empty($_REQUEST['_billing_' . $field_id])) ? sanitize_text_field($_REQUEST['_billing_' . $field_id]) : false;
+                $cf_value = (isset($_REQUEST['_billing_' . $field_id]) and !empty($_REQUEST['_billing_' . $field_id])) ? sanitize_text_field(wp_unslash($_REQUEST['_billing_' . $field_id])) : false;
                 $old_value = get_user_meta($user_id, "billing_{$field_id}", true);
                 //Only update if value got changed
                 if (($cf_value !== $old_value)) {
@@ -689,7 +691,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
         //saves the custom shipping fields
         if (!empty($this->custom_shipping_fields) and is_array($this->custom_shipping_fields)) {
             foreach ($this->custom_shipping_fields as $field_id => $value) {
-                $sf_value = (isset($_REQUEST['_shipping_' . $field_id]) and !empty($_REQUEST['_shipping_' . $field_id])) ? sanitize_text_field($_REQUEST['_shipping_' . $field_id]) : false;
+                $sf_value = (isset($_REQUEST['_shipping_' . $field_id]) and !empty($_REQUEST['_shipping_' . $field_id])) ? sanitize_text_field(wp_unslash($_REQUEST['_shipping_' . $field_id])) : false;
                 $old_value = get_user_meta($user_id, "billing_{$field_id}", true);
                 //Only update if value got changed
                 if (($sf_value !== $old_value)) {
@@ -704,6 +706,8 @@ class woo_add_customer_admin extends woo_add_customer_helper
         }
         return $changes_count;
     }
+
+    // phpcs:enable WordPress.Security.NonceVerification
 
     /**
      * Creates a unique username
@@ -761,7 +765,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
         $this->wac_enqueue_admin_style();
         $this->wac_enqueue_admin_scripts();
 
-        echo $html;
+        echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The templates escape their output
         return;
     }
 
@@ -789,18 +793,18 @@ class woo_add_customer_admin extends woo_add_customer_helper
             ? wp_date('d. F Y - H:i:s', intval($created_time))
             : __('unknown date', 'add-customer-for-woocommerce');
         if ($user_name instanceof WP_User) {
-            echo sprintf(
+            echo esc_html(sprintf(
                 /* translators: 1: Display name of the user who created the customer, 2: Date and time of creation */
-                __('User was created by %s with the Add customer for WooCommerce Plugin on %s', 'add-customer-for-woocommerce'),
-                esc_html($user_name->display_name),
-                esc_html($time)
-            );
+                __('User was created by %1$s with the Add customer for WooCommerce Plugin on %2$s', 'add-customer-for-woocommerce'),
+                $user_name->display_name,
+                $time
+            ));
         } else {
-            echo sprintf(
+            echo esc_html(sprintf(
                 /* translators: %s: Date and time of creation */
                 __('User was created by the Add customer for WooCommerce Plugin on %s', 'add-customer-for-woocommerce'),
-                esc_html($time)
-            );
+                $time
+            ));
         }
     }
 
@@ -837,7 +841,10 @@ class woo_add_customer_admin extends woo_add_customer_helper
      */
     public function wac_pre_get_users($query)
     {
-        if (!is_admin() or !isset($_GET['created_by']) or !$_GET['created_by'] === 'add_customer') {
+        //Only filters the user list, no data is changed
+        $created_by = isset($_GET['created_by']) ? sanitize_key(wp_unslash($_GET['created_by'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $is_add_customer_filter = $created_by === 'add_customer';
+        if (!is_admin() || !$is_add_customer_filter) {
             return $query;
         }
         if (empty($query->meta_key)) {

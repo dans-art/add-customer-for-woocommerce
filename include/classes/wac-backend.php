@@ -42,7 +42,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
     public function render_options()
     {
         $wac = new woo_add_customer();
-        echo $wac->load_template_to_var('backend-options-page', 'backend/');
+        echo $wac->load_template_to_var('backend-options-page', 'backend/'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The template escapes its output
         return;
     }
 
@@ -58,7 +58,9 @@ class woo_add_customer_backend extends woo_add_customer_helper
         if($pagenow !== 'admin.php' && $pagenow !== 'options.php' ) {
             return false;
         }
-        if (!isset( $_REQUEST['page'] ) || $_REQUEST['page'] !== 'wac_general_options' ) {
+        //Only used to check if the settings page is loaded
+        $page = isset($_REQUEST['page']) ? sanitize_key(wp_unslash($_REQUEST['page'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        if ($page !== 'wac_general_options') {
             return false;
         }
         $wac = new woo_add_customer();
@@ -206,7 +208,7 @@ class woo_add_customer_backend extends woo_add_customer_helper
                 'description' =>
                 __('The format you\'d like to have for the automatically generated email.', 'add-customer-for-woocommerce') . ' ' .
                     __('You can use the supported tags below wrapping them in [ ]', 'add-customer-for-woocommerce') . '<br/>' .
-                    __('Supported tags:', 'add-customer-for-woocommerce') . ' <strong>' . implode(', ', apply_filters('wac_supported_fake_email_parts', $wac->supported_fake_email_parts)) . '</strong>',
+                    __('Supported tags:', 'add-customer-for-woocommerce') . ' <strong>' . implode(', ', apply_filters('wac_supported_fake_email_parts', $wac->supported_fake_email_parts)) . '</strong>', // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Public hook, renaming would break existing customizations
                 'page' => 'wac_general_options',
                 'default_value' => '[first_name].[last_name].[company]@' . $wac->get_domain_name()
             )
@@ -322,13 +324,13 @@ class woo_add_customer_backend extends woo_add_customer_helper
 
         switch ($type) {
             case 'checkbox':
-                echo $this->load_template_to_var('checkbox', 'backend/components', $label_for, $options_val, $default_value, $args);
+                echo $this->load_template_to_var('checkbox', 'backend/components', $label_for, $options_val, $default_value, $args); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The template escapes its output
                 break;
             case 'text':
-                echo $this->load_template_to_var('text-input', 'backend/components', $label_for, $options_val, $default_value, $args);
+                echo $this->load_template_to_var('text-input', 'backend/components', $label_for, $options_val, $default_value, $args); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The template escapes its output
                 break;
             case 'select':
-                echo $this->load_template_to_var('select-input', 'backend/components', $label_for, $options_val, $default_value, $args);
+                echo $this->load_template_to_var('select-input', 'backend/components', $label_for, $options_val, $default_value, $args); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The template escapes its output
                 break;
 
             default:

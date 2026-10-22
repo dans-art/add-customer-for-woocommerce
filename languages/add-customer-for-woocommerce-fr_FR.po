@@ -44,8 +44,8 @@ msgstr "Ajouter un nouveau client : action par défaut"
 
 #: include/tools/helper.php:240
 #, php-format
-msgid "Added customer: %s <%s>"
-msgstr "Client ajouté : %s <%s>"
+msgid "Added customer: %1$s <%2$s>"
+msgstr "Client ajouté : %1$s <%2$s>"
 
 #: include/classes/wac-backend.php:134
 msgid "Allow user role selection before creating a new customer"
@@ -445,8 +445,8 @@ msgstr ""
 #| msgid ""
 #| "There have been %d customers added and %d customers edited by the plugin"
 msgid ""
-"There have been %d customers added and %d customers edited by the Plugin"
-msgstr "Il y a eu %d clients ajoutés et %d clients modifiés par le plugin"
+"There have been %1$d customers added and %2$d customers edited by the Plugin"
+msgstr "Il y a eu %1$d clients ajoutés et %2$d clients modifiés par le plugin"
 
 #: include/classes/wac-admin.php:216
 #| msgid "This order is already linked to an user"

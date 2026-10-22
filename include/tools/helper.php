@@ -83,7 +83,7 @@ class woo_add_customer_helper
         if (isset($exp[1])) {
             return $exp[1];
         }
-        $urlparts = parse_url(home_url());
+        $urlparts = wp_parse_url(home_url());
         return ($urlparts['host'] !== 'localhost') ? $urlparts['host'] : 'local.host';
     }
 
@@ -109,8 +109,9 @@ class woo_add_customer_helper
             //Custom format
             $mail_split = explode('@', $custom_format);
             $custom_format_name = (isset($mail_split[0])) ? $mail_split[0] : $custom_format;
-            $mail_parts = apply_filters('wac_supported_fake_email_parts', $this->supported_fake_email_parts);
+            $mail_parts = apply_filters('wac_supported_fake_email_parts', $this->supported_fake_email_parts); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Public hook, renaming would break existing customizations
             if (is_array($mail_parts)) {
+                // phpcs:disable WordPress.Security.NonceVerification -- Runs on the WooCommerce order save hook, WooCommerce verifies the nonce before.
                 foreach ($mail_parts as $tag_name) {
                     //Add the _billing_ if field exists but only if no custom field exists with the same name
                     $request_name = $tag_name;
@@ -119,10 +120,11 @@ class woo_add_customer_helper
                     }
                     if (isset($_REQUEST[$request_name]) and strpos($custom_format_name, $tag_name) !== false) {
                         //Placeholder found in the custom format and data found in request
-                        $value = $_REQUEST[$request_name];
+                        $value = sanitize_text_field(wp_unslash($_REQUEST[$request_name]));
                         $custom_format_name = str_replace('[' . $tag_name . ']', $value, $custom_format_name);
                     }
                 }
+                // phpcs:enable WordPress.Security.NonceVerification
             }
 
             $name = str_replace(['[', ']'], '', $custom_format_name); //Remove tags if any left
@@ -140,7 +142,8 @@ class woo_add_customer_helper
      */
     public function wac_disable_new_customer_mail($customer_id)
     {
-        if (isset($_REQUEST['wac_add_customer']) and $_REQUEST['wac_add_customer'] === 'true') {
+        //Runs on the WooCommerce order save hook, WooCommerce verifies the nonce before
+        if (isset($_REQUEST['wac_add_customer']) and $_REQUEST['wac_add_customer'] === 'true') { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
             add_filter('woocommerce_email_enabled_customer_new_account', function ($enabled, $user, $email) {
                 return false; //$enabled = false;
             }, 10, 3);
@@ -165,7 +168,7 @@ class woo_add_customer_helper
         $user_id = intval($user_id);
 
         $user_is_created_by_plugin = get_user_meta($user_id, 'wac_created_by_plugin', true) ?: false;
-        $deactivate_emails_for_user = apply_filters('wac_deactivate_user_emails', boolval($user_is_created_by_plugin), intval($user_id));
+        $deactivate_emails_for_user = apply_filters('wac_deactivate_user_emails', boolval($user_is_created_by_plugin), intval($user_id)); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Public hook, renaming would break existing customizations
 
         //Skip the deactivation if the user was not created by the plugin or if the filter was set to false
         if (!$deactivate_emails_for_user) {
@@ -182,55 +185,8 @@ class woo_add_customer_helper
             });
             $emails[] = $wc_email->id;
         }
-        apply_filters('simple_history_log', "Emails blocked for user - by Add Customer", array('emails' => implode(', ', $emails), 'user_id' => $user_id));
+        apply_filters('simple_history_log', "Emails blocked for user - by Add Customer", array('emails' => implode(', ', $emails), 'user_id' => $user_id)); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Hook of the Simple History plugin
     }
-    /**
-     * Loads the translation of the plugin.
-     * First it checks for downloaded translations by Wordpress, else it will search for the the translation in the plugin dir.
-     * Located at: plugins/add-customer-for-woocommerce/languages/
-     *
-     * @return void
-     */
-    public function wac_load_textdomain()
-    {
-        //WordPress loads the translations from wp-content/languages/plugins first, then from the plugin dir
-        load_plugin_textdomain('add-customer-for-woocommerce', false, 'add-customer-for-woocommerce/languages');
-    }
-
-    /**
-     * Gets the Home Path. Workaround if WP is not completely loaded yet. 
-     *
-     * @return string  Full filesystem path to the root of the WordPress installation. (/var/www/htdocs/)
-     */
-    public function wac_get_home_path()
-    {
-        if (function_exists('get_home_path')) {
-            return get_home_path();
-        }
-        $home    = set_url_scheme(get_option('home'), 'http');
-        $siteurl = set_url_scheme(get_option('siteurl'), 'http');
-
-        if (!empty($home) && 0 !== strcasecmp($home, $siteurl)) {
-            $wp_path_rel_to_home = str_ireplace($home, '', $siteurl); /* $siteurl - $home */
-            $pos                 = strripos(str_replace('\\', '/', $_SERVER['SCRIPT_FILENAME']), trailingslashit($wp_path_rel_to_home));
-            $home_path           = substr($_SERVER['SCRIPT_FILENAME'], 0, $pos);
-            $home_path           = trailingslashit($home_path);
-        } else {
-            $home_path = ABSPATH;
-        }
-
-        return str_replace('\\', '/', $home_path);
-    }
-    /**
-     * Registers the custom settings Field
-     *
-     * @return void
-     */
-    public function wac_add_settings_section_init()
-    {
-        register_setting('general', 'wac_add_customer');
-    }
-
     /**
      * Enqueue the styles of the plugin
      * Located at: plugins/add-customer-for-woocommerce/style/admin-style.css
@@ -251,11 +207,12 @@ class woo_add_customer_helper
     public function wac_enqueue_admin_scripts()
     {
         if (WP_DEBUG) {
-            wp_enqueue_script('wac-admin-script', get_option('siteurl') . '/wp-content/plugins/add-customer-for-woocommerce/include/js/wac-main-script.js', array('jquery', 'wp-i18n'), $this->version);
+            wp_enqueue_script('wac-admin-script', get_option('siteurl') . '/wp-content/plugins/add-customer-for-woocommerce/include/js/wac-main-script.js', array('jquery', 'wp-i18n'), $this->version, true);
         } else {
-            wp_enqueue_script('wac-admin-script', get_option('siteurl') . '/wp-content/plugins/add-customer-for-woocommerce/include/js/wac-main-script.min.js', array('jquery', 'wp-i18n'), $this->version);
+            wp_enqueue_script('wac-admin-script', get_option('siteurl') . '/wp-content/plugins/add-customer-for-woocommerce/include/js/wac-main-script.min.js', array('jquery', 'wp-i18n'), $this->version, true);
         }
-        wp_set_script_translations('wac-admin-script', 'add-customer-for-woocommerce', $this->plugin_path . 'languages');
+        //The translations are loaded from translate.wordpress.org
+        wp_set_script_translations('wac-admin-script', 'add-customer-for-woocommerce');
     }
 
     /**
@@ -301,7 +258,7 @@ class woo_add_customer_helper
                 break;
             case 'added_user':
                 /* translators: 1: Username of the customer, 2: Email address */
-                $message = htmlspecialchars(__('Added customer: %s <%s>', 'add-customer-for-woocommerce'));
+                $message = htmlspecialchars(__('Added customer: %1$s <%2$s>', 'add-customer-for-woocommerce'));
                 $type = 'success';
                 break;
             case 'email_send':
@@ -333,10 +290,13 @@ class woo_add_customer_helper
                 break;
             case 'failed_to_add_user':
                 $message = __('New customer could not be added by Add Customer Plugin. Please contact the Plugin Author.', 'add-customer-for-woocommerce');
-                $message .= (isset($args[0])) ? '<br/>' . json_encode($args[0]) : '';
+                $message .= (isset($args[0])) ? '<br/>' . esc_html(wp_json_encode($args[0])) : '';
                 $type = 'error';
                 $additional_log = array('wc_create_new_customer' => $args[0], 'user' => $args[1], 'email' => $args[2]);
-                error_log($message . " - " . htmlspecialchars(json_encode($args))); //Prints the args with the error message from wc_create_new_customer to the error log
+                //Prints the args with the error message from wc_create_new_customer to the error log
+                if (defined('WP_DEBUG') && WP_DEBUG) {
+                    error_log($message . " - " . htmlspecialchars(wp_json_encode($args))); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+                }
                 break;
             case 'user_role_not_allowed':
                 $message = __('The user role you provided is not allowed. Please select another one.', 'add-customer-for-woocommerce');
@@ -374,7 +334,7 @@ class woo_add_customer_helper
         } else {
             $msg_trans = $message;
         }
-        apply_filters('simple_history_log', "{$msg_trans} - by Add Customer", $additional_log);
+        apply_filters('simple_history_log', "{$msg_trans} - by Add Customer", $additional_log); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Hook of the Simple History plugin
         $this->wac_set_notice($msg_trans, $type, $order_id);
         return;
     }
@@ -389,7 +349,7 @@ class woo_add_customer_helper
      */
     public function log_event_message($log_message, $order_id, $type = 'null')
     {
-        apply_filters('simple_history_log', "{$log_message} - by Add Customer");
+        apply_filters('simple_history_log', "{$log_message} - by Add Customer"); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Hook of the Simple History plugin
         $this->wac_set_notice($log_message, $type, $order_id);
         return;
     }
@@ -416,7 +376,7 @@ class woo_add_customer_helper
             return $output_string;
         }
         /* translators: 1: Name of the template, 2: Path of the template */
-        return sprintf(__('Template "%s" not found! (%s)', 'add-customer-for-woocommerce'), $template_name, $path);
+        return esc_html(sprintf(__('Template "%1$s" not found! (%2$s)', 'add-customer-for-woocommerce'), $template_name, $path));
     }
 
     /**
@@ -593,8 +553,9 @@ class woo_add_customer_helper
     public function wac_display_notices($id_to_get = null)
     {
         //Show success message on options save screen, but not after saving the settings of other plugins
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- Only used to select the notices to display
         $is_settings_updated = !empty($_GET['settings-updated']);
-        $is_wac_options_page = isset($_GET['page']) && 'wac_general_options' === $_GET['page'];
+        $is_wac_options_page = isset($_GET['page']) && 'wac_general_options' === sanitize_key(wp_unslash($_GET['page']));
         $is_general_notice = empty($id_to_get);
         if ($is_settings_updated && $is_wac_options_page && $is_general_notice) {
             add_settings_error('wac_settings_saved_message', 'wac_settings_saved_message', __('Settings saved', 'add-customer-for-woocommerce'), 'success');
@@ -603,20 +564,21 @@ class woo_add_customer_helper
 
         $user_id = get_current_user_id();
         if (isset($_GET['id'])) {
-            $order_id = $_GET['id'];
+            $order_id = absint($_GET['id']);
         } else if (isset($_GET['post'])) {
-            $order_id = $_GET['post'];
+            $order_id = absint($_GET['post']);
         } else if (!empty($id_to_get)) {
             $order_id = $id_to_get;
         } else {
             return;
         }
+        // phpcs:enable WordPress.Security.NonceVerification.Recommended
         $trans_id = "wac_admin_notice_{$user_id}_{$order_id}";
         $notices = get_transient($trans_id);
 
         if (is_array($notices)) {
             foreach ($notices as $notice) {
-                echo $notice;
+                echo wp_kses_post($notice);
             }
         }
         delete_transient($trans_id);
@@ -672,7 +634,7 @@ class woo_add_customer_helper
 
         $email = sanitize_email($email, true); //Remove all un-allowed characters
 
-        return apply_filters('wac_make_email_valid', $email, $orig_email);
+        return apply_filters('wac_make_email_valid', $email, $orig_email); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Public hook, renaming would break existing customizations
     }
 
     /**
@@ -792,7 +754,7 @@ class woo_add_customer_helper
         if(strlen($user) > 60){
             $user = substr($user, 0, 60);
         }
-        return apply_filters('wac_make_user_valid', $user, $orig_user);
+        return apply_filters('wac_make_user_valid', $user, $orig_user); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Public hook, renaming would break existing customizations
     }
 
     /**
@@ -812,7 +774,7 @@ class woo_add_customer_helper
             }
             $roles[$key] = $value;
         }
-        return apply_filters('wac_get_user_roles', $roles);
+        return apply_filters('wac_get_user_roles', $roles); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Public hook, renaming would break existing customizations
     }
 
     /**
@@ -838,9 +800,10 @@ class woo_add_customer_helper
      * @return array Empty array if no users are found, array with the user ids otherwise
      */
     public function get_users_created_by_plugin(){
+        //Only used on the settings and users page
         $args = [
-            'meta_key'   => 'wac_created_by_plugin',
-            'meta_value' => true,
+            'meta_key'   => 'wac_created_by_plugin', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+            'meta_value' => true, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
             'fields' => 'ID'
         ];
 

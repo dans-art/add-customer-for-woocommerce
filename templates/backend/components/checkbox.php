@@ -11,6 +11,7 @@
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Included within woo_add_customer_helper::load_template_to_var(), the variables are not global.
 global $backend_class;
 $backend_class = (!is_object($backend_class)) ? new woo_add_customer_backend() : $backend_class;
 extract(get_defined_vars());
@@ -26,11 +27,11 @@ $description = (isset($args['description'])) ? $args['description'] : '';
 ?>
 
 
-<fieldset class="<?php echo $class; ?>">
-    <label for="<?php echo $label_for; ?>">
-        <input name="<?php echo $page.'['.$label_for.']'; ?>" type="checkbox" id="<?php echo $label_for; ?>" value="yes" <?php echo $checked; ?>>
-        <?php echo __('Activated', 'add-customer-for-woocommerce'); ?></label>
+<fieldset class="<?php echo esc_attr($class); ?>">
+    <label for="<?php echo esc_attr($label_for); ?>">
+        <input name="<?php echo esc_attr($page . '[' . $label_for . ']'); ?>" type="checkbox" id="<?php echo esc_attr($label_for); ?>" value="yes" <?php echo esc_attr($checked); ?>>
+        <?php echo esc_html__('Activated', 'add-customer-for-woocommerce'); ?></label>
     <p class="description">
-        <?php echo $description; ?>
+        <?php echo wp_kses_post($description); ?>
     </p>
 </fieldset>

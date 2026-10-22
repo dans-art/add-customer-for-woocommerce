@@ -71,8 +71,8 @@ msgstr "Neue Kunden standardmässig speichern"
 #: include/tools/helper.php:277
 #, php-format
 #| msgid "Added customer \"%s <%s>\""
-msgid "Added customer: %s <%s>"
-msgstr "Kunde %s <%s> hinzugefügt"
+msgid "Added customer: %1$s <%2$s>"
+msgstr "Kunde %1$s <%2$s> hinzugefügt"
 
 #: include/classes/wac-backend.php:154
 msgid "Allow user role selection before creating a new customer"
@@ -494,9 +494,9 @@ msgstr ""
 #| msgid ""
 #| "There have been %d customers added and %d customers edited by the plugin"
 msgid ""
-"There have been %d customers added and %d customers edited by the Plugin"
+"There have been %1$d customers added and %2$d customers edited by the Plugin"
 msgstr ""
-"Es wurden bisher durch das Plugin %d Kunden hinzugefügt und %d Kunden "
+"Es wurden bisher durch das Plugin %1$d Kunden hinzugefügt und %2$d Kunden "
 "bearbeitet."
 
 #: include/classes/wac-admin.php:226
