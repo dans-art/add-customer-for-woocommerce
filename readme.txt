@@ -93,7 +93,7 @@ Are there any hooks I can use?
 == Changelog ==
 
 = [1.10.1] =
-* Fixed: Administrator accounts could be created by shop managers. Users without the "promote_users" capability can now only assign the default role set by the admin
+* Fixed: Administrator accounts could be created by shop managers. The administrator role can no longer be assigned to new customers, and users without the "promote_users" capability can only assign the default role set by the admin
 * Changed: If the role selection is disabled, the default role set by the admin is always assigned
 * Changed: Invalid fake email formats are rejected on save, and the previous format is kept
 * Fixed: Order save failed with a fatal error if no password reset link could be created

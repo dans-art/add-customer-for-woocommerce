@@ -564,12 +564,14 @@ class woo_add_customer_admin extends woo_add_customer_helper
 
         //Validate the user role.
         //A role chosen in the dropdown must be one the current user is allowed to assign.
-        //The default role was set by the admin, so it only has to exist.
+        //The default role was set by the admin, so it only has to exist and must not be the administrator role (e.g. saved by an older version).
         if ($use_requested_role) {
             $valid_user_roles = $this->get_user_role_array();
             $is_role_allowed = isset($valid_user_roles[$user_role]);
         } else {
-            $is_role_allowed = $this->is_existing_user_role($user_role);
+            $role_exists = $this->is_existing_user_role($user_role);
+            $is_administrator_role = $user_role === 'administrator';
+            $is_role_allowed = $role_exists && !$is_administrator_role;
         }
 
         if (!$is_role_allowed) {

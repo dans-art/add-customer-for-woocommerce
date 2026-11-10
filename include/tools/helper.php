@@ -832,6 +832,7 @@ class woo_add_customer_helper
     /**
      * Returns a array with user roles. It only allows the roles that the current user can edit.
      * Users without the promote_users capability (e.g. shop managers) only get the default role set by the admin.
+     * The administrator role is never included, not even for admins.
      * With the filter wac_get_user_roles, you can add a custom role, or one that got previously filtered out
      *
      * @return array The roles. ['slug' => 'Name']
@@ -845,6 +846,9 @@ class woo_add_customer_helper
         } else {
             $roles = $this->get_default_role_as_array();
         }
+
+        //Customers should never be created as administrators
+        unset($roles['administrator']);
 
         return apply_filters('wac_get_user_roles', $roles); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Public hook, renaming would break existing customizations
     }
