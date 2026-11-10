@@ -23,7 +23,9 @@ $blog_name = get_bloginfo('name');
 $blog_name = html_entity_decode($blog_name, ENT_QUOTES, 'UTF-8');
 $user = wp_get_current_user();
 
-$message = $this->load_template_to_var('new-account', 'email/', $user->user_email, $user->display_name, $wac->get_user_reset_password_link($user->user_email), $blog_name);
+//Dummy link for the preview. A real reset key would replace any reset link the admin requested before
+$preview_reset_link = network_site_url('wp-login.php?action=rp&key=PREVIEW&login=' . rawurlencode($user->user_login), 'login');
+$message = $this->load_template_to_var('new-account', 'email/', $user->user_email, $user->display_name, $preview_reset_link, $blog_name);
 //Apply the style
 $woo = new WC_Email;
 $message = $woo->style_inline($message);

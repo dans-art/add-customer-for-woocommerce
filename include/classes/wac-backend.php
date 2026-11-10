@@ -260,7 +260,10 @@ class woo_add_customer_backend extends woo_add_customer_helper
             switch ($key) {
                 case 'wac_fakemail_format':
                     if (!empty($value)) {
-                        $input[$key] = $this->sanitize_placeholder_email($value, $key);
+                        $valid_format = $this->sanitize_placeholder_email($value, $key);
+                        //Keep the previously saved format, if the new one is not valid
+                        $previous_format = (string) $this->get_wac_option($key);
+                        $input[$key] = ($valid_format !== false) ? $valid_format : $previous_format;
                     } else {
                         $input[$key] = '';
                     }

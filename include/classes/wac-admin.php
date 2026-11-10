@@ -42,6 +42,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
         add_filter('load_script_textdomain_relative_path', [$this, 'wac_script_translation_path'], 10, 2);
         add_action('woocommerce_admin_order_data_after_billing_address', [$this, 'wac_add_checkbox'], 10, 1);
         add_action('woocommerce_created_customer', [$this, 'wac_disable_new_customer_mail'], 1, 1);
+        add_action('delete_user', [$this, 'wac_decrease_counter_on_user_delete'], 10, 1);
         add_action('woocommerce_process_shop_order_meta', [$this, 'wac_save_order'], 99, 2);
 
         add_action('woocommerce_checkout_order_created', [$this, 'wac_checkout_order_created_action'], 99, 2);
@@ -531,7 +532,12 @@ class woo_add_customer_admin extends woo_add_customer_helper
         $user = $this->wac_get_unique_user($user_first . '.' . $user_last . '.' . $user_company);
         $password = wp_generate_password();
         $email_is_fake = false;
-        $user_role = (isset($_REQUEST['wac_add_customer_role'])) ? sanitize_key(wp_unslash($_REQUEST['wac_add_customer_role'])) : $this->get_default_user_role();
+
+        //The role from the dropdown is only used if the dropdown is enabled. Otherwise the default role set by the admin is used.
+        $role_dropdown_enabled = $this->get_wac_option('wac_define_user_role') === 'yes';
+        $requested_role = (isset($_REQUEST['wac_add_customer_role'])) ? sanitize_key(wp_unslash($_REQUEST['wac_add_customer_role'])) : '';
+        $use_requested_role = $role_dropdown_enabled && $requested_role !== '';
+        $user_role = ($use_requested_role) ? $requested_role : $this->get_default_user_role();
 
         $order = wc_get_order($order_id);
         if (!$order) {
@@ -541,12 +547,12 @@ class woo_add_customer_admin extends woo_add_customer_helper
 
         if (empty($email)) {
             //create new 'fake' email
-            $email = $this->create_fake_email($user);
+            $email = $this->create_fake_email($user, $order_id);
             $email_is_fake = true;
         }
 
         //Add hook to allow to modify the email
-        $email = $this->make_email_valid($email);
+        $email = $this->make_email_valid($email, $order_id);
         $email = apply_filters('wac_add_customer_email', $email, $user); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Public hook, renaming would break existing customizations
 
         //Validate the email
@@ -556,20 +562,27 @@ class woo_add_customer_admin extends woo_add_customer_helper
             return false;
         }
 
-        //Validate the user role. This should never return false, except if someone alters the select selection
-        $valid_user_roles = $this->get_user_role_array();
-        if (!isset($valid_user_roles[$user_role])) {
+        //Validate the user role.
+        //A role chosen in the dropdown must be one the current user is allowed to assign.
+        //The default role was set by the admin, so it only has to exist.
+        if ($use_requested_role) {
+            $valid_user_roles = $this->get_user_role_array();
+            $is_role_allowed = isset($valid_user_roles[$user_role]);
+        } else {
+            $is_role_allowed = $this->is_existing_user_role($user_role);
+        }
+
+        if (!$is_role_allowed) {
             //User role does not exist, or is not allowed
             $this->log_event("user_role_not_allowed", $order_id, $user_role);
             return false;
-        } else {
-            //Add the role
-            add_filter('woocommerce_new_customer_data', function ($data) {
-                $user_role = (isset($_REQUEST['wac_add_customer_role'])) ? sanitize_key(wp_unslash($_REQUEST['wac_add_customer_role'])) : $this->get_default_user_role();
-                $data['role'] = $user_role;
-                return $data;
-            });
         }
+
+        //Add the validated role
+        add_filter('woocommerce_new_customer_data', function ($data) use ($user_role) {
+            $data['role'] = $user_role;
+            return $data;
+        });
 
         //Save the email to the order
         $order->update_meta_data('billing_email', $email);
@@ -582,7 +595,7 @@ class woo_add_customer_admin extends woo_add_customer_helper
         }
 
         //Make the username valid
-        $user = $this->make_user_valid($user);
+        $user = $this->make_user_valid($user, $order_id);
 
         if ($user !== false) {
             $user_id = wc_create_new_customer($email, $user, $password);

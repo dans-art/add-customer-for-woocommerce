@@ -37,75 +37,120 @@ class woo_add_customer_helper
      * Creates a fake email with the domain of the site.
      * It is recommended to setup a catch-all email
      *
+     * The email is normalized before the uniqueness check, so the returned address is the final one.
+     *
      * @param string $username - A username to start with or null
-     * @return string A unique fake email
+     * @param int|null $order_id - The order the notices belong to. Falls back to get_the_ID()
+     * @return string|false A unique fake email, false if no valid or unique email could be created
      */
-    public function create_fake_email($username = null)
+    public function create_fake_email($username = null, $order_id = null)
     {
-        $domain_name = $this->get_domain_name();
-        $number = '';
         $name = $this->create_fake_email_name($username);
-        $email_total_characters = 100; //Maximum length of the email according to the user_email field in wp_users
+        $email = $this->normalize_fake_email($name, $order_id);
 
-        //Make sure that the email is not too long
-        if(strlen($name) >  ($email_total_characters - strlen($domain_name) - 1)){
-            $name = substr($name, 0, ($email_total_characters - strlen($domain_name) - 1));
+        if ($email === false) {
+            //Nothing valid left of the name (e.g. only non latin characters without the Intl extension). Use a random name instead
+            $email = $this->normalize_fake_email(wp_generate_password(10, false), $order_id);
+        }
+        if ($email === false) {
+            return false;
         }
 
         //Add a number if email already exists
-        while ((get_user_by('email', $name . $number . '@' . $domain_name) !== false) and $number < 100) {
-            if (empty($number)) {
-                $number = 0;
-            }
+        list($name, $domain_name) = explode('@', $email, 2);
+        $number = 0;
+        while (email_exists($email) !== false) {
             $number++;
+            if ($number >= 100) {
+                return false;
+            }
+            $email = $name . $number . '@' . $domain_name;
         }
-        if ($number == 100) {
-            return false;
-        }
-        $email = $name . $number . '@' . $domain_name;
-        $email = str_replace(' ', '_', $email); //Replace the spaces with underlines
-        $email = trim($email); //Removes all the other whitespaces, tabs, new-lines, etc.
 
         return $email;
     }
 
     /**
+     * Converts the name to a valid email with the fake email domain.
+     * Uses the same sanitizing as for the real emails and makes sure that there is room for a two digit number.
+     *
+     * @param string $name - The name part of the email
+     * @param int|null $order_id - The order the notices belong to
+     * @return string|false The valid email, false if the email is not valid
+     */
+    private function normalize_fake_email($name, $order_id = null)
+    {
+        $domain_name = $this->get_domain_name();
+        $email_total_characters = 100; //Maximum length of the email according to the user_email field in wp_users
+        $number_characters = 2; //Room for the number added if the email already exists
+
+        $name = str_replace(' ', '_', trim($name)); //Replace the spaces with underlines
+        $email = $this->make_email_valid($name . '@' . $domain_name, $order_id);
+        if (!is_email($email)) {
+            return false;
+        }
+
+        //Make sure that the email is not too long
+        list($name, $domain_name) = explode('@', $email, 2);
+        $max_name_length = $email_total_characters - strlen($domain_name) - 1 - $number_characters;
+        $name = rtrim(substr($name, 0, $max_name_length), '.');
+        if ($name === '') {
+            return false;
+        }
+
+        return $name . '@' . $domain_name;
+    }
+
+    /**
      * Receives the domain name without the scheme
-     * If the option wac_fakemail_format is set, the domain name will be taken from the option. 
+     * If the option wac_fakemail_format is set and valid, the domain name will be taken from the option.
      *
      * @return string The Domain name.
      */
     public function get_domain_name()
     {
-        $custom_format = $this->get_wac_option('wac_fakemail_format');
-        $exp = ($custom_format !== null) ? explode('@', $custom_format) : null;
-        //$exp[0] = email Name, $exp[1] = domain name
-        if (isset($exp[1])) {
-            return $exp[1];
+        $custom_format = $this->get_valid_fakemail_format();
+        if ($custom_format !== null) {
+            list(, $custom_domain) = explode('@', $custom_format, 2);
+            if ($custom_domain !== '') {
+                return $custom_domain;
+            }
         }
         $urlparts = wp_parse_url(home_url());
         return ($urlparts['host'] !== 'localhost') ? $urlparts['host'] : 'local.host';
     }
 
     /**
+     * Returns the custom fake email format from the options, but only if it is valid.
+     *
+     * @return string|null The format, null if not set or not valid
+     */
+    private function get_valid_fakemail_format()
+    {
+        $custom_format = $this->get_wac_option('wac_fakemail_format');
+        if (empty($custom_format)) {
+            return null;
+        }
+
+        $backend_class = new woo_add_customer_backend;
+        $format_error = $backend_class->check_option('wac_fakemail_format', $custom_format);
+        return (empty($format_error)) ? $custom_format : null;
+    }
+
+    /**
      * Creates the name for the email
-     * If the option wac_fakemail_format is set, the name will be created accordingly. 
+     * If the option wac_fakemail_format is set and valid, the name will be created accordingly.
      *
      * @param string $username
      * @return string The eMail name
      */
     public function create_fake_email_name($username = null)
     {
-        $backend_class = new woo_add_customer_backend;
         $name = (!empty($username)) ? sanitize_user($username) : wp_generate_password(5, false);
 
         //Craft the email
-        $custom_format = $this->get_wac_option('wac_fakemail_format');
-        if (!empty($backend_class->check_option('wac_fakemail_format', $custom_format))) {
-            //Email set in the options is not valid. Return the original name
-            return $name;
-        }
-        if (!empty($custom_format)) {
+        $custom_format = $this->get_valid_fakemail_format();
+        if ($custom_format !== null) {
             //Custom format
             $mail_split = explode('@', $custom_format);
             $custom_format_name = (isset($mail_split[0])) ? $mail_split[0] : $custom_format;
@@ -127,7 +172,12 @@ class woo_add_customer_helper
                 // phpcs:enable WordPress.Security.NonceVerification
             }
 
-            $name = str_replace(['[', ']'], '', $custom_format_name); //Remove tags if any left
+            //Remove the placeholders that could not be filled, including their name. E.g. [last_name]
+            $name = preg_replace('/\[[^\]]*\]/', '', $custom_format_name);
+            $name = str_replace(['[', ']'], '', $name); //Remove unclosed brackets
+            //Clean up the separators left by the removed placeholders. E.g. "john..doe" => "john.doe", "john." => "john"
+            $name = preg_replace('/([._-])\1+/', '$1', $name);
+            $name = trim($name, '._-');
         }
 
         //Make sure that the generated name is not empty
@@ -149,6 +199,7 @@ class woo_add_customer_helper
             }, 10, 3);
             return true;
         }
+        return false;
     }
 
     /**
@@ -195,7 +246,18 @@ class woo_add_customer_helper
      */
     public function wac_enqueue_admin_style()
     {
-        wp_enqueue_style('wac-admin-style', get_option('siteurl') . '/wp-content/plugins/add-customer-for-woocommerce/style/admin-style.min.css', array(), $this->version);
+        wp_enqueue_style('wac-admin-style', $this->get_plugin_url('style/admin-style.min.css'), array(), $this->version);
+    }
+
+    /**
+     * Returns the URL to a file inside the plugin folder
+     *
+     * @param string $relative_path - The path of the file, relative to the plugin folder
+     * @return string The URL of the file
+     */
+    public function get_plugin_url($relative_path)
+    {
+        return plugins_url($relative_path, $this->plugin_path . 'add-customer-for-woocommerce.php');
     }
 
     /**
@@ -206,11 +268,11 @@ class woo_add_customer_helper
      */
     public function wac_enqueue_admin_scripts()
     {
-        if (WP_DEBUG) {
-            wp_enqueue_script('wac-admin-script', get_option('siteurl') . '/wp-content/plugins/add-customer-for-woocommerce/include/js/wac-main-script.js', array('jquery', 'wp-i18n'), $this->version, true);
-        } else {
-            wp_enqueue_script('wac-admin-script', get_option('siteurl') . '/wp-content/plugins/add-customer-for-woocommerce/include/js/wac-main-script.min.js', array('jquery', 'wp-i18n'), $this->version, true);
-        }
+        //Load the unminified script, if SCRIPT_DEBUG is enabled
+        $use_unminified_script = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG;
+        $script_file = ($use_unminified_script) ? 'include/js/wac-main-script.js' : 'include/js/wac-main-script.min.js';
+
+        wp_enqueue_script('wac-admin-script', $this->get_plugin_url($script_file), array('jquery', 'wp-i18n'), $this->version, true);
         //The translations are loaded from translate.wordpress.org
         wp_set_script_translations('wac-admin-script', 'add-customer-for-woocommerce');
     }
@@ -246,6 +308,7 @@ class woo_add_customer_helper
     {
         $additional_log = array();
         $type = 'null';
+        $message_suffix = ''; //Appended after the formatting. Must not go through vsprintf, because it can contain "%"
 
         switch ($log_type) {
             case 'existing_account':
@@ -285,18 +348,19 @@ class woo_add_customer_helper
                 break;
             case 'invalid_email':
                 /* translators: %s: Email address */
-                $message = sprintf(__('The email "%s" is not valid.', 'add-customer-for-woocommerce'), $args[0]);
+                $message = __('The email "%s" is not valid.', 'add-customer-for-woocommerce');
                 $type = 'error';
                 break;
             case 'failed_to_add_user':
                 $message = __('New customer could not be added by Add Customer Plugin. Please contact the Plugin Author.', 'add-customer-for-woocommerce');
-                $message .= (isset($args[0])) ? '<br/>' . esc_html(wp_json_encode($args[0])) : '';
+                $message_suffix = (isset($args[0])) ? '<br/>' . esc_html(wp_json_encode($args[0])) : '';
                 $type = 'error';
                 $additional_log = array('wc_create_new_customer' => $args[0], 'user' => $args[1], 'email' => $args[2]);
                 //Prints the args with the error message from wc_create_new_customer to the error log
                 if (defined('WP_DEBUG') && WP_DEBUG) {
                     error_log($message . " - " . htmlspecialchars(wp_json_encode($args))); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
                 }
+                $args = array(); //The message has no placeholders, the args are only used for the logs
                 break;
             case 'user_role_not_allowed':
                 $message = __('The user role you provided is not allowed. Please select another one.', 'add-customer-for-woocommerce');
@@ -334,6 +398,7 @@ class woo_add_customer_helper
         } else {
             $msg_trans = $message;
         }
+        $msg_trans .= $message_suffix;
         apply_filters('simple_history_log', "{$msg_trans} - by Add Customer", $additional_log); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Hook of the Simple History plugin
         $this->wac_set_notice($msg_trans, $type, $order_id);
         return;
@@ -442,6 +507,9 @@ class woo_add_customer_helper
         $blog_name = get_bloginfo('name');
         $blog_name = html_entity_decode($blog_name, ENT_QUOTES, 'UTF-8');
         $password_reset_link = $this->get_user_reset_password_link($email);
+        if ($password_reset_link === false) {
+            return false; //No reset link available, the email would be useless without it
+        }
         $message = $this->load_template_to_var('new-account', 'email/', $email, $name, $password_reset_link, $blog_name);
         $from_email_option = $this->get_mail_from();
 
@@ -563,12 +631,13 @@ class woo_add_customer_helper
         }
 
         $user_id = get_current_user_id();
-        if (isset($_GET['id'])) {
+        //An explicitly requested ID always wins over the ID of the current page
+        if (!empty($id_to_get)) {
+            $order_id = $id_to_get;
+        } else if (isset($_GET['id'])) {
             $order_id = absint($_GET['id']);
         } else if (isset($_GET['post'])) {
             $order_id = absint($_GET['post']);
-        } else if (!empty($id_to_get)) {
-            $order_id = $id_to_get;
         } else {
             return;
         }
@@ -588,15 +657,23 @@ class woo_add_customer_helper
      * Generates the link to the reset password page
      *
      * @param string $user_email - The user email
-     * @return string The url to the password reset page
+     * @return string|false The url to the password reset page, false if the user was not found or no reset key could be created
      */
     public function get_user_reset_password_link($user_email)
     {
         //Create the Password reset link
         $user = get_user_by('email', $user_email);
-        $user_login = $user->user_login;
+        if (!$user) {
+            return false;
+        }
+
+        //Can be a WP_Error, e.g. if password resets are disabled for this user or the key could not be saved
         $reset_key = get_password_reset_key($user);
-        return network_site_url("wp-login.php?action=rp&key=$reset_key&login=" . rawurlencode($user_login), 'login');
+        if (is_wp_error($reset_key)) {
+            return false;
+        }
+
+        return network_site_url("wp-login.php?action=rp&key=$reset_key&login=" . rawurlencode($user->user_login), 'login');
     }
 
     /**
@@ -613,13 +690,37 @@ class woo_add_customer_helper
     }
 
     /**
+     * Decreases the add customer counter, if the deleted user was created by the plugin.
+     * This keeps the counter in sync with the users that have the wac_created_by_plugin meta (see is_customer_created_miss_match()).
+     * Runs on the delete_user hook, before the user meta gets deleted.
+     *
+     * @param int $user_id - The ID of the deleted user
+     * @return void
+     */
+    public function wac_decrease_counter_on_user_delete($user_id)
+    {
+        $is_created_by_plugin = (bool) get_user_meta($user_id, 'wac_created_by_plugin', true);
+        if (!$is_created_by_plugin) {
+            return;
+        }
+
+        $value = (int) get_option('wac_add_customer_count');
+        if ($value > 0) {
+            update_option('wac_add_customer_count', $value - 1);
+        }
+    }
+
+    /**
      * Replaces all the email parts that are not valid
      * Converts cyrillic and other non latin characters to latin
      * Requires the INTL PHP extension
-     * @return void
+     * @param string $email - The email to make valid
+     * @param int|null $order_id - The order the notice belongs to. Falls back to get_the_ID()
+     * @return string The sanitized email
      */
-    public function make_email_valid($email)
+    public function make_email_valid($email, $order_id = null)
     {
+        $notice_id = ($order_id !== null) ? $order_id : get_the_ID();
         //Replaces the cyrillic letters
         $orig_email = $email;
         //Make sure that the Intl extension is installed
@@ -628,116 +729,87 @@ class woo_add_customer_helper
             $email = transliterator_transliterate('Any-Latin; Latin-ASCII; [\u0100-\u7fff] remove', $email);
         } elseif (!is_email($email)) {
             //Display notice if email is not valid and php intl extension is not installed
-            $this->wac_set_notice(__('Intl PHP extension not installed. Please install it to validate the emails.', 'add-customer-for-woocommerce'), 'error', get_the_ID());
+            $this->wac_set_notice(__('Intl PHP extension not installed. Please install it to validate the emails.', 'add-customer-for-woocommerce'), 'error', $notice_id);
         }
 
 
-        $email = sanitize_email($email, true); //Remove all un-allowed characters
+        $email = sanitize_email($email); //Remove all un-allowed characters
 
         return apply_filters('wac_make_email_valid', $email, $orig_email); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Public hook, renaming would break existing customizations
     }
 
     /**
-     * Checks if the given email is valid. Same as sanitize_email but allowing the special characters []
+     * Checks if the given email format is valid. Like is_email(), but allows the placeholder characters [] in the name part.
+     * The value is not changed. If anything is invalid, an error notice is set and false is returned.
      *
-     * @param string $email
-     * @param string $fieldname
-     * @return string The sanitized email
+     * @param string $email - The email format, e.g. [first_name].[last_name]@example.com
+     * @param string $fieldname - The name of the field. Used as ID for the notice
+     * @return string|false The unchanged email format, false if it is not valid
      */
     public function sanitize_placeholder_email($email, $fieldname)
     {
-        // Test for the minimum length the email can be.
+        $error = $this->get_placeholder_email_error($email);
+        if ($error !== '') {
+            $this->wac_set_notice(esc_html($error), "error", $fieldname);
+            return false;
+        }
+        return $email;
+    }
+
+    /**
+     * Validates the email format and returns the reason why it is not valid.
+     *
+     * @param string $email - The email format
+     * @return string The error message, empty string if the format is valid
+     */
+    private function get_placeholder_email_error($email)
+    {
         if (strlen($email) < 6) {
-            $this->wac_set_notice(esc_html__('Email is too short', 'add-customer-for-woocommerce'), "error", $fieldname);
-            return htmlspecialchars($email);
+            return __('Email is too short', 'add-customer-for-woocommerce');
         }
 
-        // Test for an @ character after the first position.
-        if (strpos($email, '@', 1) === false) {
-            $this->wac_set_notice(esc_html__('Email must contain one @', 'add-customer-for-woocommerce'), "error", $fieldname);
-            return htmlspecialchars($email);
+        $has_one_at = substr_count($email, '@') === 1;
+        $starts_with_at = strpos($email, '@') === 0;
+        if (!$has_one_at || $starts_with_at) {
+            return __('Email must contain one @', 'add-customer-for-woocommerce');
         }
 
-        // Split out the local and domain parts.
         list($local, $domain) = explode('@', $email, 2);
 
-        /*
-             * LOCAL PART
-             * Test for invalid characters.
-             */
-        $local = preg_replace('/[^a-zA-Z0-9!#$%&\[\]\'*+\/=?^_`{|}~\.-]/', '', $local);
-        if ('' === $local) {
-            $this->wac_set_notice(esc_html__('Email contains forbidden characters or is empty', 'add-customer-for-woocommerce'), "error", $fieldname);
-            return htmlspecialchars($email);
+        //Name part: Same characters as in is_email(), plus [] for the placeholders
+        $local_is_valid = preg_match('/^[a-zA-Z0-9!#$%&\[\]\'*+\/=?^_`{|}~\.-]+$/', $local) === 1;
+        if (!$local_is_valid) {
+            return __('Email contains forbidden characters or is empty', 'add-customer-for-woocommerce');
         }
 
-        /*
-             * DOMAIN PART
-             * Test for sequences of periods.
-             */
-        $domain = preg_replace('/\.{2,}/', '', $domain);
-        if ('' === $domain) {
-            $this->wac_set_notice(esc_html__('Domain parts must contain at least one dot', 'add-customer-for-woocommerce'), "error", $fieldname);
-            return htmlspecialchars($email);
-        }
-
-        // Test for leading and trailing periods and whitespace.
-        $domain = trim($domain, " \t\n\r\0\x0B.");
-        if ('' === $domain) {
-            $this->wac_set_notice(esc_html__('Domain parts are invalid', 'add-customer-for-woocommerce'), "error", $fieldname);
-            return htmlspecialchars($email);
-        }
-
-        // Split the domain into subs.
-        $subs = explode('.', $domain);
-
-        // Assume the domain will have at least two subs.
-        if (2 > count($subs)) {
-            $this->wac_set_notice(esc_html__('Domain parts are invalid', 'add-customer-for-woocommerce'), "error", $fieldname);
-            return htmlspecialchars($email);
-        }
-
-        // Create an array that will contain valid subs.
-        $new_subs = array();
-
-        // Loop through each sub.
-        foreach ($subs as $sub) {
-            // Test for leading and trailing hyphens.
-            $sub = trim($sub, " \t\n\r\0\x0B-");
-
-            // Test for invalid characters.
-            $sub = preg_replace('/[^a-z0-9-]+/i', '', $sub);
-
-            // If there's anything left, add it to the valid subs.
-            if ('' !== $sub) {
-                $new_subs[] = $sub;
+        //Domain part: At least two parts separated by a dot. Each part only contains letters, numbers and hyphens, but does not start or end with a hyphen
+        $domain_parts = explode('.', $domain);
+        $has_enough_parts = count($domain_parts) >= 2;
+        $all_parts_valid = true;
+        foreach ($domain_parts as $domain_part) {
+            if (preg_match('/^[a-z0-9]([a-z0-9-]*[a-z0-9])?$/i', $domain_part) !== 1) {
+                $all_parts_valid = false;
+                break;
             }
         }
-
-        // If there aren't 2 or more valid subs.
-        if (2 > count($new_subs)) {
-            $this->wac_set_notice(esc_html__('Domain parts are invalid', 'add-customer-for-woocommerce'), "error", $fieldname);
-            return htmlspecialchars($email);
+        if (!$has_enough_parts || !$all_parts_valid) {
+            return __('Domain parts are invalid', 'add-customer-for-woocommerce');
         }
 
-        // Join valid subs into the new domain.
-        $domain = implode('.', $new_subs);
-
-        // Put the email back together.
-        $sanitized_email = $local . '@' . $domain;
-
-        // Congratulations, your email made it!
-        return $sanitized_email;
+        return '';
     }
 
     /**
      * Replaces all the user name parts that are not valid
      * Converts cyrillic and other non latin characters to latin
      * Requires the INTL PHP extension
-     * @return void
+     * @param string $user - The username to make valid
+     * @param int|null $order_id - The order the notice belongs to. Falls back to get_the_ID()
+     * @return string The sanitized username
      */
-    public function make_user_valid($user)
+    public function make_user_valid($user, $order_id = null)
     {
+        $notice_id = ($order_id !== null) ? $order_id : get_the_ID();
         //Replaces the cyrillic letters
         $orig_user = $user;
         //Make sure that the Intl extension is installed
@@ -746,35 +818,80 @@ class woo_add_customer_helper
             $user = transliterator_transliterate('Any-Latin; Latin-ASCII; [\u0100-\u7fff] remove', $user);
         } elseif ($user !== sanitize_user($user, true)) {
             //Display notice if user is not valid and php intl extension is not installed
-            $this->wac_set_notice(__('Intl PHP extension not installed. Please install it to validate username.', 'add-customer-for-woocommerce'), 'error', get_the_ID());
+            $this->wac_set_notice(__('Intl PHP extension not installed. Please install it to validate username.', 'add-customer-for-woocommerce'), 'error', $notice_id);
         }
         $user = sanitize_user($user, true); //Remove all un-allowed characters
 
         //Make sure that the username is not longer than 60 characters
-        if(strlen($user) > 60){
+        if (strlen($user) > 60) {
             $user = substr($user, 0, 60);
         }
         return apply_filters('wac_make_user_valid', $user, $orig_user); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Public hook, renaming would break existing customizations
     }
 
     /**
-     * Returns a array with user roles. If the current user is not an admin, it will remove the admin role from the results
-     * 
+     * Returns a array with user roles. It only allows the roles that the current user can edit.
+     * Users without the promote_users capability (e.g. shop managers) only get the default role set by the admin.
+     * With the filter wac_get_user_roles, you can add a custom role, or one that got previously filtered out
+     *
      * @return array The roles. ['slug' => 'Name']
      */
     public function get_user_role_array()
     {
-        $current_user = wp_get_current_user();
-        $user_is_admin = (array_search('administrator', $current_user->caps) !== false) ? true : false;
-        $wp_roles = new WP_Roles();
-        $roles = [];
-        foreach ($wp_roles->role_names as $key => $value) {
-            if (!$user_is_admin and $key === 'administrator') {
-                continue;
-            }
-            $roles[$key] = $value;
+        $can_promote_users = current_user_can('promote_users');
+
+        if ($can_promote_users) {
+            $roles = $this->get_editable_role_names();
+        } else {
+            $roles = $this->get_default_role_as_array();
         }
+
         return apply_filters('wac_get_user_roles', $roles); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Public hook, renaming would break existing customizations
+    }
+
+    /**
+     * Returns the roles the current user is allowed to edit, with translated names.
+     *
+     * @return array The roles. ['slug' => 'Name']
+     */
+    private function get_editable_role_names()
+    {
+        if (!function_exists('get_editable_roles')) {
+            require_once ABSPATH . 'wp-admin/includes/user.php';
+        }
+
+        $roles = [];
+        foreach (get_editable_roles() as $role_slug => $role_details) {
+            $roles[$role_slug] = translate_user_role($role_details['name']);
+        }
+        return $roles;
+    }
+
+    /**
+     * Returns the default user role defined by the admin, with its translated name.
+     *
+     * @return array The role. ['slug' => 'Name'] or an empty array, if the role does not exist
+     */
+    private function get_default_role_as_array()
+    {
+        $default_role = $this->get_default_user_role();
+        $role_names = wp_roles()->get_names();
+
+        if (!isset($role_names[$default_role])) {
+            return [];
+        }
+        return [$default_role => translate_user_role($role_names[$default_role])];
+    }
+
+    /**
+     * Checks if the given role is registered in WordPress.
+     *
+     * @param string $role_slug - The slug of the role
+     * @return bool True if the role exists, false otherwise
+     */
+    public function is_existing_user_role($role_slug)
+    {
+        return wp_roles()->is_role($role_slug);
     }
 
     /**
@@ -786,7 +903,7 @@ class woo_add_customer_helper
     public function is_customer_created_miss_match()
     {
         $users_created_option = intval(get_option('wac_add_customer_count'));
-        $users_created_in_meta = count($this -> get_users_created_by_plugin());
+        $users_created_in_meta = count($this->get_users_created_by_plugin());
         if ($users_created_in_meta !== $users_created_option) {
             return true; //Not all users are created by the plugin
         } else {
@@ -799,7 +916,8 @@ class woo_add_customer_helper
      *
      * @return array Empty array if no users are found, array with the user ids otherwise
      */
-    public function get_users_created_by_plugin(){
+    public function get_users_created_by_plugin()
+    {
         //Only used on the settings and users page
         $args = [
             'meta_key'   => 'wac_created_by_plugin', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key

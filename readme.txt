@@ -6,7 +6,7 @@ Tags: woocommerce, customer, tools, helper
 Requires at least: 5.4.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.10.0
+Stable tag: 1.10.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -91,6 +91,14 @@ Are there any hooks I can use?
  - You can use the new hook "wac_deactivate_user_emails" for that. It has two parameters: $is_deactivated and $user_id. You can use this filter and return "true" for the users you like to suppress the messages. 
 
 == Changelog ==
+
+= [1.10.1] =
+* Fixed: Administrator accounts could be created by shop managers. Users without the "promote_users" capability can now only assign the default role set by the admin
+* Changed: If the role selection is disabled, the default role set by the admin is always assigned
+* Changed: Invalid fake email formats are rejected on save, and the previous format is kept
+* Fixed: Order save failed with a fatal error if no password reset link could be created
+* Fixed: Customers were not created if the generated fake email already existed after converting special characters
+* Fixed: Various bugfixes
 
 = [1.10.0] =
 * Added: Option to allow customers created by the plugin to pay for their orders without login

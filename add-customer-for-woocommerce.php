@@ -4,7 +4,7 @@
  * Plugin Name:          Add Customer for WooCommerce
  * Plugin URI:           https://dev.dans-art.ch/blog/wordpress/add-customer-for-woocommerce/
  * Description:          Allows you to add a customer when creating a new order on the orders page
- * Version:              1.10.0
+ * Version:              1.10.1
  * Requires at least:    5.4.0
  * Requires PHP:         7.4
  * Requires Plugins:     woocommerce
@@ -15,7 +15,7 @@
  * Text Domain:          add-customer-for-woocommerce
  *
  * WC requires at least: 7.4.1
- * WC tested up to:      11.1.0
+ * WC tested up to:      11.2.0
  */
 
 if (!defined('ABSPATH')) {

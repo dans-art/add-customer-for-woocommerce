@@ -39,7 +39,7 @@ $user_role_to_set = $wac -> get_default_user_role();
             //Add the options field to choose a user role
             if ($set_role === 'yes') : ?>
                 <select name="wac_add_customer_role" id="wac_add_customer_role">
-                    <?php foreach ($wac->get_user_role_array(false) as $role_slug => $name) : ?>
+                    <?php foreach ($wac->get_user_role_array() as $role_slug => $name) : ?>
                         <?php $selected = ($role_slug === $user_role_to_set) ? 'selected' : ''; ?>
                         <option value="<?php echo esc_attr($role_slug); ?>" <?php echo esc_attr($selected); ?>><?php echo esc_html($name); ?></option>
                     <?php endforeach; ?>
